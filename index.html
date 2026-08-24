@@ -5,11 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Shadow</title>
+<title>Shadow - Социальная сеть нового поколения</title>
+
+<!-- Подключение Supabase клиента для работы с базой данных -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 /* ============================================
-   СБРОС СТИЛЕЙ
+   СЕКЦИЯ 1: СБРОС СТИЛЕЙ И БАЗОВЫЕ НАСТРОЙКИ
    ============================================ */
 *,
 *::before,
@@ -58,6 +61,7 @@ img {
     display: block;
 }
 
+/* Настройка скроллбара для вебkit браузеров */
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -72,29 +76,37 @@ img {
 }
 
 /* ============================================
-   ПЕРЕМЕННЫЕ CSS
+   СЕКЦИЯ 2: CSS ПЕРЕМЕННЫЕ (ТЕМА)
    ============================================ */
 :root {
+    /* Основные цвета бренда */
     --primary: #a855f7;
     --primary-dark: #7c3aed;
     --primary-light: #c084fc;
+    
+    /* Цвета текста */
     --text-sec: #a1a1aa;
     --text-muted: #52525b;
+    
+    /* Цвета фона и границ */
     --border: #27272a;
     --bg-card: #0a0a0a;
     --bg-card-alt: #121212;
     --bg-input: #1a1a1a;
+    
+    /* Семантические цвета */
     --error: #ef4444;
     --success: #22c55e;
     --premium: #fbbf24;
     --premium-dark: #f59e0b;
+    
+    /* Размеры и отступы */
     --nav-h: 60px;
     --safe-b: env(safe-area-inset-bottom, 0px);
-    --safe-t: env(safe-area-inset-top, 0px);
 }
 
 /* ============================================
-   ПРИЛОЖЕНИЕ И ЭКРАНЫ
+   СЕКЦИЯ 3: СТРУКТУРА ПРИЛОЖЕНИЯ
    ============================================ */
 #app {
     width: 100%;
@@ -120,7 +132,7 @@ img {
 }
 
 /* ============================================
-   КНОПКИ
+   СЕКЦИЯ 4: КНОПКИ И ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ
    ============================================ */
 .btn {
     display: inline-flex;
@@ -156,12 +168,6 @@ img {
     font-weight: 700;
 }
 
-.btn-telegram {
-    background: linear-gradient(135deg, #2AABEE, #1E96D1);
-    color: #fff;
-    font-weight: 700;
-}
-
 .btn-secondary {
     background: var(--bg-card-alt);
     color: #fff;
@@ -171,12 +177,6 @@ img {
 .btn-ghost {
     background: transparent;
     color: var(--text-sec);
-}
-
-.btn-danger {
-    background: rgba(239, 68, 68, 0.12);
-    color: var(--error);
-    border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .btn-small {
@@ -191,7 +191,7 @@ img {
 }
 
 /* ============================================
-   ФОРМЫ
+   СЕКЦИЯ 5: ФОРМЫ И ПОЛЯ ВВОДА
    ============================================ */
 .form-group {
     width: 100%;
@@ -231,7 +231,7 @@ img {
 }
 
 /* ============================================
-   АВАТАРЫ
+   СЕКЦИЯ 6: АВАТАРЫ И ПРОФИЛИ
    ============================================ */
 .avatar {
     width: 48px;
@@ -278,63 +278,110 @@ img {
     color: #fff;
 }
 
-.avatar.banned {
-    background: #333;
-    color: #666;
-    border-color: var(--error);
-}
-
 .avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+.avatar-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 800;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 3px solid var(--border);
+}
+
+.avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /* ============================================
-   FOLLOW BAR (кружки подписок)
+   СЕКЦИЯ 7: ПАНЕЛЬ ДРУЗЕЙ
    ============================================ */
 .follow-bar {
     display: flex;
-    gap: 8px;
-    padding: 8px 4px;
+    gap: 12px;
+    padding: 12px 16px;
     overflow-x: auto;
     scrollbar-width: none;
-    background: #000;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
 }
 
 .follow-bar::-webkit-scrollbar {
     display: none;
 }
 
-.follow-avatar-wrap {
+.friend-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 6px;
     cursor: pointer;
     flex-shrink: 0;
+    width: 64px;
 }
 
-.follow-avatar-wrap .avatar {
-    width: 50px;
-    height: 50px;
-    font-size: 18px;
+.friend-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    padding: 2px;
+    background: #000;
+    transition: transform 0.2s;
 }
 
-.follow-avatar-name {
-    font-size: 9px;
+.friend-avatar:hover {
+    transform: scale(1.05);
+}
+
+.friend-name {
+    font-size: 11px;
     color: var(--text-sec);
-    max-width: 52px;
+    text-align: center;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: center;
+    width: 100%;
 }
 
 /* ============================================
-   ЛЕНТА НА ГЛАВНОЙ
+   СЕКЦИЯ 8: ПОИСК
+   ============================================ */
+.search-container {
+    padding: 12px 16px;
+    background: #000;
+    border-bottom: 1px solid var(--border);
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: #fff;
+    font-size: 15px;
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+}
+
+/* ============================================
+   СЕКЦИЯ 9: ЛЕНТА КОНТЕНТА
    ============================================ */
 .home-feed {
     flex: 1;
@@ -342,9 +389,6 @@ img {
     padding-bottom: calc(var(--nav-h) + var(--safe-b));
 }
 
-/* ============================================
-   ВИДЕО ЛЕНТА
-   ============================================ */
 .feed-container {
     width: 100%;
     height: 100%;
@@ -377,181 +421,90 @@ img {
     background: #000;
 }
 
-.video-gradient {
+.video-overlay {
     position: absolute;
     inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 40%);
     pointer-events: none;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 35%);
 }
 
 .video-info {
     position: absolute;
-    bottom: calc(var(--nav-h) + var(--safe-b) + 16px);
-    left: 14px;
-    right: 76px;
+    bottom: calc(var(--nav-h) + var(--safe-b) + 20px);
+    left: 16px;
+    right: 80px;
     z-index: 5;
 }
 
-.video-author-row {
+.video-author {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 10px;
+    margin-bottom: 12px;
 }
 
-.video-author-name {
+.author-name {
     font-weight: 700;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-    cursor: pointer;
+    font-size: 16px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .video-desc {
     font-size: 14px;
     line-height: 1.4;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-    margin-bottom: 6px;
-}
-
-.video-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.video-tag {
-    font-size: 13px;
-    color: var(--primary-light);
-    font-weight: 600;
-}
-
-.play-indicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 84px;
-    height: 84px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    pointer-events: none;
-    z-index: 6;
-}
-
-.play-indicator svg {
-    width: 100%;
-    height: 100%;
-    fill: rgba(255, 255, 255, 0.95);
-    filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.6));
-}
-
-.play-indicator.visible {
-    opacity: 1;
+    margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .video-actions {
     position: absolute;
-    right: 10px;
+    right: 12px;
     bottom: calc(var(--nav-h) + var(--safe-b) + 20px);
     z-index: 5;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 18px;
+    gap: 20px;
 }
 
-.video-action {
+.action-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
 }
 
-.video-action-btn {
-    width: 46px;
-    height: 46px;
+.icon-circle {
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    transition: transform 0.15s;
+    transition: transform 0.2s;
 }
 
-.video-action-btn:active {
-    transform: scale(0.85);
+.icon-circle:active {
+    transform: scale(0.9);
 }
 
-.video-action-btn svg {
-    width: 26px;
-    height: 26px;
+.icon-circle svg {
+    width: 24px;
+    height: 24px;
     fill: #fff;
 }
 
-.video-action.liked .video-action-btn svg {
-    fill: var(--primary);
-}
-
-.video-action.saved .video-action-btn svg {
-    fill: var(--premium);
-}
-
-.video-action-count {
+.action-count {
     font-size: 12px;
     font-weight: 600;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-.avatar-follow-wrap {
-    position: relative;
-    margin-bottom: 6px;
-}
-
-.follow-plus {
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
-    border: 2px solid #000;
-    transition: background 0.15s;
-}
-
-.follow-plus.followed {
-    background: var(--success);
-}
-
-.video-empty {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle, #121212, #000);
-    gap: 12px;
 }
 
 /* ============================================
-   НИЖНЯЯ НАВИГАЦИЯ
+   СЕКЦИЯ 10: НИЖНЯЯ НАВИГАЦИЯ
    ============================================ */
-.bottom-nav-fixed {
+.bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -565,127 +518,109 @@ img {
     z-index: 100;
 }
 
-.nav-btn {
+.nav-item {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
+    gap: 4px;
     color: var(--text-muted);
     transition: color 0.2s;
 }
 
-.nav-btn svg {
-    width: 24px;
-    height: 24px;
+.nav-item svg {
+    width: 26px;
+    height: 26px;
     fill: currentColor;
 }
 
-.nav-btn span {
+.nav-item span {
     font-size: 10px;
+    font-weight: 500;
 }
 
-.nav-btn.active {
+.nav-item.active {
     color: var(--primary);
 }
 
-.upload-nav-btn {
-    width: 44px;
+.nav-add-btn {
+    width: 48px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: 10px;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 12px rgba(168, 85, 247, 0.4);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
 }
 
-.upload-nav-btn svg {
-    width: 22px;
-    height: 22px;
+.nav-add-btn svg {
+    width: 24px;
+    height: 24px;
     fill: #fff;
 }
 
 /* ============================================
-   ПРОФИЛЬ
+   СЕКЦИЯ 11: ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
    ============================================ */
-.profile-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    padding-bottom: calc(var(--nav-h) + var(--safe-b) + 20px);
-}
-
 .profile-header {
+    padding: 30px 20px;
     text-align: center;
-    margin-bottom: 20px;
+    background: linear-gradient(to bottom, #1a1a1a, #000);
 }
 
-.profile-name-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 14px;
-}
-
-.profile-name {
-    font-size: 21px;
-    font-weight: 800;
-}
-
-.profile-username {
-    color: var(--text-sec);
-    font-size: 14px;
-    margin-top: 4px;
-}
-
-.profile-bio {
-    color: var(--text-sec);
-    font-size: 14px;
-    margin-top: 10px;
-    max-width: 300px;
+.profile-avatar-lg {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    border: 3px solid var(--border);
+    overflow: hidden;
+    background: #000;
 }
 
 .profile-stats {
     display: flex;
     justify-content: center;
-    gap: 22px;
-    margin-top: 18px;
-    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
 }
 
-.stat-val {
-    font-size: 20px;
+.stat-box {
+    text-align: center;
+}
+
+.stat-num {
+    font-size: 18px;
     font-weight: 800;
+    color: #fff;
 }
 
 .stat-label {
     font-size: 12px;
     color: var(--text-sec);
+    margin-top: 4px;
 }
 
 .profile-tabs {
     display: flex;
-    gap: 4px;
     border-bottom: 1px solid var(--border);
-    margin: 20px 0 16px;
+    background: #000;
 }
 
-.profile-tab {
+.tab-btn {
     flex: 1;
-    padding: 12px;
+    padding: 16px;
     text-align: center;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-sec);
+    color: var(--text-muted);
     border-bottom: 2px solid transparent;
     transition: all 0.2s;
-    cursor: pointer;
 }
 
-.profile-tab.active {
+.tab-btn.active {
     color: var(--primary);
     border-bottom-color: var(--primary);
 }
@@ -693,135 +628,90 @@ img {
 .videos-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    width: 100%;
+    gap: 1px;
+    background: #000;
+    padding: 1px;
 }
 
-.grid-video {
+.grid-item {
     aspect-ratio: 9 / 16;
-    background: var(--bg-card-alt);
-    border-radius: 3px;
-    overflow: hidden;
+    background: #111;
     position: relative;
+    overflow: hidden;
     cursor: pointer;
 }
 
-.grid-video video,
-.grid-video img {
+.grid-item img,
+.grid-item video {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.grid-video-views {
-    position: absolute;
-    bottom: 6px;
-    left: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-.grid-video-menu-btn {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
-    z-index: 3;
-}
-
-.promo-tab-content {
-    padding: 10px 0;
-}
-
-.promo-status {
-    background: var(--bg-card-alt);
-    border-radius: 12px;
-    padding: 18px;
-    text-align: center;
-    margin-bottom: 16px;
-}
-
 /* ============================================
-   МОДАЛКИ
+   СЕКЦИЯ 12: МОДАЛЬНЫЕ ОКНА
    ============================================ */
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 200;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    animation: fadeIn 0.2s ease;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(5px);
 }
 
-.modal {
-    background: var(--bg-card);
+.modal-content {
+    background: #181818;
     border-radius: 20px 20px 0 0;
     width: 100%;
-    max-height: 88vh;
+    max-height: 90vh;
     overflow-y: auto;
-    padding: 20px 20px calc(20px + var(--safe-b));
+    padding: 24px;
     animation: slideUp 0.3s ease;
-    border-top: 1px solid var(--border);
 }
 
-@media (min-width: 768px) {
-    .modal-overlay {
-        align-items: center;
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
     }
-
-    .modal {
-        max-width: 520px;
-        border-radius: 20px;
+    to {
+        transform: translateY(0);
     }
-}
-
-.modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
-}
-
-.modal-title {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.modal-close {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--bg-input);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-close svg {
-    width: 18px;
-    height: 18px;
-    fill: var(--text-sec);
 }
 
 /* ============================================
-   ЗАГРУЗКА ВИДЕО
+   СЕКЦИЯ 13: УВЕДОМЛЕНИЯ (TOAST)
+   ============================================ */
+.toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    z-index: 300;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 10px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* ============================================
+   СЕКЦИЯ 14: ЗАГРУЗКА ВИДЕО
    ============================================ */
 .upload-dropzone {
     border: 2px dashed var(--border);
@@ -887,7 +777,7 @@ img {
 }
 
 /* ============================================
-   КОММЕНТАРИИ
+   СЕКЦИЯ 15: КОММЕНТАРИИ
    ============================================ */
 .comments-list {
     display: flex;
@@ -960,7 +850,7 @@ img {
 }
 
 /* ============================================
-   ПРЕМИУМ
+   СЕКЦИЯ 16: ПРЕМИУМ ФУНКЦИИ
    ============================================ */
 .premium-card {
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(245, 158, 11, 0.04));
@@ -1012,40 +902,7 @@ img {
 }
 
 /* ============================================
-   TOAST УВЕДОМЛЕНИЯ
-   ============================================ */
-.toast {
-    position: fixed;
-    bottom: calc(var(--nav-h) + var(--safe-b) + 20px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg-card-alt);
-    border: 1px solid var(--border);
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-size: 14px;
-    z-index: 600;
-    max-width: 90%;
-    text-align: center;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    animation: toastIn 0.3s ease;
-    white-space: pre-line;
-}
-
-.toast.success {
-    border-color: var(--success);
-}
-
-.toast.error {
-    border-color: var(--error);
-}
-
-.toast.premium {
-    border-color: var(--premium);
-}
-
-/* ============================================
-   ПУСТЫЕ СОСТОЯНИЯ
+   СЕКЦИЯ 17: ПУСТЫЕ СОСТОЯНИЯ
    ============================================ */
 .empty-state {
     display: flex;
@@ -1096,8 +953,14 @@ img {
     animation: spin 0.8s linear infinite;
 }
 
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* ============================================
-   АДМИН ПАНЕЛЬ
+   СЕКЦИЯ 18: АДМИН ПАНЕЛЬ
    ============================================ */
 .admin-row {
     display: flex;
@@ -1157,79 +1020,7 @@ img {
 }
 
 /* ============================================
-   ВЫБОР АВАТАРА
-   ============================================ */
-.avatar-picker {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.avatar-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 34px;
-    font-weight: 800;
-    overflow: hidden;
-    flex-shrink: 0;
-    border: 3px solid var(--border);
-}
-
-.avatar-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.avatar-options {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    flex: 1;
-}
-
-.avatar-option {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-input);
-    border: 2px solid var(--border);
-    cursor: pointer;
-    overflow: hidden;
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--text-sec);
-    transition: all 0.15s;
-}
-
-.avatar-option.selected {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.3);
-    transform: scale(1.05);
-}
-
-.avatar-option svg,
-.avatar-option img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.avatar-option.photo-opt {
-    font-size: 22px;
-}
-
-/* ============================================
-   ПРИВЕТСТВИЕ
+   СЕКЦИЯ 19: ЭКРАН ПРИВЕТСТВИЯ
    ============================================ */
 .welcome-title {
     font-size: clamp(52px, 13vw, 76px);
@@ -1258,141 +1049,64 @@ img {
     max-width: 320px;
     margin-top: 40px;
 }
-
-/* ============================================
-   АНИМАЦИИ
-   ============================================ */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(60px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes toastIn {
-    from {
-        transform: translateX(-50%) translateY(20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes heartPop {
-    0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-    }
-    15% {
-        transform: translate(-50%, -50%) scale(1.25);
-        opacity: 1;
-    }
-    30% {
-        transform: translate(-50%, -50%) scale(0.95);
-    }
-    45%,
-    80% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(0.9);
-        opacity: 0;
-    }
-}
-
-.heart-pop {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 110px;
-    height: 110px;
-    pointer-events: none;
-    z-index: 50;
-    animation: heartPop 0.9s ease forwards;
-}
-
-.heart-pop svg {
-    width: 100%;
-    height: 100%;
-    fill: var(--primary);
-    filter: drop-shadow(0 4px 20px rgba(168, 85, 247, 0.8));
-}
 </style>
 </head>
 <body>
+
+<!-- ============================================
+     ОСНОВНАЯ СТРУКТУРА ПРИЛОЖЕНИЯ
+     ============================================ -->
 <div id="app">
 
-<!-- ЭКРАН ПРИВЕТСТВИЯ -->
+<!-- ============================================
+     ЭКРАН ПРИВЕТСТВИЯ
+     ============================================ -->
 <div class="screen active" id="screen-welcome" style="padding:20px;align-items:center;justify-content:center;">
-    <div id="welcome-logo" style="margin-bottom:32px;">
-        <svg width="110" height="110" viewBox="0 0 120 120">
+    <div style="margin-bottom:40px;">
+        <svg width="80" height="80" viewBox="0 0 100 100">
             <defs>
-                <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stop-color="#a855f7"/>
-                    <stop offset="100%" stop-color="#c084fc"/>
+                    <stop offset="100%" stop-color="#ec4899"/>
                 </linearGradient>
             </defs>
-            <circle cx="60" cy="60" r="56" fill="#0a0a0a" stroke="#27272a" stroke-width="2"/>
-            <path d="M60 18 C40 18 26 34 26 60 C26 86 40 102 60 102 C60 90 50 80 50 60 C50 40 60 30 60 18 Z" fill="url(#sg)"/>
-            <circle cx="72" cy="52" r="5" fill="#c084fc"/>
-            <circle cx="78" cy="72" r="3" fill="#c084fc"/>
+            <circle cx="50" cy="50" r="45" fill="url(#grad1)" opacity="0.2"/>
+            <path d="M35 30 L35 70 L65 50 Z" fill="#fff"/>
         </svg>
     </div>
     <h1 class="welcome-title">Shadow</h1>
-    <p class="welcome-subtitle">Мультиплеер онлайн. Видео, подписки.</p>
+    <p class="welcome-subtitle">Твой мир, твои правила.</p>
     <div class="welcome-actions">
         <button class="btn btn-primary btn-block" onclick="App.go('register')">Создать аккаунт</button>
         <button class="btn btn-secondary btn-block" onclick="App.go('login')">Войти</button>
-        <button class="btn btn-ghost btn-block" onclick="App.enterGuest()">Продолжить как гость</button>
     </div>
 </div>
 
-<!-- ЭКРАН РЕГИСТРАЦИИ -->
+<!-- ============================================
+     ЭКРАН РЕГИСТРАЦИИ
+     ============================================ -->
 <div class="screen" id="screen-register" style="padding:20px;align-items:flex-start;">
     <div style="width:100%;max-width:400px;">
         <button class="btn btn-ghost btn-small" onclick="App.go('welcome')" style="margin-bottom:20px;">← Назад</button>
-        <h2 style="font-size:26px;font-weight:800;margin-bottom:6px;">Создать аккаунт</h2>
-        <p style="color:var(--text-sec);margin-bottom:24px;">Регистрация глобальная 🌍</p>
+        <h2 style="font-size:28px;font-weight:700;margin-bottom:24px;">Регистрация</h2>
         <div class="form-group">
-            <label class="form-label">Имя пользователя *</label>
+            <label class="form-label">Имя пользователя</label>
             <input type="text" class="form-input" id="reg-username" placeholder="латиница и цифры" maxlength="20">
         </div>
         <div class="form-group">
-            <label class="form-label">Пароль *</label>
+            <label class="form-label">Пароль</label>
             <input type="password" class="form-input" id="reg-password" placeholder="минимум 6 символов" maxlength="50">
         </div>
         <div class="form-group">
-            <label class="form-label">Отображаемое имя *</label>
+            <label class="form-label">Отображаемое имя</label>
             <input type="text" class="form-input" id="reg-displayname" placeholder="Как тебя будут видеть" maxlength="30" oninput="Reg.onNameChange()">
         </div>
         <div class="form-group" style="max-width:none;">
-            <label class="form-label">Выбери аватар</label>
-            <div class="avatar-picker">
+            <label class="form-label">Аватар</label>
+            <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;">
                 <div class="avatar-preview" id="avatar-preview">?</div>
-                <div class="avatar-options" id="avatar-options"></div>
             </div>
+            <button type="button" class="btn btn-secondary btn-block" onclick="Reg.openPhotoPicker()" style="margin-bottom:12px;">Загрузить с устройства</button>
             <input type="file" id="avatar-file" accept="image/*" style="display:none;" onchange="Reg.pickPhoto(this)">
         </div>
         <div class="form-group">
@@ -1403,11 +1117,13 @@ img {
     </div>
 </div>
 
-<!-- ЭКРАН ВХОДА -->
+<!-- ============================================
+     ЭКРАН ВХОДА
+     ============================================ -->
 <div class="screen" id="screen-login" style="padding:20px;align-items:flex-start;">
     <div style="width:100%;max-width:400px;">
         <button class="btn btn-ghost btn-small" onclick="App.go('welcome')" style="margin-bottom:20px;">← Назад</button>
-        <h2 style="font-size:26px;font-weight:800;margin-bottom:24px;">Вход в аккаунт</h2>
+        <h2 style="font-size:28px;font-weight:700;margin-bottom:24px;">Вход</h2>
         <div class="form-group">
             <label class="form-label">Имя пользователя</label>
             <input type="text" class="form-input" id="login-username">
@@ -1420,73 +1136,93 @@ img {
     </div>
 </div>
 
-<!-- ЭКРАН БАНА -->
-<div class="screen" id="screen-banned" style="padding:20px;align-items:center;justify-content:center;">
-    <div style="text-align:center;max-width:340px;">
-        <div class="ban-icon">🚫</div>
-        <div class="ban-title">Аккаунт заблокирован</div>
-        <div style="color:var(--text-sec);line-height:1.6;margin-bottom:20px;">Твой аккаунт был заблокирован навсегда.</div>
-        <div id="ban-reason" style="background:var(--bg-card-alt);border:1px solid var(--error);border-radius:10px;padding:14px;font-size:14px;margin-bottom:24px;display:none;"></div>
-        <button class="btn btn-secondary btn-block" onclick="Auth.logout()">Выйти</button>
+<!-- ============================================
+     ГЛАВНЫЙ ЭКРАН
+     ============================================ -->
+<div class="screen" id="screen-home">
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Поиск друзей..." oninput="HomeSearch.run(this.value)">
     </div>
-</div>
-
-<!-- ГЛАВНАЯ -->
-<div class="screen" id="screen-home" style="flex-direction:column;">
-    <div style="padding:8px 10px;background:#000;border-bottom:1px solid var(--border);flex-shrink:0;">
-        <input type="text" style="width:100%;padding:10px 16px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:#fff;font-size:14px;" id="home-search-input" placeholder="🔍 Поиск людей и видео..." oninput="HomeSearch.run()">
-    </div>
-    <div id="home-search-results" style="display:none;max-height:250px;overflow-y:auto;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;"></div>
-    <div id="follow-bar-container" style="flex-shrink:0;"></div>
+    <div id="friends-bar" class="follow-bar"></div>
     <div class="home-feed" id="home-feed-container"></div>
-    <nav class="bottom-nav-fixed">
-        <button class="nav-btn active" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
-        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
-        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
-        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
-        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="App.nav('home')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Главная</span>
+        </div>
+        <div class="nav-item" onclick="App.nav('feed')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Лента</span>
+        </div>
+        <div class="nav-item" onclick="Upload.openMenu()">
+            <div class="nav-add-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="nav-item" onclick="App.nav('profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Профиль</span>
+        </div>
     </nav>
 </div>
 
-<!-- ЛЕНТА -->
-<div class="screen" id="screen-feed" style="flex-direction:column;">
+<!-- ============================================
+     ЭКРАН ЛЕНТЫ
+     ============================================ -->
+<div class="screen" id="screen-feed">
     <div class="feed-container" id="feed-container"></div>
-    <nav class="bottom-nav-fixed">
-        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
-        <button class="nav-btn active" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
-        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
-        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
-        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="App.nav('home')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Главная</span>
+        </div>
+        <div class="nav-item active" onclick="App.nav('feed')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Лента</span>
+        </div>
+        <div class="nav-item" onclick="Upload.openMenu()">
+            <div class="nav-add-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="nav-item" onclick="App.nav('profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Профиль</span>
+        </div>
     </nav>
 </div>
 
-<!-- ВХОДЯЩИЕ -->
-<div class="screen" id="screen-inbox" style="padding:20px;align-items:center;justify-content:center;">
-    <div class="empty-state">
-        <div class="empty-icon">🔔</div>
-        <div class="empty-title">Входящие</div>
-        <div class="empty-text">Сообщения и уведомления скоро появятся</div>
+<!-- ============================================
+     ЭКРАН ПРОФИЛЯ
+     ============================================ -->
+<div class="screen" id="screen-profile">
+    <div class="profile-header">
+        <div class="profile-avatar-lg" id="profile-avatar"></div>
+        <h2 id="profile-name" style="font-size:20px;font-weight:700;"></h2>
+        <p id="profile-username" style="color:var(--text-sec);font-size:14px;"></p>
+        <div class="profile-stats">
+            <div class="stat-box"><div class="stat-num" id="stat-videos">0</div><div class="stat-label">Видео</div></div>
+            <div class="stat-box"><div class="stat-num" id="stat-friends">0</div><div class="stat-label">Друзья</div></div>
+        </div>
     </div>
-    <nav class="bottom-nav-fixed">
-        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
-        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
-        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
-        <button class="nav-btn active" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
-        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
-    </nav>
-</div>
-
-<!-- ПРОФИЛЬ -->
-<div class="screen" id="screen-profile" style="flex-direction:column;">
-    <div class="profile-scroll">
-        <div id="profile-content"></div>
+    <div class="profile-tabs">
+        <div class="tab-btn active" onclick="Profile.switchTab('videos')">Видео</div>
+        <div class="tab-btn" onclick="Profile.switchTab('promos')">Промокоды</div>
+        <div class="tab-btn" onclick="Profile.switchTab('settings')">Настройки</div>
     </div>
-    <nav class="bottom-nav-fixed">
-        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
-        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
-        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
-        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
-        <button class="nav-btn active" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
+    <div id="profile-content" style="flex:1;overflow-y:auto;background:#000;"></div>
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="App.nav('home')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Главная</span>
+        </div>
+        <div class="nav-item" onclick="App.nav('feed')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Лента</span>
+        </div>
+        <div class="nav-item" onclick="Upload.openMenu()">
+            <div class="nav-add-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="nav-item active" onclick="App.nav('profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Профиль</span>
+        </div>
     </nav>
 </div>
 
@@ -1494,936 +1230,544 @@ img {
 </div>
 
 <script>
-/* ============================================
-   SUPABASE ПОДКЛЮЧЕНИЕ
-   ============================================ */
-var SB_URL = 'https://rzahwdxsdvwojdklblbb.supabase.co';
-var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
-
-var sb = null;
+// ============================================
+// КОНФИГУРАЦИЯ SUPABASE
+// ============================================
+const SB_URL = 'https://rzahwdxsdvwojdklblbb.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
+let sb = null;
 
 try {
-    if (window.supabase && window.supabase.createClient) {
-        sb = window.supabase.createClient(SB_URL, SB_KEY);
-    }
+    sb = window.supabase.createClient(SB_URL, SB_KEY);
 } catch (e) {
-    console.error('Supabase init error:', e);
+    console.error('Ошибка подключения к Supabase:', e);
 }
 
-function storageUrl(bucket, fname) {
-    return SB_URL + '/storage/v1/object/public/' + bucket + '/' + fname;
+// Функция для получения URL файла из хранилища
+function storageUrl(bucket, path) {
+    return SB_URL + '/storage/v1/object/public/' + bucket + '/' + path;
 }
 
-/* ============================================
-   КОНФИГУРАЦИЯ
-   ============================================ */
-var CONFIG = {
-    FREE_LIMIT: 2,
-    PREMIUM_LIMIT: 4,
-    FREE_MAX_MB: 50,
-    PREMIUM_MAX_MB: 70,
-    PREMIUM_PRICE: 199,
-    PREMIUM_DAYS: 30,
-    WEEK_MS: 7 * 24 * 60 * 60 * 1000,
-    MAX_VIDEO_SEC: 30,
-    ADMIN_PASSWORD: 'shadow2024',
-    TELEGRAM_LINK: 'https://t.me/shadowlolthehome'
-};
-
-/* ============================================
-   КЛАССИЧЕСКИЕ АВАТАРЫ
-   ============================================ */
-var CLASSIC_AVATARS = [
-    '<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#7c3aed"/><circle cx="50" cy="55" r="28" fill="#c084fc"/><path d="M30 35 L35 18 L45 32 Z" fill="#c084fc"/><path d="M70 35 L65 18 L55 32 Z" fill="#c084fc"/><circle cx="42" cy="52" r="3" fill="#000"/><circle cx="58" cy="52" r="3" fill="#000"/></svg>',
-    '<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#a855f7"/><rect x="25" y="30" width="50" height="45" rx="8" fill="#c084fc"/><circle cx="40" cy="50" r="5" fill="#000"/><circle cx="60" cy="50" r="5" fill="#000"/></svg>',
-    '<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#7c3aed"/><path d="M50 20 C33 20 25 33 25 50 L25 78 L75 78 L75 50 C75 33 67 20 50 20 Z" fill="#c084fc"/><circle cx="41" cy="47" r="4" fill="#000"/><circle cx="59" cy="47" r="4" fill="#000"/></svg>',
-    '<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#a855f7"/><path d="M50 18 L59 40 L83 40 L64 54 L71 78 L50 63 L29 78 L36 54 L17 40 L41 40 Z" fill="#fbbf24"/></svg>',
-    '<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#7c3aed"/><path d="M50 15 C45 30 35 35 35 52 C35 65 42 75 50 78 C58 75 65 65 65 52 C65 35 55 30 50 15 Z" fill="#fbbf24"/></svg>',
-    '<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#a855f7"/><circle cx="50" cy="50" r="22" fill="#c084fc"/><ellipse cx="50" cy="50" rx="38" ry="10" fill="none" stroke="#fbbf24" stroke-width="3" transform="rotate(-20 50 50)"/></svg>'
-];
-
-function avatarContent(u) {
-    if (!u) return '?';
-    if (u.avatar_type === 'photo' && u.avatar_url) {
-        return '<img src="' + u.avatar_url + '" alt="">';
-    }
-    if (u.avatar_type === 'classic' && u.avatar_index !== undefined) {
-        return CLASSIC_AVATARS[u.avatar_index] || CLASSIC_AVATARS[0];
-    }
-    return Utils.esc((u.display_name || '?')[0].toUpperCase());
-}
-
-/* ============================================
-   ИКОНКИ SVG
-   ============================================ */
-var Icons = {
-    heart: function() {
-        return '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+// ============================================
+// УТИЛИТЫ
+// ============================================
+const Utils = {
+    // Показать всплывающее уведомление
+    toast: (msg) => {
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
     },
-    comment: function() {
-        return '<svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>';
+    
+    // Экранирование HTML
+    esc: (str) => {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
     },
-    share: function() {
-        return '<svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>';
+    
+    // Хеширование пароля
+    hash: async (str) => {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
     },
-    bookmark: function() {
-        return '<svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>';
-    },
-    close: function() {
-        return '<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
-    },
-    send: function() {
-        return '<svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>';
-    },
-    play: function() {
-        return '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-    },
-    verified: function() {
-        return '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#fbbf24" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>';
-    },
-    crown: function() {
-        return '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fbbf24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5m14 3c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1v-1h14v1z"/></svg>';
-    }
-};
-
-/* ============================================
-   УТИЛИТЫ
-   ============================================ */
-var Utils = {
-    toast: function(msg, type) {
-        type = type || '';
-        document.querySelectorAll('.toast').forEach(function(x) { x.remove(); });
-        var el = document.createElement('div');
-        el.className = 'toast ' + type;
-        el.textContent = msg;
-        document.body.appendChild(el);
-        setTimeout(function() { el.remove(); }, 3200);
-    },
-    esc: function(t) {
-        var d = document.createElement('div');
-        d.textContent = t || '';
-        return d.innerHTML;
-    },
-    timeAgo: function(ts) {
-        if (!ts) return '';
-        var m = Math.floor((Date.now() - new Date(ts).getTime()) / 60000);
-        if (m < 1) return 'только что';
-        if (m < 60) return m + ' мин';
-        var h = Math.floor(m / 60);
-        if (h < 24) return h + ' ч';
-        var d = Math.floor(h / 24);
-        return d < 7 ? d + ' дн' : new Date(ts).toLocaleDateString('ru-RU');
-    },
-    genId: function() {
-        return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
-    },
-    fmtNum: function(n) {
-        if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-        if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
-        return String(n || 0);
-    },
-    genPromo: function() {
-        var c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-        var s = 'SHDW-';
-        for (var i = 0; i < 6; i++) {
-            s += c[Math.floor(Math.random() * c.length)];
-        }
-        return s;
-    },
-    hash: function(str) {
-        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function(h) {
-            return Array.from(new Uint8Array(h)).map(function(x) {
-                return x.toString(16).padStart(2, '0');
-            }).join('');
-        });
-    },
-    compressImage: function(file, sz) {
-        sz = sz || 400;
-        return new Promise(function(res, rej) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var img = new Image();
-                img.onload = function() {
-                    var canvas = document.createElement('canvas');
-                    canvas.width = sz;
-                    canvas.height = sz;
-                    var ctx = canvas.getContext('2d');
-                    var size = Math.min(img.width, img.height);
-                    ctx.drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, sz, sz);
-                    canvas.toBlob(function(b) { res(b); }, 'image/jpeg', 0.85);
+    
+    // Сжатие изображения
+    compressImage: (file, size) => {
+        size = size || 400;
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
+                    const s = Math.min(img.width, img.height);
+                    ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+                    canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.85);
                 };
-                img.onerror = rej;
+                img.onerror = reject;
                 img.src = e.target.result;
             };
-            reader.onerror = rej;
+            reader.onerror = reject;
             reader.readAsDataURL(file);
         });
-    },
-    _pc: new Map(),
-    getProfile: function(uid) {
-        if (this._pc.has(uid)) return Promise.resolve(this._pc.get(uid));
-        var self = this;
-        return sb.from('profiles').select('*').eq('id', uid).single().then(function(r) {
-            if (r.data) self._pc.set(uid, r.data);
-            return r.data;
-        }).catch(function() { return null; });
-    },
-    clearPC: function() { this._pc.clear(); }
-};
-
-/* ============================================
-   БАЗА ДАННЫХ
-   ============================================ */
-var DB = {
-    createUser: function(p) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
-        return Utils.hash(p.password).then(function(ph) {
-            var au = '';
-            var doUpload = Promise.resolve();
-            if (p.avatar_type === 'photo' && p.avatar_blob) {
-                var fn = Utils.genId() + '.jpg';
-                doUpload = sb.storage.from('avatars').upload(fn, p.avatar_blob, { contentType: 'image/jpeg', upsert: true }).then(function(r) {
-                    if (r.error) throw new Error('Ошибка аватара: ' + r.error.message);
-                    au = storageUrl('avatars', fn);
-                });
-            }
-            return doUpload.then(function() {
-                return sb.from('profiles').insert({ username: p.username, password_hash: ph, display_name: p.display_name, bio: p.bio, avatar_type: p.avatar_type, avatar_index: p.avatar_index, avatar_url: au }).select().single();
-            }).then(function(result) {
-                if (result.error) {
-                    if (result.error.code === '23505') return { ok: false, error: 'Имя занято' };
-                    return { ok: false, error: result.error.message };
-                }
-                return { ok: true, user: result.data };
-            });
-        }).catch(function(e) { return { ok: false, error: e.message }; });
-    },
-    findUser: function(username, password) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
-        return Utils.hash(password).then(function(ph) {
-            return sb.from('profiles').select('*').eq('username', username).eq('password_hash', ph).single();
-        }).then(function(r) {
-            if (r.error || !r.data) return { ok: false, error: 'Неверное имя или пароль' };
-            return { ok: true, user: r.data };
-        }).catch(function(e) { return { ok: false, error: e.message }; });
-    },
-    getUserById: function(id) {
-        if (!sb || !id) return Promise.resolve(null);
-        return sb.from('profiles').select('*').eq('id', id).single().then(function(r) { return r.data || null; }).catch(function() { return null; });
-    },
-    updateUser: function(id, updates) {
-        if (!sb) return Promise.resolve();
-        return sb.from('profiles').update(updates).eq('id', id).then(function() { Utils.clearPC(); });
-    },
-    getFeed: function(uid) {
-        if (!sb) return Promise.resolve([]);
-        return sb.from('videos').select('*, profiles!inner(id,username,display_name,avatar_type,avatar_index,avatar_url,premium_until,banned)').eq('profiles.banned', false).order('created_at', { ascending: false }).limit(50).then(function(vr) {
-            var videos = vr.data || [];
-            var res = [];
-            var chain = Promise.resolve();
-            videos.forEach(function(vi) {
-                chain = chain.then(function() {
-                    return sb.from('likes').select('*', { count: 'exact', head: true }).eq('video_id', vi.id).then(function(lk) {
-                        return sb.from('comments').select('*', { count: 'exact', head: true }).eq('video_id', vi.id).then(function(cm) {
-                            var lb = false;
-                            var sb2 = false;
-                            var checkLikes = Promise.resolve();
-                            if (uid) {
-                                checkLikes = sb.from('likes').select('id').eq('video_id', vi.id).eq('user_id', uid).maybeSingle().then(function(l) {
-                                    lb = !!l.data;
-                                    return sb.from('saves').select('id').eq('video_id', vi.id).eq('user_id', uid).maybeSingle();
-                                }).then(function(s) { sb2 = !!s.data; });
-                            }
-                            return checkLikes.then(function() {
-                                res.push({ id: vi.id, user_id: vi.user_id, author: vi.profiles, title: vi.title, description: vi.description, video_url: vi.video_url, thumbnail_url: vi.thumbnail_url, duration: vi.duration, tags: vi.tags || [], views: vi.views || 0, likes: lk.count || 0, comment_count: cm.count || 0, liked_by_me: lb, saved_by_me: sb2, created_at: vi.created_at });
-                            });
-                        });
-                    });
-                });
-            });
-            return chain.then(function() { return res; });
-        }).catch(function(e) { console.error('getFeed:', e); return []; });
-    },
-    getUserVideos: function(uid) {
-        if (!sb) return Promise.resolve([]);
-        return sb.from('videos').select('*').eq('user_id', uid).order('created_at', { ascending: false }).then(function(vr) {
-            var videos = vr.data || [];
-            var res = [];
-            var chain = Promise.resolve();
-            videos.forEach(function(vi) {
-                chain = chain.then(function() {
-                    return sb.from('likes').select('*', { count: 'exact', head: true }).eq('video_id', vi.id).then(function(lk) { vi.likes = lk.count || 0; res.push(vi); });
-                });
-            });
-            return chain.then(function() { return res; });
-        }).catch(function() { return []; });
-    },
-    uploadVideo: function(p) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
-        var vid = Utils.genId();
-        var vn = vid + '.mp4';
-        var tn = vid + '.jpg';
-        var videoUrl = storageUrl('videos', vn);
-        var thumbUrl = '';
-        return sb.storage.from('videos').upload(vn, p.videoBlob, { contentType: p.videoBlob.type || 'video/mp4', upsert: true }).then(function(vr) {
-            if (vr.error) throw new Error('Ошибка видео: ' + vr.error.message);
-            if (p.thumbBlob) {
-                return sb.storage.from('thumbnails').upload(tn, p.thumbBlob, { contentType: 'image/jpeg', upsert: true }).then(function(tr) {
-                    if (!tr.error) thumbUrl = storageUrl('thumbnails', tn);
-                });
-            }
-            return Promise.resolve();
-        }).then(function() {
-            return sb.from('videos').insert({ user_id: p.userId, username: p.username, title: p.title, description: p.description, tags: p.tags, duration: p.duration, video_url: videoUrl, thumbnail_url: thumbUrl });
-        }).then(function(mr) {
-            if (mr.error) throw new Error('Ошибка сохранения');
-            return sb.from('uploads').upsert({ user_id: p.userId, uploaded_at: new Date().toISOString() });
-        }).then(function() { return { ok: true }; }).catch(function(e) { return { ok: false, error: e.message }; });
-    },
-    deleteVideo: function(videoId) {
-        if (!sb) return Promise.resolve();
-        return sb.from('videos').select('video_url,thumbnail_url,user_id').eq('id', videoId).single().then(function(r) {
-            if (!r.data) return;
-            var chain = Promise.resolve();
-            if (r.data.video_url) {
-                var n = r.data.video_url.split('/').pop();
-                chain = chain.then(function() { return sb.storage.from('videos').remove([n]); });
-            }
-            if (r.data.thumbnail_url) {
-                var tn = r.data.thumbnail_url.split('/').pop();
-                chain = chain.then(function() { return sb.storage.from('thumbnails').remove([tn]); });
-            }
-            return chain.then(function() {
-                return sb.from('videos').delete().eq('id', videoId).then(function() {
-                    /* Удаляем запись из uploads чтобы вернуть лимит */
-                    return sb.from('uploads').select('id').eq('user_id', r.data.user_id).order('uploaded_at', { ascending: false }).limit(1).then(function(delRes) {
-                        if (delRes.data && delRes.data.length > 0) {
-                            return sb.from('uploads').delete().eq('id', delRes.data[0].id);
-                        }
-                        return;
-                    });
-                });
-            });
-        }).catch(function(e) { console.error(e); });
-    },
-    toggleLike: function(videoId, userId) {
-        if (!sb) return Promise.resolve(null);
-        return sb.from('likes').select('id').eq('video_id', videoId).eq('user_id', userId).maybeSingle().then(function(e) {
-            if (e.data) { return sb.from('likes').delete().eq('id', e.data.id).then(function() { return { liked: false }; }); }
-            else { return sb.from('likes').insert({ video_id: videoId, user_id: userId }).then(function() { return { liked: true }; }); }
-        }).catch(function() { return null; });
-    },
-    toggleSave: function(videoId, userId) {
-        if (!sb) return Promise.resolve(null);
-        return sb.from('saves').select('id').eq('video_id', videoId).eq('user_id', userId).maybeSingle().then(function(e) {
-            if (e.data) { return sb.from('saves').delete().eq('id', e.data.id).then(function() { return { saved: false }; }); }
-            else { return sb.from('saves').insert({ video_id: videoId, user_id: userId }).then(function() { return { saved: true }; }); }
-        }).catch(function() { return null; });
-    },
-    toggleFollow: function(targetId, currentId) {
-        if (!sb) return Promise.resolve(null);
-        return sb.from('follows').select('id').eq('follower_id', currentId).eq('following_id', targetId).maybeSingle().then(function(e) {
-            if (e.data) { return sb.from('follows').delete().eq('id', e.data.id).then(function() { return { following: false }; }); }
-            else { return sb.from('follows').insert({ follower_id: currentId, following_id: targetId }).then(function() { return { following: true }; }); }
-        }).catch(function() { return null; });
-    },
-    isFollowing: function(targetId, currentId) {
-        if (!sb || !currentId) return Promise.resolve(false);
-        return sb.from('follows').select('id').eq('follower_id', currentId).eq('following_id', targetId).maybeSingle().then(function(r) { return !!r.data; }).catch(function() { return false; });
-    },
-    followersCount: function(uid) {
-        if (!sb) return Promise.resolve(0);
-        return sb.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', uid).then(function(r) { return r.count || 0; }).catch(function() { return 0; });
-    },
-    followingCount: function(uid) {
-        if (!sb) return Promise.resolve(0);
-        return sb.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', uid).then(function(r) { return r.count || 0; }).catch(function() { return 0; });
-    },
-    getComments: function(videoId) {
-        if (!sb) return Promise.resolve([]);
-        return sb.from('comments').select('*, profiles(id,display_name,avatar_type,avatar_index,avatar_url,premium_until)').eq('video_id', videoId).order('created_at', { ascending: true }).then(function(r) { return r.data || []; }).catch(function() { return []; });
-    },
-    addComment: function(p) {
-        if (!sb) return Promise.resolve(null);
-        return sb.from('comments').insert({ video_id: p.videoId, user_id: p.userId, text: p.text }).select('*, profiles(id,display_name,avatar_type,avatar_index,avatar_url,premium_until)').single().then(function(r) { return r.data || null; }).catch(function() { return null; });
-    },
-    redeemPromo: function(code, userId) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
-        var cl = (code || '').trim().toUpperCase().replace(/\s/g, '');
-        var clnd = cl.replace(/-/g, '');
-        return sb.from('promos').select('*').then(function(pr) {
-            var promos = pr.data || [];
-            var found = null;
-            for (var i = 0; i < promos.length; i++) {
-                var s = promos[i].code.trim().toUpperCase().replace(/\s/g, '');
-                if (s === cl || s.replace(/-/g, '') === clnd) { found = promos[i]; break; }
-            }
-            if (!found) return { ok: false, error: 'Промокод не найден' };
-            if (found.used) return { ok: false, error: 'Уже использован' };
-            return sb.from('promos').update({ used: true, used_by: userId, used_at: new Date().toISOString() }).eq('id', found.id).then(function() {
-                return Premium.activate(userId, found.days).then(function() { return { ok: true, days: found.days }; });
-            });
-        }).catch(function(e) { return { ok: false, error: e.message }; });
-    },
-    getUploads: function(uid) {
-        if (!sb) return Promise.resolve([]);
-        return sb.from('uploads').select('uploaded_at').eq('user_id', uid).then(function(r) { return (r.data || []).map(function(u) { return new Date(u.uploaded_at).getTime(); }); }).catch(function() { return []; });
-    },
-    banUser: function(uid, reason) { if (!sb) return Promise.resolve(); return sb.from('profiles').update({ banned: true, ban_reason: reason || 'Нарушение' }).eq('id', uid); },
-    unbanUser: function(uid) { if (!sb) return Promise.resolve(); return sb.from('profiles').update({ banned: false, ban_reason: '' }).eq('id', uid); },
-    createPromo: function() { if (!sb) return Promise.resolve(null); var c = Utils.genPromo(); return sb.from('promos').insert({ code: c, days: 30 }).select().single().then(function(r) { return r.data ? r.data.code : c; }).catch(function() { return c; }); },
-    getAllPromos: function() { if (!sb) return Promise.resolve([]); return sb.from('promos').select('*').order('created_at', { ascending: false }).then(function(r) { return r.data || []; }).catch(function() { return []; }); },
-    getMyFollowList: function(myId) {
-        if (!sb || !myId) return Promise.resolve([]);
-        return sb.from('follows').select('following_id').eq('follower_id', myId).then(function(followingResult) {
-            var followingIds = (followingResult.data || []).map(function(f) { return f.following_id; });
-            return sb.from('follows').select('follower_id').eq('following_id', myId).then(function(followersResult) {
-                var followerIds = (followersResult.data || []).map(function(f) { return f.follower_id; });
-                var allIds = {};
-                followingIds.forEach(function(id) { allIds[id] = true; });
-                followerIds.forEach(function(id) { allIds[id] = true; });
-                var uniqueIds = Object.keys(allIds);
-                if (uniqueIds.length === 0) return [];
-                return sb.from('profiles').select('id,username,display_name,avatar_type,avatar_index,avatar_url,premium_until,banned').in_('id', uniqueIds).eq('banned', false).then(function(profilesResult) { return profilesResult.data || []; });
-            });
-        }).catch(function(e) { console.error('getMyFollowList:', e); return []; });
-    },
-    getLatestVideo: function(userId) {
-        if (!sb || !userId) return Promise.resolve(null);
-        return sb.from('videos').select('id,thumbnail_url,video_url,title').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).then(function(r) { return (r.data && r.data.length > 0) ? r.data[0] : null; }).catch(function() { return null; });
     }
 };
 
-/* ============================================
-   ПРЕМИУМ
-   ============================================ */
-var Premium = {
-    isActive: function(u) { return u && u.premium_until && new Date(u.premium_until).getTime() > Date.now(); },
-    activate: function(userId, days) {
-        days = days || 30;
-        if (!sb) return Promise.resolve();
-        return DB.getUserById(userId).then(function(current) {
-            var base = Date.now();
-            if (current && current.premium_until && new Date(current.premium_until).getTime() > Date.now()) base = new Date(current.premium_until).getTime();
-            var newUntil = new Date(base + days * 24 * 60 * 60 * 1000).toISOString();
-            return DB.updateUser(userId, { premium_until: newUntil }).then(function() { if (Auth.user && Auth.user.id === userId) Auth.user.premium_until = newUntil; });
-        });
+// ============================================
+// РАБОТА С БАЗОЙ ДАННЫХ
+// ============================================
+const DB = {
+    // Получить список друзей (взаимные подписки)
+    getFriends: async (myId) => {
+        if (!sb || !myId) return [];
+        
+        // Получаем тех, на кого подписан я
+        const { data: followsOut } = await sb.from('follows')
+            .select('following_id')
+            .eq('follower_id', myId);
+        
+        if (!followsOut) return [];
+        const followingIds = followsOut.map(f => f.following_id);
+        if (followingIds.length === 0) return [];
+        
+        // Проверяем, кто из них подписан на меня
+        const { data: followsIn } = await sb.from('follows')
+            .select('follower_id')
+            .in_('follower_id', followingIds)
+            .eq('following_id', myId);
+        
+        const friendIds = new Set((followsIn || []).map(f => f.follower_id));
+        if (friendIds.size === 0) return [];
+        
+        // Получаем профили друзей
+        const { data: profiles } = await sb.from('profiles')
+            .select('*')
+            .in_('id', Array.from(friendIds));
+        
+        return profiles || [];
     },
-    badge: function(u) { return this.isActive(u) ? '<span title="Премиум">' + Icons.verified() + '</span>' : ''; },
-    open: function() {
-        var user = Auth.user;
-        var isActive = user && this.isActive(user);
-        var body = '';
-        if (!user || Auth.isGuest) { body = '<div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-title">Нужен аккаунт</div><button class="btn btn-primary" style="margin-top:16px;" onclick="App.closeModal();App.go(\'register\')">Создать аккаунт</button></div>'; }
-        else if (isActive) { var daysLeft = Math.ceil((new Date(user.premium_until).getTime() - Date.now()) / (24 * 60 * 60 * 1000)); body = '<div class="premium-card"><div style="font-size:48px;margin-bottom:10px;">👑</div><div style="font-size:20px;font-weight:800;">Премиум активен</div><div style="color:var(--text-sec);margin-top:8px;">до ' + new Date(user.premium_until).toLocaleDateString('ru-RU') + '</div><div style="margin-top:12px;font-size:14px;color:var(--premium);">Осталось: ' + daysLeft + ' дн.</div></div><div style="margin-top:16px;display:flex;gap:8px;"><input type="text" class="form-input" id="promo-input" placeholder="SHDW-XXXXXX" style="text-transform:uppercase;letter-spacing:1px;flex:1;"><button class="btn btn-premium btn-small" onclick="Premium.redeemPromo()" style="min-height:48px;">ОК</button></div>'; }
-        else { body = '<div class="premium-card"><div style="font-size:22px;font-weight:800;">' + Icons.crown() + ' Shadow Premium</div><div class="premium-price">' + CONFIG.PREMIUM_PRICE + ' ₽/мес</div><div class="premium-features"><div class="premium-feature">✅ Золотая галочка</div><div class="premium-feature">🚀 Видео выше в рекомендациях</div><div class="premium-feature">📤 ' + CONFIG.PREMIUM_LIMIT + ' видео/нед</div><div class="premium-feature">📹 Видео до ' + CONFIG.PREMIUM_MAX_MB + ' МБ</div></div><div class="telegram-box"><div style="font-size:14px;font-weight:600;margin-bottom:10px;">📱 Купить промокод</div><button class="btn btn-telegram" style="width:100%;" onclick="Premium.openTelegram()">✈️ Telegram</button></div><div style="display:flex;gap:8px;"><input type="text" class="form-input" id="promo-input" placeholder="SHDW-XXXXXX" style="text-transform:uppercase;letter-spacing:1px;flex:1;"><button class="btn btn-premium" onclick="Premium.redeemPromo()" style="min-height:48px;">Активировать</button></div></div>'; }
-        App.modal('<div class="modal-header"><div class="modal-title">💎 Премиум</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div>' + body);
+    
+    // Получить видео пользователя
+    getUserVideos: async (userId) => {
+        if (!sb) return [];
+        const { data } = await sb.from('videos')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+        return data || [];
     },
-    openTelegram: function() { if (CONFIG.TELEGRAM_LINK) window.open(CONFIG.TELEGRAM_LINK, '_blank'); },
-    redeemPromo: function() {
-        var input = document.getElementById('promo-input');
-        var code = input.value.trim();
-        if (!code) { Utils.toast('Введи промокод', 'error'); return; }
-        if (!Auth.user) { Utils.toast('Нужен аккаунт', 'error'); return; }
-        DB.redeemPromo(code, Auth.user.id).then(function(res) {
-            if (res.ok) { App.closeModal(); Utils.toast('👑 Премиум на ' + res.days + ' дней!', 'premium'); Feed.renderInto('feed-container'); }
-            else { Utils.toast(res.error, 'error'); }
+    
+    // Регистрация нового пользователя
+    register: async (username, password, displayName, avatarUrl) => {
+        if (!sb) return { error: 'Нет соединения' };
+        const passHash = await Utils.hash(password);
+        const { data, error } = await sb.from('profiles').insert({
+            username,
+            password_hash: passHash,
+            display_name: displayName,
+            avatar_url: avatarUrl || ''
+        }).select().single();
+        
+        if (error) return { error: error.message };
+        return { data };
+    },
+    
+    // Вход в аккаунт
+    login: async (username, password) => {
+        if (!sb) return { error: 'Нет соединения' };
+        const passHash = await Utils.hash(password);
+        const { data, error } = await sb.from('profiles')
+            .select('*')
+            .eq('username', username)
+            .eq('password_hash', passHash)
+            .single();
+        
+        if (error || !data) return { error: 'Неверные данные' };
+        return { data };
+    },
+    
+    // Загрузка аватара в хранилище
+    uploadAvatar: async (userId, blob) => {
+        if (!sb) return { error: 'Нет соединения' };
+        const filename = userId + '_' + Date.now() + '.jpg';
+        const { error } = await sb.storage.from('avatars').upload(filename, blob, {
+            contentType: 'image/jpeg',
+            upsert: true
         });
+        
+        if (error) return { error: error.message };
+        const url = storageUrl('avatars', filename);
+        await sb.from('profiles').update({ avatar_url: url }).eq('id', userId);
+        return { data: url };
     }
 };
 
-/* ============================================
-   РЕГИСТРАЦИЯ АВАТАРОВ
-   ============================================ */
-var Reg = {
-    avatarType: 'letter',
-    avatarIndex: 0,
+// ============================================
+// УПРАВЛЕНИЕ РЕГИСТРАЦИЕЙ
+// ============================================
+const Reg = {
     avatarBlob: null,
-    buildPicker: function() {
-        var opts = document.getElementById('avatar-options');
-        if (!opts) return;
-        var html = '<div class="avatar-option selected" data-type="letter" onclick="Reg.select(\'letter\')">A</div>';
-        for (var i = 0; i < CLASSIC_AVATARS.length; i++) { html += '<div class="avatar-option" data-type="classic" data-index="' + i + '" onclick="Reg.select(\'classic\',' + i + ')">' + CLASSIC_AVATARS[i] + '</div>'; }
-        html += '<div class="avatar-option photo-opt" data-type="photo" onclick="Reg.openPhotoPicker()">📷</div>';
-        opts.innerHTML = html;
-        this.avatarType = 'letter';
-        this.avatarIndex = 0;
-        this.avatarBlob = null;
-        this.updatePreview();
+    
+    // Открыть диалог выбора фото
+    openPhotoPicker: function() {
+        document.getElementById('avatar-file').click();
     },
-    select: function(type, idx) {
-        if (type === 'photo') { this.openPhotoPicker(); return; }
-        this.avatarType = type;
-        this.avatarIndex = idx || 0;
-        if (type === 'classic') this.avatarBlob = null;
-        var self = this;
-        document.querySelectorAll('.avatar-option').forEach(function(o) {
-            var isSelected = (o.dataset.type === type) && (type !== 'classic' || parseInt(o.dataset.index) === self.avatarIndex);
-            o.classList.toggle('selected', isSelected);
-        });
-        this.updatePreview();
-    },
-    openPhotoPicker: function() { document.getElementById('avatar-file').click(); },
+    
+    // Обработка выбранного фото
     pickPhoto: function(input) {
-        var self = this;
-        var f = input.files[0];
+        const self = this;
+        const f = input.files[0];
         if (!f) return;
+        
         Utils.compressImage(f, 400).then(function(blob) {
             self.avatarBlob = blob;
-            self.avatarType = 'photo';
-            document.querySelectorAll('.avatar-option').forEach(function(o) { o.classList.toggle('selected', o.dataset.type === 'photo'); });
-            self.updatePreview();
-            Utils.toast('Фото загружено! 📸', 'success');
-        }).catch(function() { Utils.toast('Ошибка', 'error'); });
+            const preview = document.getElementById('avatar-preview');
+            preview.innerHTML = '<img src="' + URL.createObjectURL(blob) + '" alt="">';
+            Utils.toast('Фото загружено!');
+        }).catch(function() {
+            Utils.toast('Ошибка');
+        });
+        
         input.value = '';
     },
-    onNameChange: function() { if (this.avatarType === 'letter') this.updatePreview(); },
-    updatePreview: function() {
-        var p = document.getElementById('avatar-preview');
-        if (!p) return;
-        if (this.avatarType === 'photo' && this.avatarBlob) { p.innerHTML = '<img src="' + URL.createObjectURL(this.avatarBlob) + '" alt="">'; }
-        else if (this.avatarType === 'classic') { p.innerHTML = CLASSIC_AVATARS[this.avatarIndex] || CLASSIC_AVATARS[0]; }
-        else { var n = document.getElementById('reg-displayname'); p.textContent = (n && n.value.trim() ? n.value.trim()[0] : '?').toUpperCase(); }
+    
+    // Обновление превью при изменении имени
+    onNameChange: function() {
+        const p = document.getElementById('avatar-preview');
+        const n = document.getElementById('reg-displayname');
+        if (!this.avatarBlob && p) {
+            p.textContent = (n && n.value.trim() ? n.value.trim()[0] : '?').toUpperCase();
+        }
     }
 };
 
-/* ============================================
-   АУТЕНТИФИКАЦИЯ
-   ============================================ */
-var Auth = {
-    user: null,
-    isGuest: false,
-    session: null,
-    register: function() {
-        var username = document.getElementById('reg-username').value.trim();
-        var password = document.getElementById('reg-password').value;
-        var display = document.getElementById('reg-displayname').value.trim();
-        var bio = document.getElementById('reg-bio').value.trim();
-        if (username.length < 3) { Utils.toast('Имя минимум 3 символа', 'error'); return; }
-        if (!/^[a-zA-Z0-9_]+$/.test(username)) { Utils.toast('Только латиница, цифры и _', 'error'); return; }
-        if (password.length < 6) { Utils.toast('Пароль минимум 6 символов', 'error'); return; }
-        if (!display) { Utils.toast('Введи отображаемое имя', 'error'); return; }
-        var btn = document.getElementById('reg-submit');
+// ============================================
+// АВТОРИЗАЦИЯ
+// ============================================
+const Auth = {
+    currentUser: null,
+    
+    // Регистрация
+    register: async function() {
+        const u = document.getElementById('reg-username').value.trim();
+        const p = document.getElementById('reg-password').value;
+        const n = document.getElementById('reg-displayname').value.trim();
+        
+        if (!u || !p || !n) return Utils.toast('Заполни все поля');
+        if (u.length < 3) return Utils.toast('Имя минимум 3 символа');
+        if (!/^[a-zA-Z0-9_]+$/.test(u)) return Utils.toast('Только латиница, цифры и _');
+        if (p.length < 6) return Utils.toast('Пароль минимум 6 символов');
+        
+        const btn = document.getElementById('reg-submit');
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner"></div>';
-        var self = this;
-        DB.createUser({ username: username, password: password, display_name: display, bio: bio, avatar_type: Reg.avatarType, avatar_index: Reg.avatarIndex, avatar_blob: Reg.avatarBlob }).then(function(res) {
-            if (!res.ok) { Utils.toast(res.error, 'error'); btn.disabled = false; btn.textContent = 'Создать аккаунт'; return; }
-            self.user = res.user;
-            self.session = { user_id: res.user.id, username: username, password: password };
-            localStorage.setItem('shadow_session', JSON.stringify(self.session));
-            Utils.toast('Аккаунт создан! 🎉', 'success');
-            App.startApp();
-        }).catch(function(e) { Utils.toast('Ошибка: ' + e.message, 'error'); btn.disabled = false; btn.textContent = 'Создать аккаунт'; });
+        
+        let avatarUrl = '';
+        if (Reg.avatarBlob) {
+            const tempId = 'temp_' + Date.now();
+            const uploadRes = await DB.uploadAvatar(tempId, Reg.avatarBlob);
+            if (uploadRes.data) avatarUrl = uploadRes.data;
+        }
+        
+        const res = await DB.register(u, p, n, avatarUrl);
+        
+        if (res.error) {
+            Utils.toast(res.error);
+            btn.disabled = false;
+            btn.textContent = 'Создать аккаунт';
+            return;
+        }
+        
+        localStorage.setItem('shadow_session', JSON.stringify(res.data));
+        Auth.currentUser = res.data;
+        Utils.toast('Аккаунт создан!');
+        App.nav('home');
     },
-    login: function() {
-        var username = document.getElementById('login-username').value.trim();
-        var password = document.getElementById('login-password').value;
-        if (!username || !password) { Utils.toast('Введи имя и пароль', 'error'); return; }
-        var btn = document.getElementById('login-submit');
+    
+    // Вход
+    login: async function() {
+        const u = document.getElementById('login-username').value.trim();
+        const p = document.getElementById('login-password').value;
+        
+        if (!u || !p) return Utils.toast('Введи имя и пароль');
+        
+        const btn = document.getElementById('login-submit');
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner"></div>';
-        var self = this;
-        DB.findUser(username, password).then(function(res) {
-            if (!res.ok) { Utils.toast(res.error, 'error'); btn.disabled = false; btn.textContent = 'Войти'; return; }
-            if (res.user.banned) { App.showBanScreen(res.user); return; }
-            self.user = res.user;
-            self.session = { user_id: res.user.id, username: username, password: password };
-            localStorage.setItem('shadow_session', JSON.stringify(self.session));
-            Utils.toast('С возвращением, ' + res.user.display_name + '!', 'success');
-            App.startApp();
-        }).catch(function(e) { Utils.toast('Ошибка: ' + e.message, 'error'); btn.disabled = false; btn.textContent = 'Войти'; });
+        
+        const res = await DB.login(u, p);
+        
+        if (res.error) {
+            Utils.toast(res.error);
+            btn.disabled = false;
+            btn.textContent = 'Войти';
+            return;
+        }
+        
+        localStorage.setItem('shadow_session', JSON.stringify(res.data));
+        Auth.currentUser = res.data;
+        App.nav('home');
     },
+    
+    // Восстановление сессии
     restoreSession: function() {
-        var raw = localStorage.getItem('shadow_session');
-        if (!raw) return Promise.resolve(false);
-        try {
-            this.session = JSON.parse(raw);
-            if (!this.session.user_id) return Promise.resolve(false);
-            var self = this;
-            return DB.getUserById(this.session.user_id).then(function(u) {
-                if (!u) return false;
-                if (u.banned) { App.showBanScreen(u); return false; }
-                return DB.findUser(u.username, self.session.password).then(function(chk) {
-                    if (!chk.ok) { localStorage.removeItem('shadow_session'); return false; }
-                    self.user = u;
-                    return true;
-                });
-            }).catch(function() { return false; });
-        } catch (e) { return Promise.resolve(false); }
-    },
-    logout: function() { if (!confirm('Выйти?')) return; this.user = null; this.session = null; this.isGuest = false; localStorage.removeItem('shadow_session'); App.go('welcome'); }
-};
-
-/* ============================================
-   ЛИМИТЫ
-   ============================================ */
-var Limits = {
-    weekUploads: function(uid) { return DB.getUploads(uid).then(function(uploads) { var weekAgo = Date.now() - CONFIG.WEEK_MS; return uploads.filter(function(t) { return t > weekAgo; }).length; }); },
-    canUpload: function(user) { var limit = Premium.isActive(user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT; return this.weekUploads(user.id).then(function(count) { return count < limit; }); },
-    remaining: function(user) { var limit = Premium.isActive(user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT; return this.weekUploads(user.id).then(function(count) { return Math.max(0, limit - count); }); },
-    maxMB: function(user) { return Premium.isActive(user) ? CONFIG.PREMIUM_MAX_MB : CONFIG.FREE_MAX_MB; }
-};
-
-/* ============================================
-   FOLLOW BAR
-   ============================================ */
-var FollowBar = {
-    loadBar: function() {
-        var container = document.getElementById('follow-bar-container');
-        if (!container) return;
-        if (!Auth.user || Auth.isGuest) { container.innerHTML = ''; return; }
-        DB.getMyFollowList(Auth.user.id).then(function(profiles) {
-            if (!profiles || profiles.length === 0) { container.innerHTML = ''; return; }
-            var html = '<div class="follow-bar">';
-            DB.getLatestVideo(Auth.user.id).then(function(myLatest) {
-                if (myLatest) {
-                    var myAvatarHtml = avatarContent(Auth.user);
-                    var thumbStyle = myLatest.thumbnail_url ? 'background-image:url(' + myLatest.thumbnail_url + ');background-size:cover;background-position:center;' : '';
-                    html += '<div class="follow-avatar-wrap" onclick="Feed.jumpTo(\'' + myLatest.id + '\')"><div class="avatar has-story ' + (Premium.isActive(Auth.user) ? 'premium' : 'regular') + '" style="' + thumbStyle + '">' + (myLatest.thumbnail_url ? '' : myAvatarHtml) + '</div><div class="follow-avatar-name">Моя</div></div>';
-                }
-                var chain = Promise.resolve();
-                profiles.forEach(function(p) {
-                    chain = chain.then(function() {
-                        return DB.getLatestVideo(p.id).then(function(latest) {
-                            if (!latest) return;
-                            var avHtml = avatarContent(p);
-                            var thumbStyle = latest.thumbnail_url ? 'background-image:url(' + latest.thumbnail_url + ');background-size:cover;background-position:center;' : '';
-                            html += '<div class="follow-avatar-wrap" onclick="App.viewProfile(\'' + p.id + '\')"><div class="avatar has-story ' + (Premium.isActive(p) ? 'premium' : 'regular') + '" style="' + thumbStyle + '">' + (latest.thumbnail_url ? '' : avHtml) + '</div><div class="follow-avatar-name">' + Utils.esc(p.display_name || '?') + '</div></div>';
-                        });
-                    });
-                });
-                return chain.then(function() { html += '</div>'; container.innerHTML = html; });
-            });
-        });
-    }
-};
-
-/* ============================================
-   ПОИСК НА ГЛАВНОЙ
-   ============================================ */
-var HomeSearch = {
-    timeout: null,
-    run: function() { var self = this; clearTimeout(this.timeout); var q = document.getElementById('home-search-input').value.trim().toLowerCase(); var results = document.getElementById('home-search-results'); if (!q) { results.style.display = 'none'; results.innerHTML = ''; return; } this.timeout = setTimeout(function() { self.doSearch(q); }, 300); },
-    doSearch: function(q) {
-        var results = document.getElementById('home-search-results');
-        sb.from('profiles').select('*').eq('banned', false).or('username.ilike.%' + q + '%,display_name.ilike.%' + q + '%').limit(10).then(function(usersResult) {
-            return sb.from('videos').select('*').ilike('title', '%' + q + '%').limit(10).then(function(videosResult) {
-                var html = '';
-                if (usersResult.data && usersResult.data.length) {
-                    html += '<div style="padding:8px 14px;font-size:12px;color:var(--text-muted);font-weight:700;">ЛЮДИ</div>';
-                    for (var i = 0; i < usersResult.data.length; i++) { var u = usersResult.data[i]; html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;" onclick="App.viewProfile(\'' + u.id + '\');document.getElementById(\'home-search-results\').style.display=\'none\';"><div class="avatar small ' + (Premium.isActive(u) ? 'premium' : 'regular') + '">' + avatarContent(u) + '</div><div><div style="font-weight:600;font-size:14px;">' + Utils.esc(u.display_name) + ' ' + Premium.badge(u) + '</div><div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(u.username) + '</div></div></div>'; }
-                }
-                if (videosResult.data && videosResult.data.length) {
-                    html += '<div style="padding:8px 14px;font-size:12px;color:var(--text-muted);font-weight:700;">ВИДЕО</div>';
-                    for (var j = 0; j < videosResult.data.length; j++) { var v = videosResult.data[j]; html += '<div style="padding:10px 14px;cursor:pointer;" onclick="Feed.jumpTo(\'' + v.id + '\');document.getElementById(\'home-search-results\').style.display=\'none\';"><div style="font-weight:600;font-size:14px;">' + Utils.esc(v.title) + '</div><div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(v.username) + '</div></div>'; }
-                }
-                if (!html) html = '<div style="padding:20px;text-align:center;color:var(--text-sec);">Ничего не найдено</div>';
-                results.innerHTML = html;
-                results.style.display = 'block';
-            });
-        });
-    }
-};
-
-/* ============================================
-   ВИДЕО ЛЕНТА
-   ============================================ */
-var Feed = {
-    videos: [],
-    observer: null,
-    currentCard: null,
-    load: function() {
-        var self = this;
-        return DB.getFeed(Auth.user ? Auth.user.id : null).then(function(videos) {
-            self.videos = videos;
-            var following = {};
-            var followPromise = Promise.resolve();
-            if (Auth.user) { followPromise = sb.from('follows').select('following_id').eq('follower_id', Auth.user.id).then(function(r) { (r.data || []).forEach(function(f) { following[f.following_id] = true; }); }).catch(function() {}); }
-            return followPromise.then(function() {
-                for (var i = 0; i < self.videos.length; i++) { var v = self.videos[i]; var score = Math.random() * 25; if (following[v.user_id]) score += 40; if (Premium.isActive(v.author)) score += 25; var ageDays = (Date.now() - new Date(v.created_at).getTime()) / 86400000; score += Math.max(0, 60 - ageDays * 15); v._score = score; }
-                self.videos.sort(function(a, b) { return b._score - a._score; });
-            });
-        });
-    },
-    renderInto: function(containerId) {
-        var container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = '<div class="video-card"><div class="video-empty"><div class="spinner" style="width:40px;height:40px;border-width:4px;"></div></div></div>';
-        var self = this;
-        this.load().then(function() {
-            container.innerHTML = '';
-            if (!self.videos.length) { container.innerHTML = '<div class="video-card"><div class="video-empty"><div style="font-size:56px;">🎬</div><div style="font-size:18px;font-weight:700;">Лента пуста</div></div></div>'; return; }
-            var chain = Promise.resolve();
-            self.videos.forEach(function(v) { chain = chain.then(function() { return self.createCard(v, container); }); });
-            return chain.then(function() { self.setupAutoplay(container); });
-        }).catch(function() { container.innerHTML = '<div class="video-card"><div class="video-empty"><div style="font-size:48px;">😞</div></div></div>'; });
-    },
-    createCard: function(v, container) {
-        var author = v.author || {};
-        var self = this;
-        return DB.isFollowing(v.user_id, Auth.user ? Auth.user.id : null).then(function(isFollowing) {
-            var showFollow = Auth.user && !Auth.isGuest && Auth.user.id !== v.user_id;
-            var card = document.createElement('div');
-            card.className = 'video-card';
-            card.dataset.id = v.id;
-            var videoHtml = v.video_url ? '<video class="video-element" src="' + v.video_url + '" loop playsinline preload="metadata"' + (v.thumbnail_url ? ' poster="' + v.thumbnail_url + '"' : '') + '></video>' : '<div class="video-empty"><div style="font-size:48px;">🎬</div></div>';
-            var html = videoHtml;
-            html += '<div class="video-gradient"></div><div class="play-indicator">' + Icons.play() + '</div><div class="video-info"><div class="video-author-row"><div class="avatar small ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div><div class="video-author-name" onclick="App.viewProfile(\'' + v.user_id + '\')">@' + Utils.esc(author.username || v.username) + ' ' + Premium.badge(author) + '</div></div><div class="video-desc">' + Utils.esc(v.title) + '</div><div class="video-tags">' + (v.tags || []).map(function(t) { return '<span class="video-tag">#' + Utils.esc(t) + '</span>'; }).join('') + '</div></div><div class="video-actions"><div class="avatar-follow-wrap"><div class="avatar big ' + (Premium.isActive(author) ? 'premium' : 'regular') + '" onclick="App.viewProfile(\'' + v.user_id + '\')">' + avatarContent(author) + '</div>';
-            if (showFollow) { html += '<button class="follow-plus ' + (isFollowing ? 'followed' : '') + '" data-follow-btn="' + v.user_id + '" onclick="event.stopPropagation();Feed.toggleFollow(\'' + v.user_id + '\')">' + (isFollowing ? '✓' : '+') + '</button>'; }
-            html += '</div><div class="video-action ' + (v.liked_by_me ? 'liked' : '') + '" onclick="Feed.like(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.heart() + '</div><span class="video-action-count" id="likes-' + v.id + '">' + Utils.fmtNum(v.likes) + '</span></div><div class="video-action" onclick="Comments.open(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.comment() + '</div><span class="video-action-count">' + Utils.fmtNum(v.comment_count) + '</span></div><div class="video-action" onclick="Feed.share()"><div class="video-action-btn">' + Icons.share() + '</div></div><div class="video-action ' + (v.saved_by_me ? 'saved' : '') + '" onclick="Feed.save(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.bookmark() + '</div></div></div>';
-            card.innerHTML = html;
-            card.addEventListener('click', function(e) { if (e.target.closest('.video-action') || e.target.closest('.video-info') || e.target.closest('.avatar-follow-wrap')) return; self.togglePlayVideo(this); });
-            container.appendChild(card);
-        });
-    },
-    toggleFollow: function(userId) { if (!Auth.user) { Utils.toast('Войди', 'error'); return; } DB.toggleFollow(userId, Auth.user.id).then(function(res) { if (!res) return; document.querySelectorAll('[data-follow-btn="' + userId + '"]').forEach(function(btn) { btn.textContent = res.following ? '✓' : '+'; btn.classList.toggle('followed', res.following); }); Utils.toast(res.following ? 'Подписался! 🎯' : 'Отписался', 'success'); }); },
-    setupAutoplay: function(container) { var self = this; if (this.observer) this.observer.disconnect(); this.observer = new IntersectionObserver(function(entries) { entries.forEach(function(entry) { var video = entry.target.querySelector('video'); if (!video) return; if (entry.isIntersecting) { self.currentCard = entry.target; video.play().catch(function() {}); self.setPS(entry.target, true); } else { video.pause(); video.currentTime = 0; } }); }, { threshold: 0.6, root: container }); container.querySelectorAll('.video-card').forEach(function(c) { self.observer.observe(c); }); },
-    togglePlayVideo: function(card) { var video = card.querySelector('video'); if (!video) return; if (video.paused) { video.play().catch(function() {}); this.setPS(card, true); } else { video.pause(); this.setPS(card, false); } },
-    setPS: function(card, isPlaying) { var indicator = card.querySelector('.play-indicator'); if (indicator) indicator.classList.toggle('visible', !isPlaying); },
-    toggleCurrent: function() { if (this.currentCard) this.togglePlayVideo(this.currentCard); },
-    like: function(videoId) { if (!Auth.user) { Utils.toast('Войди', 'error'); return; } var v = this.videos.find(function(x) { return x.id === videoId; }); if (!v) return; var self = this; DB.toggleLike(videoId, Auth.user.id).then(function(res) { if (!res) return; v.liked_by_me = res.liked; v.likes = res.liked ? v.likes + 1 : Math.max(0, v.likes - 1); if (res.liked) self.showHeart(videoId); var card = document.querySelector('.video-card[data-id="' + videoId + '"]'); if (card) { var action = card.querySelector('.video-action'); action.classList.toggle('liked', v.liked_by_me); document.getElementById('likes-' + videoId).textContent = Utils.fmtNum(v.likes); } }); },
-    showHeart: function(videoId) { var card = document.querySelector('.video-card[data-id="' + videoId + '"]'); if (!card) return; var heart = document.createElement('div'); heart.className = 'heart-pop'; heart.innerHTML = Icons.heart(); card.appendChild(heart); setTimeout(function() { heart.remove(); }, 900); },
-    save: function(videoId) { if (!Auth.user) { Utils.toast('Войди', 'error'); return; } var v = this.videos.find(function(x) { return x.id === videoId; }); if (!v) return; DB.toggleSave(videoId, Auth.user.id).then(function(res) { if (!res) return; v.saved_by_me = res.saved; var card = document.querySelector('.video-card[data-id="' + videoId + '"]'); if (card) card.querySelectorAll('.video-action')[3].classList.toggle('saved', v.saved_by_me); Utils.toast(v.saved_by_me ? 'Сохранено ✨' : 'Удалено', 'success'); }); },
-    share: function() { if (navigator.share) { navigator.share({ title: 'Shadow', url: location.href }).catch(function() {}); } else { Utils.toast('Ссылка скопирована 📋', 'success'); } },
-    jumpTo: function(videoId) { App.nav('feed'); setTimeout(function() { var card = document.querySelector('.video-card[data-id="' + videoId + '"]'); if (card) card.scrollIntoView({ behavior: 'smooth' }); }, 200); }
-};
-
-/* ============================================
-   КОММЕНТАРИИ
-   ============================================ */
-var Comments = {
-    open: function(videoId) {
-        App.modal('<div class="modal-header"><div class="modal-title">Загрузка...</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="spinner" style="margin:20px auto;"></div>');
-        DB.getComments(videoId).then(function(comments) {
-            var list = '';
-            if (!comments.length) { list = '<div class="empty-state" style="padding:30px;"><div class="empty-text">Комментариев пока нет 💬</div></div>'; }
-            else { for (var i = 0; i < comments.length; i++) { var c = comments[i]; var u = c.profiles || {}; list += '<div class="comment-item"><div class="avatar small ' + (Premium.isActive(u) ? 'premium' : 'regular') + '" onclick="App.viewProfile(\'' + u.id + '\')" style="cursor:pointer;">' + avatarContent(u) + '</div><div class="comment-body"><div class="comment-author" onclick="App.viewProfile(\'' + u.id + '\')">' + Utils.esc(u.display_name || '?') + ' ' + Premium.badge(u) + ' <span class="comment-time">· ' + Utils.timeAgo(c.created_at) + '</span></div><div class="comment-text">' + Utils.esc(c.text) + '</div></div></div>'; } }
-            var formHtml = '';
-            if (Auth.user && !Auth.isGuest) { formHtml = '<form class="comment-form" onsubmit="Comments.send(event,\'' + videoId + '\')"><input type="text" class="comment-input" id="comment-input" placeholder="Комментарий..." maxlength="300"><button type="submit" class="comment-send">' + Icons.send() + '</button></form>'; }
-            else { formHtml = '<div style="text-align:center;padding:14px;background:var(--bg-card-alt);border-radius:12px;color:var(--text-sec);font-size:14px;">Войди, чтобы комментировать</div>'; }
-            App.modal('<div class="modal-header"><div class="modal-title">Комментарии (' + comments.length + ')</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="comments-list">' + list + '</div>' + formHtml);
-        });
-    },
-    send: function(event, videoId) { event.preventDefault(); var input = document.getElementById('comment-input'); var text = input.value.trim(); if (!text || !Auth.user) return; DB.addComment({ videoId: videoId, userId: Auth.user.id, text: text }).then(function() { Comments.open(videoId); }); }
-};
-
-/* ============================================
-   ЗАГРУЗКА КОНТЕНТА
-   ============================================ */
-var Upload = {
-    file: null,
-    duration: 0,
-    openMenu: function() { if (!Auth.user || Auth.isGuest) { Utils.toast('Войди в аккаунт', 'error'); return; } App.modal('<div class="modal-header"><div class="modal-title">Что публикуем?</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><button class="btn btn-primary btn-block" style="margin-bottom:12px;" onclick="App.closeModal();Upload.openVideo()">🎬 Загрузить видео</button>'); },
-    openVideo: function() {
-        if (!Auth.user || Auth.isGuest) { Utils.toast('Войди в аккаунт', 'error'); return; }
-        var self = this;
-        Limits.canUpload(Auth.user).then(function(canUpload) {
-            if (!canUpload) { Utils.toast('Лимит видео исчерпан 😔', 'error'); if (!Premium.isActive(Auth.user)) setTimeout(function() { Premium.open(); }, 600); return; }
-            self.file = null; self.duration = 0;
-            Limits.remaining(Auth.user).then(function(rem) {
-                var lim = Premium.isActive(Auth.user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT;
-                var maxMB = Limits.maxMB(Auth.user);
-                var isPrem = Premium.isActive(Auth.user);
-                App.modal('<div class="modal-header"><div class="modal-title">Загрузить видео</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="limit-badge ' + (isPrem ? 'premium' : '') + '">📤 Осталось: ' + rem + '/' + lim + ' · Макс ' + maxMB + ' МБ</div><div class="upload-dropzone" id="dropzone" onclick="document.getElementById(\'file-input\').click()"><div class="upload-dropzone-icon">📹</div><div style="font-weight:600;margin-bottom:4px;">Выбери видео</div><div style="font-size:13px;color:var(--text-sec);">До ' + CONFIG.MAX_VIDEO_SEC + ' сек · до ' + maxMB + ' МБ</div><input type="file" id="file-input" accept="video/*" style="display:none;" onchange="Upload.pickFile(this)"></div><div class="upload-progress" id="upload-progress"><div class="upload-progress-bar" id="upload-progress-bar"></div></div><div id="video-preview-wrap" style="display:none;margin-bottom:16px;"><video id="upload-preview" class="upload-preview-video" muted playsinline loop autoplay></video><div style="font-size:12px;color:var(--text-sec);margin-top:6px;text-align:center;" id="duration-label"></div></div><div class="form-group"><label class="form-label">Название *</label><input type="text" class="form-input" id="upload-title" maxlength="100"></div><div class="form-group"><label class="form-label">Описание и теги</label><textarea class="form-textarea" id="upload-desc" maxlength="300"></textarea></div><button class="btn btn-primary" style="width:100%;" id="upload-btn" onclick="Upload.submit()" disabled>Загрузить</button>');
-            });
-        });
-    },
-    pickFile: function(input) {
-        var self = this; var f = input.files[0]; if (!f) return;
-        if (!f.type.startsWith('video/')) { Utils.toast('Выбери видеофайл', 'error'); return; }
-        var maxMB = Limits.maxMB(Auth.user);
-        if (f.size > maxMB * 1024 * 1024) { Utils.toast('Файл больше ' + maxMB + ' МБ', 'error'); return; }
-        var url = URL.createObjectURL(f);
-        var testVideo = document.createElement('video');
-        testVideo.preload = 'metadata'; testVideo.src = url;
-        testVideo.onloadedmetadata = function() {
-            URL.revokeObjectURL(url);
-            if (testVideo.duration > CONFIG.MAX_VIDEO_SEC) { Utils.toast('Видео ' + Math.round(testVideo.duration) + ' сек. Макс ' + CONFIG.MAX_VIDEO_SEC + '!', 'error'); return; }
-            self.file = f; self.duration = testVideo.duration;
-            document.getElementById('upload-preview').src = URL.createObjectURL(f);
-            document.getElementById('video-preview-wrap').style.display = 'block';
-            document.getElementById('dropzone').classList.add('has-video');
-            document.getElementById('dropzone').querySelector('.upload-dropzone-icon').textContent = '✅';
-            document.getElementById('duration-label').textContent = '⏱ ' + Math.round(self.duration) + ' сек';
-            document.getElementById('upload-btn').disabled = false;
-        };
-    },
-    makeThumbnail: function(file) {
-        return new Promise(function(resolve) {
-            var video = document.createElement('video');
-            video.preload = 'metadata'; video.muted = true; video.src = URL.createObjectURL(file);
-            video.onloadeddata = function() { video.currentTime = Math.min(1, video.duration / 2); };
-            video.onseeked = function() {
-                var canvas = document.createElement('canvas'); canvas.width = 360; canvas.height = 640;
-                var ctx = canvas.getContext('2d');
-                var ratio = Math.max(canvas.width / video.videoWidth, canvas.height / video.videoHeight);
-                var w = video.videoWidth * ratio; var h = video.videoHeight * ratio;
-                ctx.drawImage(video, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-                canvas.toBlob(function(blob) { URL.revokeObjectURL(video.src); resolve(blob); }, 'image/jpeg', 0.8);
-            };
-            video.onerror = function() { resolve(null); };
-        });
-    },
-    submit: function() {
-        var title = document.getElementById('upload-title').value.trim();
-        var desc = document.getElementById('upload-desc').value.trim();
-        if (!this.file || !title) { Utils.toast('Заполни название', 'error'); return; }
-        var btn = document.getElementById('upload-btn');
-        btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>';
-        var prog = document.getElementById('upload-progress');
-        var bar = document.getElementById('upload-progress-bar');
-        prog.style.display = 'block'; bar.style.width = '30%';
-        var self = this;
-        this.makeThumbnail(this.file).then(function(thumb) {
-            bar.style.width = '60%';
-            var tagsMatch = desc.match(/#([a-zA-Zа-яА-ЯёЁ0-9_]+)/g) || [];
-            var tags = tagsMatch.map(function(t) { return t.slice(1); });
-            return DB.uploadVideo({ userId: Auth.user.id, username: Auth.user.username || Auth.user.display_name || 'unknown', title: title, description: desc, tags: tags, duration: Math.round(self.duration), videoBlob: self.file, thumbBlob: thumb });
-        }).then(function(res) {
-            bar.style.width = '100%';
-            if (!res.ok) { Utils.toast(res.error, 'error'); btn.disabled = false; btn.textContent = 'Загрузить'; return; }
-            App.closeModal(); Utils.toast('Видео загружено! 🌍', 'success'); App.nav('feed');
-        }).catch(function(err) { Utils.toast('Ошибка: ' + err.message, 'error'); btn.disabled = false; btn.textContent = 'Загрузить'; });
-    }
-};
-
-/* ============================================
-   ПРОФИЛЬ
-   ============================================ */
-var Profile = {
-    currentTab: 'videos',
-    render: function(userId) {
-        var targetId = userId || (Auth.user && Auth.user.id);
-        var self = this;
-        DB.getUserById(targetId).then(function(user) {
-            if (!user) { document.getElementById('profile-content').innerHTML = '<div class="empty-state"><div class="empty-icon">🤷</div><div class="empty-title">Не найден</div></div>'; return; }
-            var isOwn = Auth.user && !Auth.isGuest && Auth.user.id === user.id;
-            var isPrem = Premium.isActive(user);
-            return DB.getUserVideos(user.id).then(function(myVideos) {
-                return DB.followersCount(user.id).then(function(followers) {
-                    return DB.followingCount(user.id).then(function(followingCount) {
-                        var iFollowPromise = !isOwn ? DB.isFollowing(user.id, Auth.user ? Auth.user.id : null) : Promise.resolve(false);
-                        return iFollowPromise.then(function(iFollow) {
-                            var totalLikes = myVideos.reduce(function(sum, v) { return sum + (v.likes || 0); }, 0);
-                            var gridHtml = '';
-                            for (var i = 0; i < myVideos.length; i++) { var v = myVideos[i]; var thumb = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:28px;">🎬</div>'; if (v.thumbnail_url) thumb = '<img src="' + v.thumbnail_url + '" alt="">'; gridHtml += '<div class="grid-video" onclick="Feed.jumpTo(\'' + v.id + '\')">' + thumb + '<div class="grid-video-views">▶ ' + Utils.fmtNum(v.views || 0) + '</div>'; if (isOwn) gridHtml += '<button class="grid-video-menu-btn" onclick="event.stopPropagation();Profile.openVideoMenu(\'' + v.id + '\')">⋮</button>'; gridHtml += '</div>'; }
-                            var followBtn = '';
-                            if (!isOwn && Auth.user && !Auth.isGuest) { followBtn = '<button class="btn ' + (iFollow ? 'btn-secondary' : 'btn-primary') + ' btn-block" style="margin-top:16px;" onclick="Profile.toggleFollow(\'' + user.id + '\')">' + (iFollow ? '✓ Ты подписан' : '+ Подписаться') + '</button>'; }
-                            var limitBadge = '';
-                            if (isOwn) { return Limits.remaining(user).then(function(rem) { var lb = isPrem ? '<div class="limit-badge premium" style="margin-top:14px;">👑 ' + rem + '/' + CONFIG.PREMIUM_LIMIT + ' видео/нед · ' + CONFIG.PREMIUM_MAX_MB + ' МБ</div>' : '<div class="limit-badge" style="margin-top:14px;">📤 ' + rem + '/' + CONFIG.FREE_LIMIT + ' видео/нед · ' + CONFIG.FREE_MAX_MB + ' МБ</div>'; self.buildProfileHtml(user, isOwn, isPrem, myVideos, totalLikes, followers, followingCount, followBtn, lb, gridHtml); }); }
-                            self.buildProfileHtml(user, isOwn, isPrem, myVideos, totalLikes, followers, followingCount, followBtn, limitBadge, gridHtml);
-                        });
-                    });
-                });
-            });
-        }).catch(function(e) { document.getElementById('profile-content').innerHTML = '<div class="empty-state"><div class="empty-icon">😞</div><div class="empty-title">Ошибка</div></div>'; });
-    },
-    buildProfileHtml: function(user, isOwn, isPrem, myVideos, totalLikes, followers, followingCount, followBtn, limitBadge, gridHtml) {
-        var html = '<div class="profile-header"><div class="avatar xxl ' + (isPrem ? 'premium' : 'regular') + '" style="margin:0 auto;">' + avatarContent(user) + '</div><div class="profile-name-row"><span class="profile-name">' + Utils.esc(user.display_name) + '</span> ' + Premium.badge(user) + '</div><div class="profile-username">@' + Utils.esc(user.username) + '</div>';
-        if (user.bio) html += '<div class="profile-bio">' + Utils.esc(user.bio) + '</div>';
-        if (isPrem) html += '<div class="premium-badge-inline" style="margin-top:12px;">' + Icons.crown() + ' Премиум</div>';
-        html += '<div class="profile-stats"><div><div class="stat-val">' + myVideos.length + '</div><div class="stat-label">Видео</div></div><div><div class="stat-val">' + Utils.fmtNum(totalLikes) + '</div><div class="stat-label">Лайков</div></div><div><div class="stat-val">' + Utils.fmtNum(followers) + '</div><div class="stat-label">Подписчики</div></div><div><div class="stat-val">' + Utils.fmtNum(followingCount) + '</div><div class="stat-label">Подписки</div></div></div>' + followBtn;
-        if (isOwn) { html += '<div style="display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap;">'; if (!isPrem) html += '<button class="btn btn-premium btn-small" onclick="Premium.open()">👑 Премиум</button>'; html += '<button class="btn btn-secondary btn-small" onclick="Upload.openMenu()">📤 Загрузить</button><button class="btn btn-danger btn-small" onclick="Auth.logout()">Выйти</button></div>' + limitBadge; }
-        html += '</div>';
-        if (isOwn) { html += '<div class="profile-tabs"><div class="profile-tab ' + (this.currentTab === 'videos' ? 'active' : '') + '" onclick="Profile.switchTab(\'videos\')">🎬 Видео</div><div class="profile-tab ' + (this.currentTab === 'promos' ? 'active' : '') + '" onclick="Profile.switchTab(\'promos\')">🎁 Промокоды</div></div><div id="profile-tab-content"></div>'; }
-        else { html += '<div style="font-size:14px;font-weight:700;color:var(--text-sec);margin:20px 0 12px;">ВИДЕО</div><div class="videos-grid">' + (gridHtml || '<div class="empty-state"><div class="empty-text">Пока нет видео</div></div>') + '</div>'; }
-        document.getElementById('profile-content').innerHTML = html;
-        if (isOwn) this.renderTab(myVideos, gridHtml);
-    },
-    switchTab: function(tab) { this.currentTab = tab; this.render(); },
-    toggleFollow: function(userId) { Feed.toggleFollow(userId); var self = this; setTimeout(function() { self.render(userId); }, 500); },
-    renderTab: function(myVideos, gridHtml) {
-        var container = document.getElementById('profile-tab-content');
-        if (!container) return;
-        if (this.currentTab === 'videos') { container.innerHTML = myVideos.length === 0 ? '<div class="empty-state"><div class="empty-icon">🎬</div><div class="empty-title">Пока нет видео</div></div>' : '<div class="videos-grid">' + gridHtml + '</div>'; }
-        else {
-            var isPrem = Premium.isActive(Auth.user);
-            var html = '<div class="promo-tab-content">';
-            if (isPrem) { html += '<div class="promo-status" style="border:1px solid var(--premium);"><div style="font-size:36px;margin-bottom:8px;">👑</div><div style="font-weight:800;color:var(--premium);">Премиум активен</div><div style="font-size:13px;color:var(--text-sec);margin-top:4px;">до ' + new Date(Auth.user.premium_until).toLocaleDateString('ru-RU') + '</div></div>'; }
-            else { html += '<div class="promo-status"><div style="font-size:36px;margin-bottom:8px;">💎</div><div style="font-weight:800;">Не активен</div></div>'; }
-            html += '<div class="form-group" style="max-width:none;"><label class="form-label">Промокод</label><input type="text" class="form-input" id="profile-promo-input" placeholder="SHDW-XXXXXX" style="text-transform:uppercase;letter-spacing:2px;text-align:center;"></div><button class="btn btn-premium" style="width:100%;" onclick="Profile.activatePromo()">Активировать</button><button class="btn btn-telegram" style="width:100%;margin-top:10px;" onclick="Premium.openTelegram()">✈️ Купить в Telegram</button></div>';
-            container.innerHTML = html;
+        const session = JSON.parse(localStorage.getItem('shadow_session'));
+        if (session) {
+            Auth.currentUser = session;
+            return true;
         }
+        return false;
     },
-    activatePromo: function() { var input = document.getElementById('profile-promo-input'); var code = input.value.trim(); if (!code) { Utils.toast('Введи промокод', 'error'); return; } var self = this; DB.redeemPromo(code, Auth.user.id).then(function(res) { if (res.ok) { Utils.toast('👑 Премиум на ' + res.days + ' дней!', 'premium'); Feed.renderInto('feed-container'); self.render(); } else { Utils.toast(res.error, 'error'); } }); },
-    openVideoMenu: function(videoId) { var v = Feed.videos.find(function(x) { return x.id === videoId; }); if (!v) return; App.modal('<div class="modal-header"><div class="modal-title">Меню видео</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div style="background:var(--bg-card-alt);border-radius:10px;padding:14px;margin-bottom:16px;"><div style="font-weight:600;">' + Utils.esc(v.title) + '</div><div style="font-size:12px;color:var(--text-sec);margin-top:4px;">❤ ' + Utils.fmtNum(v.likes) + '</div></div><button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" onclick="App.closeModal();Feed.jumpTo(\'' + v.id + '\')">▶️ Посмотреть</button><button class="btn btn-danger" style="width:100%;" onclick="Profile.deleteMyVideo(\'' + v.id + '\')">🗑 Удалить</button>'); },
-    deleteMyVideo: function(videoId) { if (!confirm('Удалить навсегда?')) return; DB.deleteVideo(videoId).then(function() { App.closeModal(); Utils.toast('Удалено 🗑', 'success'); Profile.render(); Feed.renderInto('feed-container'); }); }
+    
+    // Выход
+    logout: function() {
+        if (!confirm('Выйти?')) return;
+        localStorage.removeItem('shadow_session');
+        location.reload();
+    }
 };
 
-/* ============================================
-   АДМИН ПАНЕЛЬ
-   ============================================ */
-var Admin = {
-    loginTaps: 0,
-    currentTab: 'users',
-    logoTap: function() { this.loginTaps++; if (this.loginTaps >= 5) { this.loginTaps = 0; this.openLogin(); } },
-    openLogin: function() { App.modal('<div class="modal-header"><div class="modal-title">🔐 Код админа</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="form-group"><input type="password" class="form-input" id="admin-pass"></div><button class="btn btn-primary" style="width:100%;" onclick="Admin.checkPass()">Войти</button>'); },
-    checkPass: function() { if (document.getElementById('admin-pass').value === CONFIG.ADMIN_PASSWORD) { this.openPanel(); } else { Utils.toast('Неверный код', 'error'); } },
-    openPanel: function() { this.currentTab = 'users'; this.renderPanel(); },
-    switchTab: function(tab) { this.currentTab = tab; this.renderPanel(); },
-    renderPanel: function() {
-        var self = this; var content = '';
-        if (this.currentTab === 'users') { sb.from('profiles').select('*').then(function(usersResult) { var users = usersResult.data || []; for (var i = 0; i < users.length; i++) { var u = users[i]; content += '<div class="admin-row"><div style="display:flex;align-items:center;gap:10px;min-width:0;"><div class="avatar small ' + (u.banned ? 'banned' : (Premium.isActive(u) ? 'premium' : 'regular')) + '">' + avatarContent(u) + '</div><div style="min-width:0;"><div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + Utils.esc(u.display_name) + ' ' + (u.banned ? '🚫' : Premium.badge(u)) + '</div><div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(u.username) + '</div></div></div>'; if (u.banned) { content += '<button class="btn btn-secondary btn-small" onclick="Admin.unban(\'' + u.id + '\')">Разбанить</button>'; } else { content += '<button class="btn btn-danger btn-small" onclick="Admin.banUser(\'' + u.id + '\')">🚫 Бан</button>'; } content += '</div>'; } self.showPanel(content); }); }
-        else if (this.currentTab === 'videos') { sb.from('videos').select('*').order('created_at', { ascending: false }).then(function(videosResult) { var videos = videosResult.data || []; for (var j = 0; j < videos.length; j++) { var v = videos[j]; content += '<div class="admin-row"><div style="min-width:0;"><div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + Utils.esc(v.title) + '</div><div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(v.username) + '</div></div><button class="btn btn-danger btn-small" onclick="Admin.deleteVideo(\'' + v.id + '\')">🗑</button></div>'; } self.showPanel(content); }); }
-        else if (this.currentTab === 'promos') { DB.getAllPromos().then(function(promos) { var active = promos.filter(function(p) { return !p.used; }); var used = promos.filter(function(p) { return p.used; }); content += '<button class="btn btn-premium" style="width:100%;margin-bottom:12px;" onclick="Admin.createPromo()">+ Создать</button><div id="new-promo-slot"></div><div class="admin-section-title">Активные (' + active.length + ')</div>'; for (var k = 0; k < active.length; k++) { content += '<div class="admin-row"><div style="font-family:monospace;font-weight:700;">' + active[k].code + '</div><button class="btn btn-secondary btn-small" onclick="Admin.copyPromo(\'' + active[k].code + '\')">📋</button></div>'; } content += '<div class="admin-section-title">Использованные (' + used.length + ')</div>'; for (var m = 0; m < used.length; m++) { content += '<div class="admin-row" style="opacity:0.5;"><div style="font-family:monospace;text-decoration:line-through;">' + used[m].code + '</div></div>'; } self.showPanel(content); }); }
-    },
-    showPanel: function(content) { App.modal('<div class="modal-header"><div class="modal-title">⚙️ Админ</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="admin-tab-bar"><div class="admin-tab ' + (this.currentTab === 'users' ? 'active' : '') + '" onclick="Admin.switchTab(\'users\')">👥 Юзеры</div><div class="admin-tab ' + (this.currentTab === 'videos' ? 'active' : '') + '" onclick="Admin.switchTab(\'videos\')">🎬 Видео</div><div class="admin-tab ' + (this.currentTab === 'promos' ? 'active' : '') + '" onclick="Admin.switchTab(\'promos\')">🎁 Промо</div></div><div style="max-height:60vh;overflow-y:auto;">' + content + '</div>'); },
-    banUser: function(userId) { if (Auth.user && Auth.user.id === userId) { Utils.toast('Нельзя себя!', 'error'); return; } var reason = prompt('Причина:') || 'Нарушение'; var self = this; DB.banUser(userId, reason).then(function() { Utils.toast('Забанен 🚫', 'error'); self.renderPanel(); }); },
-    unban: function(userId) { var self = this; DB.unbanUser(userId).then(function() { Utils.toast('Разбанен ✅', 'success'); self.renderPanel(); }); },
-    deleteVideo: function(videoId) { if (!confirm('Удалить?')) return; var self = this; DB.deleteVideo(videoId).then(function() { Utils.toast('Удалено 🗑', 'success'); self.renderPanel(); }); },
-    createPromo: function() { DB.createPromo().then(function(code) { document.getElementById('new-promo-slot').innerHTML = '<div class="promo-code-box">' + code + '</div><button class="btn btn-secondary btn-small" style="width:100%;" onclick="Admin.copyPromo(\'' + code + '\')">📋 Скопировать</button>'; Utils.toast('Создан! 🎉', 'premium'); }); },
-    copyPromo: function(code) { navigator.clipboard.writeText(code).then(function() { Utils.toast('Скопирован 📋', 'success'); }); }
-};
-
-/* ============================================
-   ГЛАВНОЕ ПРИЛОЖЕНИЕ
-   ============================================ */
-var App = {
-    current: 'welcome',
-    profileBack: 'home',
-    go: function(name) {
-        document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
-        var screen = document.getElementById('screen-' + name);
-        if (screen) screen.classList.add('active');
-        this.current = name;
-        if (name === 'register') setTimeout(function() { Reg.buildPicker(); }, 50);
-    },
-    nav: function(name) {
-        if (name === 'home') { this.go('home'); Feed.renderInto('home-feed-container'); FollowBar.loadBar(); }
-        else if (name === 'feed') { this.go('feed'); Feed.renderInto('feed-container'); }
-        else if (name === 'inbox') { this.go('inbox'); }
-        else if (name === 'profile') {
-            if (!Auth.user) { Utils.toast('Войди', 'error'); var self = this; setTimeout(function() { self.go('welcome'); }, 500); return; }
-            this.profileBack = 'home';
-            this.go('profile');
-            Profile.currentTab = 'videos';
-            Profile.render();
-        }
-    },
-    viewProfile: function(userId) { this.profileBack = this.current; this.go('profile'); Profile.render(userId); },
-    enterGuest: function() { Auth.user = null; Auth.isGuest = true; Utils.toast('Гостевой режим 👀', 'success'); this.startApp(); },
-    modal: function(html) { document.getElementById('modals').innerHTML = '<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)App.closeModal()"><div class="modal">' + html + '</div></div>'; },
-    closeModal: function() { document.getElementById('modals').innerHTML = ''; },
-    showBanScreen: function(user) { this.go('banned'); var reasonBox = document.getElementById('ban-reason'); if (user.ban_reason) { reasonBox.style.display = 'block'; reasonBox.innerHTML = '<b>Причина:</b> ' + Utils.esc(user.ban_reason); } else { reasonBox.style.display = 'none'; } },
-    startApp: function() { this.go('home'); Feed.renderInto('home-feed-container'); FollowBar.loadBar(); },
+// ============================================
+// УПРАВЛЕНИЕ ПРИЛОЖЕНИЕМ
+// ============================================
+const App = {
+    // Инициализация
     init: function() {
-        document.getElementById('welcome-logo').addEventListener('click', function() { Admin.logoTap(); });
-        document.addEventListener('keydown', function(e) { if (e.code === 'Space') { var tag = document.activeElement.tagName; if (tag === 'INPUT' || tag === 'TEXTAREA') return; e.preventDefault(); Feed.toggleCurrent(); } });
+        if (Auth.restoreSession()) {
+            App.nav('home');
+        }
+    },
+    
+    // Переход между экранами
+    go: function(screenName) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('screen-' + screenName).classList.add('active');
+    },
+    
+    // Навигация с загрузкой данных
+    nav: async function(page) {
+        App.go(page);
+        if (page === 'home') {
+            await Home.render();
+        } else if (page === 'feed') {
+            await Feed.render();
+        } else if (page === 'profile') {
+            await Profile.render(Auth.currentUser.id);
+        }
+    },
+    
+    // Просмотр профиля другого пользователя
+    viewProfile: function(userId) {
+        Profile.render(userId);
+        App.go('profile');
+    },
+    
+    // Закрытие модального окна
+    closeModal: function() {
+        document.getElementById('modals').innerHTML = '';
     }
 };
 
-/* ============================================
-   ЗАПУСК
-   ============================================ */
-(function() {
-    if (!sb) { Utils.toast('Ошибка Supabase. Проверь интернет.', 'error'); return; }
-    App.init();
-    Auth.restoreSession().then(function(restored) {
-        if (restored && Auth.user && !Auth.user.banned) { App.startApp(); }
-        else { App.go('welcome'); }
-    });
-})();
+// ============================================
+// ГЛАВНЫЙ ЭКРАН
+// ============================================
+const Home = {
+    render: async function() {
+        if (!Auth.currentUser) {
+            App.go('welcome');
+            return;
+        }
+        
+        // Загрузка списка друзей
+        const friends = await DB.getFriends(Auth.currentUser.id);
+        const container = document.getElementById('friends-bar');
+        container.innerHTML = '';
+        
+        if (friends.length > 0) {
+            friends.forEach(friend => {
+                const el = document.createElement('div');
+                el.className = 'friend-item';
+                el.onclick = () => App.viewProfile(friend.id);
+                el.innerHTML = `
+                    <div class="friend-avatar">
+                        <img src="${friend.avatar_url || 'https://via.placeholder.com/100'}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                    </div>
+                    <div class="friend-name">${Utils.esc(friend.display_name)}</div>
+                `;
+                container.appendChild(el);
+            });
+        } else {
+            container.innerHTML = '<div style="width:100%;text-align:center;color:#555;padding:10px;font-size:12px;">Нет друзей. Найди их через поиск!</div>';
+        }
+        
+        const feedContainer = document.getElementById('home-feed-container');
+        feedContainer.innerHTML = '<div style="padding:40px;text-align:center;color:#555;">Лента пуста. Подпишись на друзей!</div>';
+    }
+};
+
+// ============================================
+// ПОИСК
+// ============================================
+const HomeSearch = {
+    timeout: null,
+    
+    run: function(query) {
+        const self = this;
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(function() {
+            self.doSearch(query);
+        }, 300);
+    },
+    
+    doSearch: async function(query) {
+        if (!query || query.length < 2) return;
+        const { data } = await sb.from('profiles')
+            .select('*')
+            .ilike('display_name', '%' + query + '%')
+            .limit(10);
+        console.log('Поиск:', data);
+    }
+};
+
+// ============================================
+// ЛЕНТА ВИДЕО
+// ============================================
+const Feed = {
+    render: async function() {
+        const container = document.getElementById('feed-container');
+        container.innerHTML = '';
+        
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+            <div style="width:100%;height:100%;background:#111;display:flex;align-items:center;justify-content:center;color:#333;">
+                Видео загружаются...
+            </div>
+        `;
+        container.appendChild(card);
+    }
+};
+
+// ============================================
+// ПРОФИЛЬ
+// ============================================
+const Profile = {
+    render: async function(userId) {
+        const { data: user } = await sb.from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+        
+        if (!user) return;
+        
+        document.getElementById('profile-name').textContent = user.display_name;
+        document.getElementById('profile-username').textContent = '@' + user.username;
+        document.getElementById('profile-avatar').innerHTML = `<img src="${user.avatar_url || 'https://via.placeholder.com/100'}" style="width:100%;height:100%;object-fit:cover;">`;
+        
+        const videos = await DB.getUserVideos(userId);
+        document.getElementById('stat-videos').textContent = videos.length;
+        
+        const friends = await DB.getFriends(userId);
+        document.getElementById('stat-friends').textContent = friends.length;
+        
+        this.switchTab('videos');
+    },
+    
+    switchTab: async function(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        const content = document.getElementById('profile-content');
+        
+        if (tab === 'videos') {
+            const videos = await DB.getUserVideos(Auth.currentUser.id);
+            let html = '<div class="videos-grid">';
+            videos.forEach(v => {
+                html += `<div class="grid-item"><img src="${v.thumbnail_url || 'https://via.placeholder.com/200x300'}"></div>`;
+            });
+            html += '</div>';
+            
+            if (videos.length === 0) {
+                html = '<div style="padding:40px;text-align:center;color:#555;">Нет видео</div>';
+            }
+            
+            content.innerHTML = html;
+        } else if (tab === 'promos') {
+            content.innerHTML = `
+                <div style="padding:20px;">
+                    <div class="form-group">
+                        <label class="form-label">Промокод</label>
+                        <input type="text" class="form-input" id="promo-input" placeholder="Введи промокод">
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="Profile.activatePromo()">Активировать</button>
+                </div>
+            `;
+        } else if (tab === 'settings') {
+            content.innerHTML = `
+                <div style="padding:20px;">
+                    <button class="btn btn-secondary btn-block" onclick="Auth.logout()" style="margin-top:20px;">Выйти из аккаунта</button>
+                </div>
+            `;
+        }
+    },
+    
+    activatePromo: async function() {
+        const input = document.getElementById('promo-input');
+        const code = input.value.trim();
+        
+        if (!code) return Utils.toast('Введи промокод');
+        
+        const { data: promo, error } = await sb.from('promos')
+            .select('*')
+            .eq('code', code)
+            .eq('used', false)
+            .single();
+        
+        if (error || !promo) {
+            return Utils.toast('Промокод не найден или уже использован');
+        }
+        
+        const { error: updateError } = await sb.from('promos')
+            .update({
+                used: true,
+                used_by: Auth.currentUser.id,
+                used_at: new Date().toISOString()
+            })
+            .eq('id', promo.id);
+        
+        if (updateError) {
+            return Utils.toast('Ошибка активации');
+        }
+        
+        const newUntil = new Date(Date.now() + promo.days * 24 * 60 * 60 * 1000).toISOString();
+        await sb.from('profiles')
+            .update({ premium_until: newUntil })
+            .eq('id', Auth.currentUser.id);
+        
+        Utils.toast('Премиум активирован на ' + promo.days + ' дней!');
+        Profile.render(Auth.currentUser.id);
+    }
+};
+
+// ============================================
+// ЗАГРУЗКА КОНТЕНТА
+// ============================================
+const Upload = {
+    openMenu: function() {
+        if (!Auth.currentUser) {
+            Utils.toast('Войди в аккаунт');
+            return;
+        }
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h3 style="margin-bottom:20px;">Что публикуем?</h3>
+                <button class="btn btn-primary btn-block" style="margin-bottom:12px;" onclick="App.closeModal();Upload.openVideo()">🎬 Загрузить видео</button>
+            </div>
+        `;
+        
+        modal.onclick = (e) => {
+            if (e.target === modal) App.closeModal();
+        };
+        
+        document.getElementById('modals').appendChild(modal);
+    },
+    
+    openVideo: function() {
+        Utils.toast('Загрузка видео скоро будет доступна');
+    }
+};
+
+// Инициализация приложения при загрузке страницы
+App.init();
 </script>
 </body>
 </html>
