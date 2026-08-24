@@ -8,7 +8,12 @@
 <title>Shadow</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*, *::before, *::after {
+/* ============================================
+   СБРОС СТИЛЕЙ
+   ============================================ */
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -41,13 +46,15 @@ button {
     -webkit-tap-highlight-color: transparent;
 }
 
-input, textarea {
+input,
+textarea {
     font-family: inherit;
     outline: none;
     border: none;
 }
 
-video, img {
+video,
+img {
     display: block;
 }
 
@@ -64,6 +71,9 @@ video, img {
     border-radius: 3px;
 }
 
+/* ============================================
+   ПЕРЕМЕННЫЕ CSS
+   ============================================ */
 :root {
     --primary: #a855f7;
     --primary-dark: #7c3aed;
@@ -83,6 +93,9 @@ video, img {
     --safe-t: env(safe-area-inset-top, 0px);
 }
 
+/* ============================================
+   ПРИЛОЖЕНИЕ И ЭКРАНЫ
+   ============================================ */
 #app {
     width: 100%;
     height: 100%;
@@ -106,6 +119,9 @@ video, img {
     opacity: 1;
 }
 
+/* ============================================
+   КНОПКИ
+   ============================================ */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -174,6 +190,9 @@ video, img {
     max-width: 320px;
 }
 
+/* ============================================
+   ФОРМЫ
+   ============================================ */
 .form-group {
     width: 100%;
     max-width: 360px;
@@ -211,6 +230,9 @@ video, img {
     min-height: 80px;
 }
 
+/* ============================================
+   АВАТАРЫ
+   ============================================ */
 .avatar {
     width: 48px;
     height: 48px;
@@ -278,6 +300,9 @@ video, img {
     box-shadow: 0 0 0 2px var(--premium);
 }
 
+/* ============================================
+   STORIES BAR
+   ============================================ */
 .stories-bar {
     display: flex;
     gap: 8px;
@@ -338,6 +363,9 @@ video, img {
     color: var(--primary);
 }
 
+/* ============================================
+   STORY VIEWER
+   ============================================ */
 .story-viewer {
     position: fixed;
     inset: 0;
@@ -387,8 +415,12 @@ video, img {
 }
 
 @keyframes storyProgress {
-    from { width: 0%; }
-    to { width: 100%; }
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
+    }
 }
 
 .story-header {
@@ -455,12 +487,18 @@ video, img {
     object-fit: contain;
 }
 
+/* ============================================
+   ЛЕНТА НА ГЛАВНОЙ
+   ============================================ */
 .home-feed {
     flex: 1;
     overflow-y: auto;
     padding-bottom: calc(var(--nav-h) + var(--safe-b));
 }
 
+/* ============================================
+   ВИДЕО ЛЕНТА
+   ============================================ */
 .feed-container {
     width: 100%;
     height: 100%;
@@ -664,6 +702,9 @@ video, img {
     gap: 12px;
 }
 
+/* ============================================
+   НИЖНЯЯ НАВИГАЦИЯ
+   ============================================ */
 .bottom-nav-fixed {
     position: fixed;
     bottom: 0;
@@ -720,6 +761,9 @@ video, img {
     fill: #fff;
 }
 
+/* ============================================
+   ПРОФИЛЬ
+   ============================================ */
 .profile-scroll {
     flex: 1;
     overflow-y: auto;
@@ -865,6 +909,9 @@ video, img {
     margin-bottom: 16px;
 }
 
+/* ============================================
+   МОДАЛКИ
+   ============================================ */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -892,6 +939,7 @@ video, img {
     .modal-overlay {
         align-items: center;
     }
+
     .modal {
         max-width: 520px;
         border-radius: 20px;
@@ -926,6 +974,9 @@ video, img {
     fill: var(--text-sec);
 }
 
+/* ============================================
+   ЗАГРУЗКА ВИДЕО
+   ============================================ */
 .upload-dropzone {
     border: 2px dashed var(--border);
     border-radius: 12px;
@@ -990,6 +1041,9 @@ video, img {
     color: var(--premium);
 }
 
+/* ============================================
+   КОММЕНТАРИИ
+   ============================================ */
 .comments-list {
     display: flex;
     flex-direction: column;
@@ -1059,6 +1113,9 @@ video, img {
     fill: #fff;
 }
 
+/* ============================================
+   ПРЕМИУМ
+   ============================================ */
 .premium-card {
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(245, 158, 11, 0.04));
     border: 2px solid var(--premium);
@@ -1108,6 +1165,9 @@ video, img {
     margin-bottom: 16px;
 }
 
+/* ============================================
+   TOAST УВЕДОМЛЕНИЯ
+   ============================================ */
 .toast {
     position: fixed;
     bottom: calc(var(--nav-h) + var(--safe-b) + 20px);
@@ -1138,6 +1198,9 @@ video, img {
     border-color: var(--premium);
 }
 
+/* ============================================
+   ПУСТЫЕ СОСТОЯНИЯ
+   ============================================ */
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -1187,6 +1250,9 @@ video, img {
     animation: spin 0.8s linear infinite;
 }
 
+/* ============================================
+   АДМИН ПАНЕЛЬ
+   ============================================ */
 .admin-row {
     display: flex;
     align-items: center;
@@ -1244,6 +1310,9 @@ video, img {
     color: #fff;
 }
 
+/* ============================================
+   ВЫБОР АВАТАРА
+   ============================================ */
 .avatar-picker {
     display: flex;
     gap: 16px;
@@ -1313,6 +1382,9 @@ video, img {
     font-size: 22px;
 }
 
+/* ============================================
+   ПРИВЕТСТВИЕ
+   ============================================ */
 .welcome-title {
     font-size: clamp(52px, 13vw, 76px);
     font-weight: 900;
@@ -1341,31 +1413,67 @@ video, img {
     margin-top: 40px;
 }
 
+/* ============================================
+   АНИМАЦИИ
+   ============================================ */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideUp {
-    from { transform: translateY(60px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(60px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 @keyframes toastIn {
-    from { transform: translateX(-50%) translateY(20px); opacity: 0; }
-    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    from {
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
 }
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes heartPop {
-    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-    15% { transform: translate(-50%, -50%) scale(1.25); opacity: 1; }
-    30% { transform: translate(-50%, -50%) scale(0.95); }
-    45%, 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    15% {
+        transform: translate(-50%, -50%) scale(1.25);
+        opacity: 1;
+    }
+    30% {
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+    45%,
+    80% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0;
+    }
 }
 
 .heart-pop {
@@ -1390,7 +1498,9 @@ video, img {
 <body>
 <div id="app">
 
-<!-- ПРИВЕТСТВИЕ -->
+<!-- ============================================
+     ЭКРАН ПРИВЕТСТВИЯ
+     ============================================ -->
 <div class="screen active" id="screen-welcome" style="padding:20px;align-items:center;justify-content:center;">
     <div id="welcome-logo" style="margin-bottom:32px;">
         <svg width="110" height="110" viewBox="0 0 120 120">
@@ -1415,7 +1525,9 @@ video, img {
     </div>
 </div>
 
-<!-- РЕГИСТРАЦИЯ -->
+<!-- ============================================
+     ЭКРАН РЕГИСТРАЦИИ
+     ============================================ -->
 <div class="screen" id="screen-register" style="padding:20px;align-items:flex-start;">
     <div style="width:100%;max-width:400px;">
         <button class="btn btn-ghost btn-small" onclick="App.go('welcome')" style="margin-bottom:20px;">← Назад</button>
@@ -1449,7 +1561,9 @@ video, img {
     </div>
 </div>
 
-<!-- ВХОД -->
+<!-- ============================================
+     ЭКРАН ВХОДА
+     ============================================ -->
 <div class="screen" id="screen-login" style="padding:20px;align-items:flex-start;">
     <div style="width:100%;max-width:400px;">
         <button class="btn btn-ghost btn-small" onclick="App.go('welcome')" style="margin-bottom:20px;">← Назад</button>
@@ -1466,7 +1580,9 @@ video, img {
     </div>
 </div>
 
-<!-- БАН -->
+<!-- ============================================
+     ЭКРАН БАНА
+     ============================================ -->
 <div class="screen" id="screen-banned" style="padding:20px;align-items:center;justify-content:center;">
     <div style="text-align:center;max-width:340px;">
         <div class="ban-icon">🚫</div>
@@ -1477,7 +1593,9 @@ video, img {
     </div>
 </div>
 
-<!-- ГЛАВНАЯ -->
+<!-- ============================================
+     ГЛАВНАЯ (поиск + сторис + видео)
+     ============================================ -->
 <div class="screen" id="screen-home" style="flex-direction:column;">
     <div style="padding:8px 10px;background:#000;border-bottom:1px solid var(--border);flex-shrink:0;">
         <input type="text" style="width:100%;padding:10px 16px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:#fff;font-size:14px;" id="home-search-input" placeholder="🔍 Поиск людей и видео..." oninput="HomeSearch.run()">
@@ -1486,27 +1604,63 @@ video, img {
     <div id="stories-bar-container" style="flex-shrink:0;"></div>
     <div class="home-feed" id="home-feed-container"></div>
     <nav class="bottom-nav-fixed">
-        <button class="nav-btn active" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
-        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
-        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
-        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
-        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
+        <button class="nav-btn active" data-nav="home" onclick="App.nav('home')">
+            <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
+            <span>Главная</span>
+        </button>
+        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
+            <span>Лента</span>
+        </button>
+        <button class="nav-btn" onclick="Upload.openMenu()">
+            <div class="upload-nav-btn">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
+            </div>
+        </button>
+        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <span>Входящие</span>
+        </button>
+        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Профиль</span>
+        </button>
     </nav>
 </div>
 
-<!-- ЛЕНТА -->
+<!-- ============================================
+     ЛЕНТА (только видео)
+     ============================================ -->
 <div class="screen" id="screen-feed" style="flex-direction:column;">
     <div class="feed-container" id="feed-container"></div>
     <nav class="bottom-nav-fixed">
-        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
-        <button class="nav-btn active" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
-        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
-        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
-        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
+        <button class="nav-btn" data-nav="home" onclick="App.nav('home')">
+            <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
+            <span>Главная</span>
+        </button>
+        <button class="nav-btn active" data-nav="feed" onclick="App.nav('feed')">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
+            <span>Лента</span>
+        </button>
+        <button class="nav-btn" onclick="Upload.openMenu()">
+            <div class="upload-nav-btn">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
+            </div>
+        </button>
+        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <span>Входящие</span>
+        </button>
+        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Профиль</span>
+        </button>
     </nav>
 </div>
 
-<!-- ВХОДЯЩИЕ -->
+<!-- ============================================
+     ВХОДЯЩИЕ
+     ============================================ -->
 <div class="screen" id="screen-inbox" style="padding:20px;align-items:center;justify-content:center;">
     <div class="empty-state">
         <div class="empty-icon">🔔</div>
@@ -1514,33 +1668,71 @@ video, img {
         <div class="empty-text">Сообщения и уведомления скоро появятся</div>
     </div>
     <nav class="bottom-nav-fixed">
-        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
-        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
-        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
-        <button class="nav-btn active" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
-        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
+        <button class="nav-btn" data-nav="home" onclick="App.nav('home')">
+            <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
+            <span>Главная</span>
+        </button>
+        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
+            <span>Лента</span>
+        </button>
+        <button class="nav-btn" onclick="Upload.openMenu()">
+            <div class="upload-nav-btn">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
+            </div>
+        </button>
+        <button class="nav-btn active" data-nav="inbox" onclick="App.nav('inbox')">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <span>Входящие</span>
+        </button>
+        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Профиль</span>
+        </button>
     </nav>
 </div>
 
-<!-- ПРОФИЛЬ -->
+<!-- ============================================
+     ПРОФИЛЬ
+     ============================================ -->
 <div class="screen" id="screen-profile" style="flex-direction:column;">
     <div class="profile-scroll">
         <div id="profile-content"></div>
     </div>
     <nav class="bottom-nav-fixed">
-        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
-        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
-        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
-        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
-        <button class="nav-btn active" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
+        <button class="nav-btn" data-nav="home" onclick="App.nav('home')">
+            <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
+            <span>Главная</span>
+        </button>
+        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')">
+            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
+            <span>Лента</span>
+        </button>
+        <button class="nav-btn" onclick="Upload.openMenu()">
+            <div class="upload-nav-btn">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
+            </div>
+        </button>
+        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')">
+            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+            <span>Входящие</span>
+        </button>
+        <button class="nav-btn active" data-nav="profile" onclick="App.nav('profile')">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Профиль</span>
+        </button>
     </nav>
 </div>
 
-<!-- STORY VIEWER -->
+<!-- ============================================
+     STORY VIEWER
+     ============================================ -->
 <div class="story-viewer" id="story-viewer">
     <div class="story-progress-bar" id="story-progress"></div>
     <div class="story-header" id="story-header"></div>
-    <button class="story-close" onclick="Stories.closeViewer()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <button class="story-close" onclick="Stories.closeViewer()">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
     <div class="story-content" id="story-content"></div>
     <div class="story-nav-zone story-nav-left" onclick="Stories.prevSlide()"></div>
     <div class="story-nav-zone story-nav-right" onclick="Stories.nextSlide()"></div>
@@ -1690,10 +1882,10 @@ var Utils = {
     },
 
     genPromo: function() {
-        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        var c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         var s = 'SHDW-';
         for (var i = 0; i < 6; i++) {
-            s += chars[Math.floor(Math.random() * chars.length)];
+            s += c[Math.floor(Math.random() * c.length)];
         }
         return s;
     },
@@ -1703,7 +1895,6 @@ var Utils = {
             return Array.from(new Uint8Array(h)).map(function(x) {
                 return x.toString(16).padStart(2, '0');
             }).join('');
-        });
     },
 
     compressImage: function(file, sz) {
@@ -1719,8 +1910,8 @@ var Utils = {
                     var ctx = canvas.getContext('2d');
                     var size = Math.min(img.width, img.height);
                     ctx.drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, sz, sz);
-                    canvas.toBlob(function(blob) {
-                        res(blob);
+                    canvas.toBlob(function(b) {
+                        res(b);
                     }, 'image/jpeg', 0.85);
                 };
                 img.onerror = rej;
@@ -1754,7 +1945,7 @@ var Utils = {
    ============================================ */
 var DB = {
     createUser: function(p) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения с сервером. Проверь интернет.' });
+        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
         return Utils.hash(p.password).then(function(ph) {
             var au = '';
             var doUpload = Promise.resolve();
@@ -1788,7 +1979,7 @@ var DB = {
     },
 
     findUser: function(username, password) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения с сервером' });
+        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
         return Utils.hash(password).then(function(ph) {
             return sb.from('profiles').select('*').eq('username', username).eq('password_hash', ph).single();
         }).then(function(r) {
@@ -1863,7 +2054,7 @@ var DB = {
                 return res;
             });
         }).catch(function(e) {
-            console.error('getFeed error:', e);
+            console.error('getFeed:', e);
             return [];
         });
     },
@@ -1917,7 +2108,7 @@ var DB = {
                 thumbnail_url: thumbUrl
             });
         }).then(function(mr) {
-            if (mr.error) throw new Error('Ошибка сохранения метаданных');
+            if (mr.error) throw new Error('Ошибка сохранения');
             return sb.from('uploads').upsert({ user_id: p.userId, uploaded_at: new Date().toISOString() });
         }).then(function() {
             return { ok: true };
@@ -1946,7 +2137,7 @@ var DB = {
                 return sb.from('videos').delete().eq('id', videoId);
             });
         }).catch(function(e) {
-            console.error('deleteVideo error:', e);
+            console.error(e);
         });
     },
 
@@ -2134,7 +2325,7 @@ var DB = {
                 return result;
             });
         }).catch(function(e) {
-            console.error('getActiveStories error:', e);
+            console.error(e);
             return [];
         });
     },
@@ -2269,7 +2460,10 @@ var Reg = {
     },
 
     select: function(type, idx) {
-        if (type === 'photo') { this.openPhotoPicker(); return; }
+        if (type === 'photo') {
+            this.openPhotoPicker();
+            return;
+        }
         this.avatarType = type;
         this.avatarIndex = idx || 0;
         if (type === 'classic') this.avatarBlob = null;
@@ -2298,7 +2492,7 @@ var Reg = {
             self.updatePreview();
             Utils.toast('Фото загружено! 📸', 'success');
         }).catch(function() {
-            Utils.toast('Ошибка загрузки фото', 'error');
+            Utils.toast('Ошибка', 'error');
         });
         input.value = '';
     },
@@ -2407,7 +2601,9 @@ var Auth = {
                     self.user = u;
                     return true;
                 });
-            }).catch(function() { return false; });
+            }).catch(function() {
+                return false;
+            });
         } catch (e) {
             return Promise.resolve(false);
         }
@@ -2433,14 +2629,17 @@ var Limits = {
             return uploads.filter(function(t) { return t > weekAgo; }).length;
         });
     },
+
     canUpload: function(user) {
         var limit = Premium.isActive(user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT;
         return this.weekUploads(user.id).then(function(count) { return count < limit; });
     },
+
     remaining: function(user) {
         var limit = Premium.isActive(user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT;
         return this.weekUploads(user.id).then(function(count) { return Math.max(0, limit - count); });
     },
+
     maxMB: function(user) {
         return Premium.isActive(user) ? CONFIG.PREMIUM_MAX_MB : CONFIG.FREE_MAX_MB;
     }
@@ -2479,10 +2678,7 @@ var Stories = {
                         if (seen[s.user_id]) continue;
                         seen[s.user_id] = true;
                         var author = s.author || {};
-                        html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')">';
-                        html += '<div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div>';
-                        html += '<div class="story-avatar-name">' + Utils.esc(author.display_name || '?') + '</div>';
-                        html += '</div>';
+                        html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')"><div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div><div class="story-avatar-name">' + Utils.esc(author.display_name || '?') + '</div></div>';
                     }
                     html += '</div>';
                     container.innerHTML = html;
@@ -2494,10 +2690,7 @@ var Stories = {
                     if (seen2[s.user_id]) continue;
                     seen2[s.user_id] = true;
                     var author = s.author || {};
-                    html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')">';
-                    html += '<div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div>';
-                    html += '<div class="story-avatar-name">' + Utils.esc(author.display_name || '?') + '</div>';
-                    html += '</div>';
+                    html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')"><div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div><div class="story-avatar-name">' + Utils.esc(author.display_name || '?') + '</div></div>';
                 }
                 html += '</div>';
                 container.innerHTML = html;
@@ -2619,6 +2812,7 @@ var Stories = {
    ============================================ */
 var HomeSearch = {
     timeout: null,
+
     run: function() {
         var self = this;
         clearTimeout(this.timeout);
@@ -2627,6 +2821,7 @@ var HomeSearch = {
         if (!q) { results.style.display = 'none'; results.innerHTML = ''; return; }
         this.timeout = setTimeout(function() { self.doSearch(q); }, 300);
     },
+
     doSearch: function(q) {
         var results = document.getElementById('home-search-results');
         sb.from('profiles').select('*').eq('banned', false).or('username.ilike.%' + q + '%,display_name.ilike.%' + q + '%').limit(10).then(function(usersResult) {
@@ -2636,19 +2831,14 @@ var HomeSearch = {
                     html += '<div style="padding:8px 14px;font-size:12px;color:var(--text-muted);font-weight:700;">ЛЮДИ</div>';
                     for (var i = 0; i < usersResult.data.length; i++) {
                         var u = usersResult.data[i];
-                        html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;" onclick="App.viewProfile(\'' + u.id + '\');document.getElementById(\'home-search-results\').style.display=\'none\';">';
-                        html += '<div class="avatar small ' + (Premium.isActive(u) ? 'premium' : 'regular') + '">' + avatarContent(u) + '</div>';
-                        html += '<div><div style="font-weight:600;font-size:14px;">' + Utils.esc(u.display_name) + ' ' + Premium.badge(u) + '</div>';
-                        html += '<div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(u.username) + '</div></div></div>';
+                        html += '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;" onclick="App.viewProfile(\'' + u.id + '\');document.getElementById(\'home-search-results\').style.display=\'none\';"><div class="avatar small ' + (Premium.isActive(u) ? 'premium' : 'regular') + '">' + avatarContent(u) + '</div><div><div style="font-weight:600;font-size:14px;">' + Utils.esc(u.display_name) + ' ' + Premium.badge(u) + '</div><div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(u.username) + '</div></div></div>';
                     }
                 }
                 if (videosResult.data && videosResult.data.length) {
                     html += '<div style="padding:8px 14px;font-size:12px;color:var(--text-muted);font-weight:700;">ВИДЕО</div>';
                     for (var j = 0; j < videosResult.data.length; j++) {
                         var v = videosResult.data[j];
-                        html += '<div style="padding:10px 14px;cursor:pointer;" onclick="Feed.jumpTo(\'' + v.id + '\');document.getElementById(\'home-search-results\').style.display=\'none\';">';
-                        html += '<div style="font-weight:600;font-size:14px;">' + Utils.esc(v.title) + '</div>';
-                        html += '<div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(v.username) + '</div></div>';
+                        html += '<div style="padding:10px 14px;cursor:pointer;" onclick="Feed.jumpTo(\'' + v.id + '\');document.getElementById(\'home-search-results\').style.display=\'none\';"><div style="font-weight:600;font-size:14px;">' + Utils.esc(v.title) + '</div><div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(v.username) + '</div></div>';
                     }
                 }
                 if (!html) html = '<div style="padding:20px;text-align:center;color:var(--text-sec);">Ничего не найдено</div>';
@@ -2724,24 +2914,11 @@ var Feed = {
             card.dataset.id = v.id;
             var videoHtml = v.video_url ? '<video class="video-element" src="' + v.video_url + '" loop playsinline preload="metadata"' + (v.thumbnail_url ? ' poster="' + v.thumbnail_url + '"' : '') + '></video>' : '<div class="video-empty"><div style="font-size:48px;">🎬</div></div>';
             var html = videoHtml;
-            html += '<div class="video-gradient"></div>';
-            html += '<div class="play-indicator">' + Icons.play() + '</div>';
-            html += '<div class="video-info"><div class="video-author-row">';
-            html += '<div class="avatar small ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div>';
-            html += '<div class="video-author-name" onclick="App.viewProfile(\'' + v.user_id + '\')">@' + Utils.esc(author.username || v.username) + ' ' + Premium.badge(author) + '</div>';
-            html += '</div><div class="video-desc">' + Utils.esc(v.title) + '</div>';
-            html += '<div class="video-tags">' + (v.tags || []).map(function(t) { return '<span class="video-tag">#' + Utils.esc(t) + '</span>'; }).join('') + '</div></div>';
-            html += '<div class="video-actions"><div class="avatar-follow-wrap">';
-            html += '<div class="avatar big ' + (Premium.isActive(author) ? 'premium' : 'regular') + '" onclick="App.viewProfile(\'' + v.user_id + '\')">' + avatarContent(author) + '</div>';
+            html += '<div class="video-gradient"></div><div class="play-indicator">' + Icons.play() + '</div><div class="video-info"><div class="video-author-row"><div class="avatar small ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div><div class="video-author-name" onclick="App.viewProfile(\'' + v.user_id + '\')">@' + Utils.esc(author.username || v.username) + ' ' + Premium.badge(author) + '</div></div><div class="video-desc">' + Utils.esc(v.title) + '</div><div class="video-tags">' + (v.tags || []).map(function(t) { return '<span class="video-tag">#' + Utils.esc(t) + '</span>'; }).join('') + '</div></div><div class="video-actions"><div class="avatar-follow-wrap"><div class="avatar big ' + (Premium.isActive(author) ? 'premium' : 'regular') + '" onclick="App.viewProfile(\'' + v.user_id + '\')">' + avatarContent(author) + '</div>';
             if (showFollow) {
                 html += '<button class="follow-plus ' + (isFollowing ? 'followed' : '') + '" data-follow-btn="' + v.user_id + '" onclick="event.stopPropagation();Feed.toggleFollow(\'' + v.user_id + '\')">' + (isFollowing ? '✓' : '+') + '</button>';
             }
-            html += '</div>';
-            html += '<div class="video-action ' + (v.liked_by_me ? 'liked' : '') + '" onclick="Feed.like(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.heart() + '</div><span class="video-action-count" id="likes-' + v.id + '">' + Utils.fmtNum(v.likes) + '</span></div>';
-            html += '<div class="video-action" onclick="Comments.open(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.comment() + '</div><span class="video-action-count">' + Utils.fmtNum(v.comment_count) + '</span></div>';
-            html += '<div class="video-action" onclick="Feed.share()"><div class="video-action-btn">' + Icons.share() + '</div></div>';
-            html += '<div class="video-action ' + (v.saved_by_me ? 'saved' : '') + '" onclick="Feed.save(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.bookmark() + '</div></div>';
-            html += '</div>';
+            html += '</div><div class="video-action ' + (v.liked_by_me ? 'liked' : '') + '" onclick="Feed.like(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.heart() + '</div><span class="video-action-count" id="likes-' + v.id + '">' + Utils.fmtNum(v.likes) + '</span></div><div class="video-action" onclick="Comments.open(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.comment() + '</div><span class="video-action-count">' + Utils.fmtNum(v.comment_count) + '</span></div><div class="video-action" onclick="Feed.share()"><div class="video-action-btn">' + Icons.share() + '</div></div><div class="video-action ' + (v.saved_by_me ? 'saved' : '') + '" onclick="Feed.save(\'' + v.id + '\')"><div class="video-action-btn">' + Icons.bookmark() + '</div></div></div>';
             card.innerHTML = html;
             card.addEventListener('click', function(e) {
                 if (e.target.closest('.video-action') || e.target.closest('.video-info') || e.target.closest('.avatar-follow-wrap')) return;
@@ -2872,10 +3049,7 @@ var Comments = {
                 for (var i = 0; i < comments.length; i++) {
                     var c = comments[i];
                     var u = c.profiles || {};
-                    list += '<div class="comment-item"><div class="avatar small ' + (Premium.isActive(u) ? 'premium' : 'regular') + '">' + avatarContent(u) + '</div>';
-                    list += '<div class="comment-body"><div class="comment-author">' + Utils.esc(u.display_name || '?') + ' ' + Premium.badge(u);
-                    list += ' <span class="comment-time">· ' + Utils.timeAgo(c.created_at) + '</span></div>';
-                    list += '<div class="comment-text">' + Utils.esc(c.text) + '</div></div></div>';
+                    list += '<div class="comment-item"><div class="avatar small ' + (Premium.isActive(u) ? 'premium' : 'regular') + '">' + avatarContent(u) + '</div><div class="comment-body"><div class="comment-author">' + Utils.esc(u.display_name || '?') + ' ' + Premium.badge(u) + ' <span class="comment-time">· ' + Utils.timeAgo(c.created_at) + '</span></div><div class="comment-text">' + Utils.esc(c.text) + '</div></div></div>';
                 }
             }
             var formHtml = '';
@@ -2887,6 +3061,7 @@ var Comments = {
             App.modal('<div class="modal-header"><div class="modal-title">Комментарии (' + comments.length + ')</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="comments-list">' + list + '</div>' + formHtml);
         });
     },
+
     send: function(event, videoId) {
         event.preventDefault();
         var input = document.getElementById('comment-input');
@@ -3033,8 +3208,7 @@ var Profile = {
                                 var v = myVideos[i];
                                 var thumb = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:28px;">🎬</div>';
                                 if (v.thumbnail_url) thumb = '<img src="' + v.thumbnail_url + '" alt="">';
-                                gridHtml += '<div class="grid-video" onclick="Feed.jumpTo(\'' + v.id + '\')">' + thumb;
-                                gridHtml += '<div class="grid-video-views">▶ ' + Utils.fmtNum(v.views || 0) + '</div>';
+                                gridHtml += '<div class="grid-video" onclick="Feed.jumpTo(\'' + v.id + '\')">' + thumb + '<div class="grid-video-views">▶ ' + Utils.fmtNum(v.views || 0) + '</div>';
                                 if (isOwn) gridHtml += '<button class="grid-video-menu-btn" onclick="event.stopPropagation();Profile.openVideoMenu(\'' + v.id + '\')">⋮</button>';
                                 gridHtml += '</div>';
                             }
@@ -3060,36 +3234,20 @@ var Profile = {
     },
 
     buildProfileHtml: function(user, isOwn, isPrem, myVideos, totalLikes, followers, followingCount, followBtn, limitBadge, gridHtml) {
-        var html = '<div class="profile-header">';
-        html += '<div class="avatar xxl ' + (isPrem ? 'premium' : 'regular') + '" style="margin:0 auto;">' + avatarContent(user) + '</div>';
-        html += '<div class="profile-name-row"><span class="profile-name">' + Utils.esc(user.display_name) + '</span> ' + Premium.badge(user) + '</div>';
-        html += '<div class="profile-username">@' + Utils.esc(user.username) + '</div>';
+        var html = '<div class="profile-header"><div class="avatar xxl ' + (isPrem ? 'premium' : 'regular') + '" style="margin:0 auto;">' + avatarContent(user) + '</div><div class="profile-name-row"><span class="profile-name">' + Utils.esc(user.display_name) + '</span> ' + Premium.badge(user) + '</div><div class="profile-username">@' + Utils.esc(user.username) + '</div>';
         if (user.bio) html += '<div class="profile-bio">' + Utils.esc(user.bio) + '</div>';
         if (isPrem) html += '<div class="premium-badge-inline" style="margin-top:12px;">' + Icons.crown() + ' Премиум</div>';
-        html += '<div class="profile-stats">';
-        html += '<div><div class="stat-val">' + myVideos.length + '</div><div class="stat-label">Видео</div></div>';
-        html += '<div><div class="stat-val">' + Utils.fmtNum(totalLikes) + '</div><div class="stat-label">Лайков</div></div>';
-        html += '<div><div class="stat-val">' + Utils.fmtNum(followers) + '</div><div class="stat-label">Подписчики</div></div>';
-        html += '<div><div class="stat-val">' + Utils.fmtNum(followingCount) + '</div><div class="stat-label">Подписки</div></div>';
-        html += '</div>';
-        html += followBtn;
+        html += '<div class="profile-stats"><div><div class="stat-val">' + myVideos.length + '</div><div class="stat-label">Видео</div></div><div><div class="stat-val">' + Utils.fmtNum(totalLikes) + '</div><div class="stat-label">Лайков</div></div><div><div class="stat-val">' + Utils.fmtNum(followers) + '</div><div class="stat-label">Подписчики</div></div><div><div class="stat-val">' + Utils.fmtNum(followingCount) + '</div><div class="stat-label">Подписки</div></div></div>' + followBtn;
         if (isOwn) {
             html += '<div style="display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap;">';
             if (!isPrem) html += '<button class="btn btn-premium btn-small" onclick="Premium.open()">👑 Премиум</button>';
-            html += '<button class="btn btn-secondary btn-small" onclick="Upload.openMenu()">📤 Загрузить</button>';
-            html += '<button class="btn btn-danger btn-small" onclick="Auth.logout()">Выйти</button>';
-            html += '</div>';
-            html += limitBadge;
+            html += '<button class="btn btn-secondary btn-small" onclick="Upload.openMenu()">📤 Загрузить</button><button class="btn btn-danger btn-small" onclick="Auth.logout()">Выйти</button></div>' + limitBadge;
         }
         html += '</div>';
         if (isOwn) {
-            html += '<div class="profile-tabs">';
-            html += '<div class="profile-tab ' + (this.currentTab === 'videos' ? 'active' : '') + '" onclick="Profile.switchTab(\'videos\')">🎬 Видео</div>';
-            html += '<div class="profile-tab ' + (this.currentTab === 'promos' ? 'active' : '') + '" onclick="Profile.switchTab(\'promos\')">🎁 Промокоды</div>';
-            html += '</div><div id="profile-tab-content"></div>';
+            html += '<div class="profile-tabs"><div class="profile-tab ' + (this.currentTab === 'videos' ? 'active' : '') + '" onclick="Profile.switchTab(\'videos\')">🎬 Видео</div><div class="profile-tab ' + (this.currentTab === 'promos' ? 'active' : '') + '" onclick="Profile.switchTab(\'promos\')">🎁 Промокоды</div></div><div id="profile-tab-content"></div>';
         } else {
-            html += '<div style="font-size:14px;font-weight:700;color:var(--text-sec);margin:20px 0 12px;">ВИДЕО</div>';
-            html += '<div class="videos-grid">' + (gridHtml || '<div class="empty-state"><div class="empty-text">Пока нет видео</div></div>') + '</div>';
+            html += '<div style="font-size:14px;font-weight:700;color:var(--text-sec);margin:20px 0 12px;">ВИДЕО</div><div class="videos-grid">' + (gridHtml || '<div class="empty-state"><div class="empty-text">Пока нет видео</div></div>') + '</div>';
         }
         document.getElementById('profile-content').innerHTML = html;
         if (isOwn) this.renderTab(myVideos, gridHtml);
@@ -3116,10 +3274,7 @@ var Profile = {
             } else {
                 html += '<div class="promo-status"><div style="font-size:36px;margin-bottom:8px;">💎</div><div style="font-weight:800;">Не активен</div></div>';
             }
-            html += '<div class="form-group" style="max-width:none;"><label class="form-label">Промокод</label><input type="text" class="form-input" id="profile-promo-input" placeholder="SHDW-XXXXXX" style="text-transform:uppercase;letter-spacing:2px;text-align:center;"></div>';
-            html += '<button class="btn btn-premium" style="width:100%;" onclick="Profile.activatePromo()">Активировать</button>';
-            html += '<button class="btn btn-telegram" style="width:100%;margin-top:10px;" onclick="Premium.openTelegram()">✈️ Купить в Telegram</button>';
-            html += '</div>';
+            html += '<div class="form-group" style="max-width:none;"><label class="form-label">Промокод</label><input type="text" class="form-input" id="profile-promo-input" placeholder="SHDW-XXXXXX" style="text-transform:uppercase;letter-spacing:2px;text-align:center;"></div><button class="btn btn-premium" style="width:100%;" onclick="Profile.activatePromo()">Активировать</button><button class="btn btn-telegram" style="width:100%;margin-top:10px;" onclick="Premium.openTelegram()">✈️ Купить в Telegram</button></div>';
             container.innerHTML = html;
         }
     },
@@ -3159,10 +3314,7 @@ var Admin = {
     loginTaps: 0,
     currentTab: 'users',
 
-    logoTap: function() {
-        this.loginTaps++;
-        if (this.loginTaps >= 5) { this.loginTaps = 0; this.openLogin(); }
-    },
+    logoTap: function() { this.loginTaps++; if (this.loginTaps >= 5) { this.loginTaps = 0; this.openLogin(); } },
 
     openLogin: function() {
         App.modal('<div class="modal-header"><div class="modal-title">🔐 Код админа</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="form-group"><input type="password" class="form-input" id="admin-pass"></div><button class="btn btn-primary" style="width:100%;" onclick="Admin.checkPass()">Войти</button>');
@@ -3184,10 +3336,7 @@ var Admin = {
                 var users = usersResult.data || [];
                 for (var i = 0; i < users.length; i++) {
                     var u = users[i];
-                    content += '<div class="admin-row"><div style="display:flex;align-items:center;gap:10px;min-width:0;">';
-                    content += '<div class="avatar small ' + (u.banned ? 'banned' : (Premium.isActive(u) ? 'premium' : 'regular')) + '">' + avatarContent(u) + '</div>';
-                    content += '<div style="min-width:0;"><div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + Utils.esc(u.display_name) + ' ' + (u.banned ? '🚫' : Premium.badge(u)) + '</div>';
-                    content += '<div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(u.username) + '</div></div></div>';
+                    content += '<div class="admin-row"><div style="display:flex;align-items:center;gap:10px;min-width:0;"><div class="avatar small ' + (u.banned ? 'banned' : (Premium.isActive(u) ? 'premium' : 'regular')) + '">' + avatarContent(u) + '</div><div style="min-width:0;"><div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + Utils.esc(u.display_name) + ' ' + (u.banned ? '🚫' : Premium.badge(u)) + '</div><div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(u.username) + '</div></div></div>';
                     if (u.banned) { content += '<button class="btn btn-secondary btn-small" onclick="Admin.unban(\'' + u.id + '\')">Разбанить</button>'; }
                     else { content += '<button class="btn btn-danger btn-small" onclick="Admin.banUser(\'' + u.id + '\')">🚫 Бан</button>'; }
                     content += '</div>';
@@ -3199,9 +3348,7 @@ var Admin = {
                 var videos = videosResult.data || [];
                 for (var j = 0; j < videos.length; j++) {
                     var v = videos[j];
-                    content += '<div class="admin-row"><div style="min-width:0;"><div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + Utils.esc(v.title) + '</div>';
-                    content += '<div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(v.username) + '</div></div>';
-                    content += '<button class="btn btn-danger btn-small" onclick="Admin.deleteVideo(\'' + v.id + '\')">🗑</button></div>';
+                    content += '<div class="admin-row"><div style="min-width:0;"><div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + Utils.esc(v.title) + '</div><div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(v.username) + '</div></div><button class="btn btn-danger btn-small" onclick="Admin.deleteVideo(\'' + v.id + '\')">🗑</button></div>';
                 }
                 self.showPanel(content);
             });
@@ -3209,12 +3356,9 @@ var Admin = {
             DB.getAllPromos().then(function(promos) {
                 var active = promos.filter(function(p) { return !p.used; });
                 var used = promos.filter(function(p) { return p.used; });
-                content += '<button class="btn btn-premium" style="width:100%;margin-bottom:12px;" onclick="Admin.createPromo()">+ Создать</button>';
-                content += '<div id="new-promo-slot"></div>';
-                content += '<div class="admin-section-title">Активные (' + active.length + ')</div>';
+                content += '<button class="btn btn-premium" style="width:100%;margin-bottom:12px;" onclick="Admin.createPromo()">+ Создать</button><div id="new-promo-slot"></div><div class="admin-section-title">Активные (' + active.length + ')</div>';
                 for (var k = 0; k < active.length; k++) {
-                    content += '<div class="admin-row"><div style="font-family:monospace;font-weight:700;">' + active[k].code + '</div>';
-                    content += '<button class="btn btn-secondary btn-small" onclick="Admin.copyPromo(\'' + active[k].code + '\')">📋</button></div>';
+                    content += '<div class="admin-row"><div style="font-family:monospace;font-weight:700;">' + active[k].code + '</div><button class="btn btn-secondary btn-small" onclick="Admin.copyPromo(\'' + active[k].code + '\')">📋</button></div>';
                 }
                 content += '<div class="admin-section-title">Использованные (' + used.length + ')</div>';
                 for (var m = 0; m < used.length; m++) {
