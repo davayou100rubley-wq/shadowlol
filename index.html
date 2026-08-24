@@ -8,12 +8,7 @@
 <title>Shadow</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-/* ============================================
-   СБРОС СТИЛЕЙ
-   ============================================ */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -46,15 +41,13 @@ button {
     -webkit-tap-highlight-color: transparent;
 }
 
-input,
-textarea {
+input, textarea {
     font-family: inherit;
     outline: none;
     border: none;
 }
 
-video,
-img {
+video, img {
     display: block;
 }
 
@@ -71,9 +64,6 @@ img {
     border-radius: 3px;
 }
 
-/* ============================================
-   ПЕРЕМЕННЫЕ CSS
-   ============================================ */
 :root {
     --primary: #a855f7;
     --primary-dark: #7c3aed;
@@ -90,11 +80,9 @@ img {
     --premium-dark: #f59e0b;
     --nav-h: 60px;
     --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
 }
 
-/* ============================================
-   ПРИЛОЖЕНИЕ И ЭКРАНЫ
-   ============================================ */
 #app {
     width: 100%;
     height: 100%;
@@ -118,9 +106,6 @@ img {
     opacity: 1;
 }
 
-/* ============================================
-   КНОПКИ
-   ============================================ */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -189,9 +174,6 @@ img {
     max-width: 320px;
 }
 
-/* ============================================
-   ФОРМЫ
-   ============================================ */
 .form-group {
     width: 100%;
     max-width: 360px;
@@ -229,9 +211,6 @@ img {
     min-height: 80px;
 }
 
-/* ============================================
-   АВАТАРЫ
-   ============================================ */
 .avatar {
     width: 48px;
     height: 48px;
@@ -299,9 +278,6 @@ img {
     box-shadow: 0 0 0 2px var(--premium);
 }
 
-/* ============================================
-   STORIES BAR
-   ============================================ */
 .stories-bar {
     display: flex;
     gap: 8px;
@@ -362,9 +338,6 @@ img {
     color: var(--primary);
 }
 
-/* ============================================
-   STORY VIEWER
-   ============================================ */
 .story-viewer {
     position: fixed;
     inset: 0;
@@ -414,12 +387,8 @@ img {
 }
 
 @keyframes storyProgress {
-    from {
-        width: 0%;
-    }
-    to {
-        width: 100%;
-    }
+    from { width: 0%; }
+    to { width: 100%; }
 }
 
 .story-header {
@@ -479,125 +448,19 @@ img {
     overflow: hidden;
 }
 
-.story-content img {
+.story-content img,
+.story-content video {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-.story-nav-zone {
-    position: absolute;
-    top: 60px;
-    bottom: 60px;
-    width: 30%;
-    z-index: 8;
-}
-
-.story-nav-left {
-    left: 0;
-}
-
-.story-nav-right {
-    right: 0;
-}
-
-/* ============================================
-   STORY UPLOAD
-   ============================================ */
-.story-upload-slides {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding: 10px 0;
-    scrollbar-width: none;
-}
-
-.story-upload-slides::-webkit-scrollbar {
-    display: none;
-}
-
-.story-slide-preview {
-    width: 80px;
-    height: 120px;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    flex-shrink: 0;
-    border: 2px solid var(--border);
-    background: var(--bg-card-alt);
-}
-
-.story-slide-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.story-slide-remove {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    color: #fff;
-}
-
-.story-slide-add {
-    width: 80px;
-    height: 120px;
-    border-radius: 8px;
-    border: 2px dashed var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    flex-shrink: 0;
-    cursor: pointer;
-    color: var(--text-sec);
-    font-size: 12px;
-    transition: all 0.2s;
-}
-
-.story-slide-add:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.story-slide-number {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* ============================================
-   ЛЕНТА НА ГЛАВНОЙ
-   ============================================ */
 .home-feed {
     flex: 1;
     overflow-y: auto;
     padding-bottom: calc(var(--nav-h) + var(--safe-b));
 }
 
-/* ============================================
-   ВИДЕО ЛЕНТА
-   ============================================ */
 .feed-container {
     width: 100%;
     height: 100%;
@@ -801,9 +664,6 @@ img {
     gap: 12px;
 }
 
-/* ============================================
-   НИЖНЯЯ НАВИГАЦИЯ
-   ============================================ */
 .bottom-nav-fixed {
     position: fixed;
     bottom: 0;
@@ -860,9 +720,6 @@ img {
     fill: #fff;
 }
 
-/* ============================================
-   ПРОФИЛЬ
-   ============================================ */
 .profile-scroll {
     flex: 1;
     overflow-y: auto;
@@ -1008,9 +865,6 @@ img {
     margin-bottom: 16px;
 }
 
-/* ============================================
-   МОДАЛКИ
-   ============================================ */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -1072,9 +926,6 @@ img {
     fill: var(--text-sec);
 }
 
-/* ============================================
-   ЗАГРУЗКА ВИДЕО
-   ============================================ */
 .upload-dropzone {
     border: 2px dashed var(--border);
     border-radius: 12px;
@@ -1095,7 +946,8 @@ img {
     margin-bottom: 10px;
 }
 
-.upload-preview-video {
+.upload-preview-video,
+.upload-preview-img {
     width: 100%;
     max-height: 280px;
     border-radius: 10px;
@@ -1138,9 +990,6 @@ img {
     color: var(--premium);
 }
 
-/* ============================================
-   КОММЕНТАРИИ
-   ============================================ */
 .comments-list {
     display: flex;
     flex-direction: column;
@@ -1210,9 +1059,6 @@ img {
     fill: #fff;
 }
 
-/* ============================================
-   ПРЕМИУМ
-   ============================================ */
 .premium-card {
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(245, 158, 11, 0.04));
     border: 2px solid var(--premium);
@@ -1262,9 +1108,6 @@ img {
     margin-bottom: 16px;
 }
 
-/* ============================================
-   TOAST УВЕДОМЛЕНИЯ
-   ============================================ */
 .toast {
     position: fixed;
     bottom: calc(var(--nav-h) + var(--safe-b) + 20px);
@@ -1295,9 +1138,6 @@ img {
     border-color: var(--premium);
 }
 
-/* ============================================
-   ПУСТЫЕ СОСТОЯНИЯ
-   ============================================ */
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -1347,9 +1187,6 @@ img {
     animation: spin 0.8s linear infinite;
 }
 
-/* ============================================
-   АДМИН ПАНЕЛЬ
-   ============================================ */
 .admin-row {
     display: flex;
     align-items: center;
@@ -1407,9 +1244,6 @@ img {
     color: #fff;
 }
 
-/* ============================================
-   ВЫБОР АВАТАРА
-   ============================================ */
 .avatar-picker {
     display: flex;
     gap: 16px;
@@ -1479,9 +1313,6 @@ img {
     font-size: 22px;
 }
 
-/* ============================================
-   ПРИВЕТСТВИЕ
-   ============================================ */
 .welcome-title {
     font-size: clamp(52px, 13vw, 76px);
     font-weight: 900;
@@ -1510,67 +1341,31 @@ img {
     margin-top: 40px;
 }
 
-/* ============================================
-   АНИМАЦИИ
-   ============================================ */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes slideUp {
-    from {
-        transform: translateY(60px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(60px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes toastIn {
-    from {
-        transform: translateX(-50%) translateY(20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
 }
 
 @keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
 @keyframes heartPop {
-    0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 0;
-    }
-    15% {
-        transform: translate(-50%, -50%) scale(1.25);
-        opacity: 1;
-    }
-    30% {
-        transform: translate(-50%, -50%) scale(0.95);
-    }
-    45%,
-    80% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(0.9);
-        opacity: 0;
-    }
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    15% { transform: translate(-50%, -50%) scale(1.25); opacity: 1; }
+    30% { transform: translate(-50%, -50%) scale(0.95); }
+    45%, 80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0; }
 }
 
 .heart-pop {
@@ -1595,9 +1390,7 @@ img {
 <body>
 <div id="app">
 
-<!-- ============================================
-     ЭКРАН ПРИВЕТСТВИЯ
-     ============================================ -->
+<!-- ПРИВЕТСТВИЕ -->
 <div class="screen active" id="screen-welcome" style="padding:20px;align-items:center;justify-content:center;">
     <div id="welcome-logo" style="margin-bottom:32px;">
         <svg width="110" height="110" viewBox="0 0 120 120">
@@ -1622,9 +1415,7 @@ img {
     </div>
 </div>
 
-<!-- ============================================
-     ЭКРАН РЕГИСТРАЦИИ
-     ============================================ -->
+<!-- РЕГИСТРАЦИЯ -->
 <div class="screen" id="screen-register" style="padding:20px;align-items:flex-start;">
     <div style="width:100%;max-width:400px;">
         <button class="btn btn-ghost btn-small" onclick="App.go('welcome')" style="margin-bottom:20px;">← Назад</button>
@@ -1658,9 +1449,7 @@ img {
     </div>
 </div>
 
-<!-- ============================================
-     ЭКРАН ВХОДА
-     ============================================ -->
+<!-- ВХОД -->
 <div class="screen" id="screen-login" style="padding:20px;align-items:flex-start;">
     <div style="width:100%;max-width:400px;">
         <button class="btn btn-ghost btn-small" onclick="App.go('welcome')" style="margin-bottom:20px;">← Назад</button>
@@ -1677,9 +1466,7 @@ img {
     </div>
 </div>
 
-<!-- ============================================
-     ЭКРАН БАНА
-     ============================================ -->
+<!-- БАН -->
 <div class="screen" id="screen-banned" style="padding:20px;align-items:center;justify-content:center;">
     <div style="text-align:center;max-width:340px;">
         <div class="ban-icon">🚫</div>
@@ -1690,9 +1477,7 @@ img {
     </div>
 </div>
 
-<!-- ============================================
-     ГЛАВНАЯ (поиск + сторис + видео)
-     ============================================ -->
+<!-- ГЛАВНАЯ -->
 <div class="screen" id="screen-home" style="flex-direction:column;">
     <div style="padding:8px 10px;background:#000;border-bottom:1px solid var(--border);flex-shrink:0;">
         <input type="text" style="width:100%;padding:10px 16px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:#fff;font-size:14px;" id="home-search-input" placeholder="🔍 Поиск людей и видео..." oninput="HomeSearch.run()">
@@ -1701,63 +1486,27 @@ img {
     <div id="stories-bar-container" style="flex-shrink:0;"></div>
     <div class="home-feed" id="home-feed-container"></div>
     <nav class="bottom-nav-fixed">
-        <button class="nav-btn active" onclick="App.nav('home')">
-            <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
-            <span>Главная</span>
-        </button>
-        <button class="nav-btn" onclick="App.nav('feed')">
-            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
-            <span>Лента</span>
-        </button>
-        <button class="nav-btn" onclick="Upload.openMenu()">
-            <div class="upload-nav-btn">
-                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
-            </div>
-        </button>
-        <button class="nav-btn" onclick="App.nav('inbox')">
-            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-            <span>Входящие</span>
-        </button>
-        <button class="nav-btn" onclick="App.nav('profile')">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            <span>Профиль</span>
-        </button>
+        <button class="nav-btn active" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
+        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
+        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
+        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
+        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
     </nav>
 </div>
 
-<!-- ============================================
-     ЛЕНТА (только видео)
-     ============================================ -->
+<!-- ЛЕНТА -->
 <div class="screen" id="screen-feed" style="flex-direction:column;">
     <div class="feed-container" id="feed-container"></div>
     <nav class="bottom-nav-fixed">
-        <button class="nav-btn" onclick="App.nav('home')">
-            <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
-            <span>Главная</span>
-        </button>
-        <button class="nav-btn active" onclick="App.nav('feed')">
-            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
-            <span>Лента</span>
-        </button>
-        <button class="nav-btn" onclick="Upload.openMenu()">
-            <div class="upload-nav-btn">
-                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
-            </div>
-        </button>
-        <button class="nav-btn" onclick="App.nav('inbox')">
-            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-            <span>Входящие</span>
-        </button>
-        <button class="nav-btn" onclick="App.nav('profile')">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            <span>Профиль</span>
-        </button>
+        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
+        <button class="nav-btn active" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
+        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
+        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
+        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
     </nav>
 </div>
 
-<!-- ============================================
-     ВХОДЯЩИЕ
-     ============================================ -->
+<!-- ВХОДЯЩИЕ -->
 <div class="screen" id="screen-inbox" style="padding:20px;align-items:center;justify-content:center;">
     <div class="empty-state">
         <div class="empty-icon">🔔</div>
@@ -1765,71 +1514,33 @@ img {
         <div class="empty-text">Сообщения и уведомления скоро появятся</div>
     </div>
     <nav class="bottom-nav-fixed">
-        <button class="nav-btn" onclick="App.nav('home')">
-            <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
-            <span>Главная</span>
-        </button>
-        <button class="nav-btn" onclick="App.nav('feed')">
-            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
-            <span>Лента</span>
-        </button>
-        <button class="nav-btn" onclick="Upload.openMenu()">
-            <div class="upload-nav-btn">
-                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
-            </div>
-        </button>
-        <button class="nav-btn active" onclick="App.nav('inbox')">
-            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-            <span>Входящие</span>
-        </button>
-        <button class="nav-btn" onclick="App.nav('profile')">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            <span>Профиль</span>
-        </button>
+        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
+        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
+        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
+        <button class="nav-btn active" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
+        <button class="nav-btn" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
     </nav>
 </div>
 
-<!-- ============================================
-     ПРОФИЛЬ
-     ============================================ -->
+<!-- ПРОФИЛЬ -->
 <div class="screen" id="screen-profile" style="flex-direction:column;">
     <div class="profile-scroll">
         <div id="profile-content"></div>
     </div>
     <nav class="bottom-nav-fixed">
-        <button class="nav-btn" onclick="App.nav('home')">
-            <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
-            <span>Главная</span>
-        </button>
-        <button class="nav-btn" onclick="App.nav('feed')">
-            <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
-            <span>Лента</span>
-        </button>
-        <button class="nav-btn" onclick="Upload.openMenu()">
-            <div class="upload-nav-btn">
-                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
-            </div>
-        </button>
-        <button class="nav-btn" onclick="App.nav('inbox')">
-            <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-            <span>Входящие</span>
-        </button>
-        <button class="nav-btn active" onclick="App.nav('profile')">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            <span>Профиль</span>
-        </button>
+        <button class="nav-btn" data-nav="home" onclick="App.nav('home')"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg><span>Главная</span></button>
+        <button class="nav-btn" data-nav="feed" onclick="App.nav('feed')"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg><span>Лента</span></button>
+        <button class="nav-btn" onclick="Upload.openMenu()"><div class="upload-nav-btn"><svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div></button>
+        <button class="nav-btn" data-nav="inbox" onclick="App.nav('inbox')"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg><span>Входящие</span></button>
+        <button class="nav-btn active" data-nav="profile" onclick="App.nav('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Профиль</span></button>
     </nav>
 </div>
 
-<!-- ============================================
-     STORY VIEWER
-     ============================================ -->
+<!-- STORY VIEWER -->
 <div class="story-viewer" id="story-viewer">
     <div class="story-progress-bar" id="story-progress"></div>
     <div class="story-header" id="story-header"></div>
-    <button class="story-close" onclick="Stories.closeViewer()">
-        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-    </button>
+    <button class="story-close" onclick="Stories.closeViewer()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
     <div class="story-content" id="story-content"></div>
     <div class="story-nav-zone story-nav-left" onclick="Stories.prevSlide()"></div>
     <div class="story-nav-zone story-nav-right" onclick="Stories.nextSlide()"></div>
@@ -1844,12 +1555,15 @@ img {
    ============================================ */
 var SB_URL = 'https://rzahwdxsdvwojdklblbb.supabase.co';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
+
 var sb = null;
 
 try {
-    sb = window.supabase.createClient(SB_URL, SB_KEY);
+    if (window.supabase && window.supabase.createClient) {
+        sb = window.supabase.createClient(SB_URL, SB_KEY);
+    }
 } catch (e) {
-    console.error('SB:', e);
+    console.error('Supabase init error:', e);
 }
 
 function storageUrl(bucket, fname) {
@@ -1868,7 +1582,8 @@ var CONFIG = {
     PREMIUM_DAYS: 30,
     WEEK_MS: 7 * 24 * 60 * 60 * 1000,
     MAX_VIDEO_SEC: 30,
-    MAX_STORY_SLIDES: 4,
+    STORY_PHOTO_SEC: 7,
+    STORY_VIDEO_SEC: 15,
     ADMIN_PASSWORD: 'shadow2024',
     TELEGRAM_LINK: 'https://t.me/shadowlolthehome'
 };
@@ -1938,12 +1653,12 @@ var Utils = {
         document.querySelectorAll('.toast').forEach(function(x) {
             x.remove();
         });
-        var e = document.createElement('div');
-        e.className = 'toast ' + type;
-        e.textContent = msg;
-        document.body.appendChild(e);
+        var el = document.createElement('div');
+        el.className = 'toast ' + type;
+        el.textContent = msg;
+        document.body.appendChild(el);
         setTimeout(function() {
-            e.remove();
+            el.remove();
         }, 3200);
     },
 
@@ -1969,16 +1684,16 @@ var Utils = {
     },
 
     fmtNum: function(n) {
-        if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
-        if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+        if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+        if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
         return String(n || 0);
     },
 
     genPromo: function() {
-        var c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         var s = 'SHDW-';
         for (var i = 0; i < 6; i++) {
-            s += c[Math.floor(Math.random() * c.length)];
+            s += chars[Math.floor(Math.random() * chars.length)];
         }
         return s;
     },
@@ -1994,25 +1709,25 @@ var Utils = {
     compressImage: function(file, sz) {
         sz = sz || 400;
         return new Promise(function(res, rej) {
-            var r = new FileReader();
-            r.onload = function(e) {
-                var i = new Image();
-                i.onload = function() {
-                    var c = document.createElement('canvas');
-                    c.width = sz;
-                    c.height = sz;
-                    var ctx = c.getContext('2d');
-                    var s = Math.min(i.width, i.height);
-                    ctx.drawImage(i, (i.width - s) / 2, (i.height - s) / 2, s, s, 0, 0, sz, sz);
-                    c.toBlob(function(b) {
-                        res(b);
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var canvas = document.createElement('canvas');
+                    canvas.width = sz;
+                    canvas.height = sz;
+                    var ctx = canvas.getContext('2d');
+                    var size = Math.min(img.width, img.height);
+                    ctx.drawImage(img, (img.width - size) / 2, (img.height - size) / 2, size, size, 0, 0, sz, sz);
+                    canvas.toBlob(function(blob) {
+                        res(blob);
                     }, 'image/jpeg', 0.85);
                 };
-                i.onerror = rej;
-                i.src = e.target.result;
+                img.onerror = rej;
+                img.src = e.target.result;
             };
-            r.onerror = rej;
-            r.readAsDataURL(file);
+            reader.onerror = rej;
+            reader.readAsDataURL(file);
         });
     },
 
@@ -2039,7 +1754,7 @@ var Utils = {
    ============================================ */
 var DB = {
     createUser: function(p) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
+        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения с сервером. Проверь интернет.' });
         return Utils.hash(p.password).then(function(ph) {
             var au = '';
             var doUpload = Promise.resolve();
@@ -2073,7 +1788,7 @@ var DB = {
     },
 
     findUser: function(username, password) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
+        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения с сервером' });
         return Utils.hash(password).then(function(ph) {
             return sb.from('profiles').select('*').eq('username', username).eq('password_hash', ph).single();
         }).then(function(r) {
@@ -2148,7 +1863,7 @@ var DB = {
                 return res;
             });
         }).catch(function(e) {
-            console.error('getFeed:', e);
+            console.error('getFeed error:', e);
             return [];
         });
     },
@@ -2202,7 +1917,7 @@ var DB = {
                 thumbnail_url: thumbUrl
             });
         }).then(function(mr) {
-            if (mr.error) throw new Error('Ошибка сохранения');
+            if (mr.error) throw new Error('Ошибка сохранения метаданных');
             return sb.from('uploads').upsert({ user_id: p.userId, uploaded_at: new Date().toISOString() });
         }).then(function() {
             return { ok: true };
@@ -2231,7 +1946,7 @@ var DB = {
                 return sb.from('videos').delete().eq('id', videoId);
             });
         }).catch(function(e) {
-            console.error(e);
+            console.error('deleteVideo error:', e);
         });
     },
 
@@ -2419,7 +2134,7 @@ var DB = {
                 return result;
             });
         }).catch(function(e) {
-            console.error(e);
+            console.error('getActiveStories error:', e);
             return [];
         });
     },
@@ -2430,33 +2145,37 @@ var DB = {
         return sb.from('stories').insert({ user_id: p.userId, username: p.username || 'unknown' }).select().single().then(function(storyResult) {
             if (storyResult.error) throw new Error(storyResult.error.message);
             var story = storyResult.data;
-            var chain = Promise.resolve();
-            for (var i = 0; i < p.slides.length; i++) {
-                (function(index) {
-                    chain = chain.then(function() {
-                        var sl = p.slides[index];
-                        var fname = story.id + '_' + index + '.jpg';
-                        return sb.storage.from('stories').upload(fname, sl.blob, { contentType: 'image/jpeg', upsert: true }).then(function(uploadResult) {
-                            if (uploadResult.error) throw new Error('Ошибка загрузки фото ' + (index + 1) + ': ' + uploadResult.error.message);
-                            var publicUrl = storageUrl('stories', fname);
-                            return sb.from('story_slides').insert({
-                                story_id: story.id,
-                                slide_order: index,
-                                media_type: 'photo',
-                                media_url: publicUrl,
-                                duration: 5
-                            });
-                        }).then(function(slideInsert) {
-                            if (slideInsert.error) throw new Error('Ошибка сохранения ' + (index + 1) + ': ' + slideInsert.error.message);
-                        });
-                    });
-                })(i);
-            }
-            return chain.then(function() {
+            var sl = p.slide;
+            var ext = sl.type === 'video' ? 'mp4' : 'jpg';
+            var fname = story.id + '_0.' + ext;
+            var ct = sl.type === 'video' ? (sl.blob.type || 'video/mp4') : 'image/jpeg';
+            return sb.storage.from('stories').upload(fname, sl.blob, { contentType: ct, upsert: true }).then(function(ur) {
+                if (ur.error) throw new Error('Ошибка загрузки файла: ' + ur.error.message);
+                var pubUrl = storageUrl('stories', fname);
+                var dur = sl.type === 'video' ? sl.duration : CONFIG.STORY_PHOTO_SEC;
+                return sb.from('story_slides').insert({
+                    story_id: story.id,
+                    slide_order: 0,
+                    media_type: sl.type,
+                    media_url: pubUrl,
+                    duration: dur
+                });
+            }).then(function(si) {
+                if (si.error) throw new Error('Ошибка сохранения слайда: ' + si.error.message);
                 return { ok: true };
             });
         }).catch(function(e) {
             return { ok: false, error: e.message || String(e) };
+        });
+    },
+
+    hasActiveStory: function(userId) {
+        if (!sb || !userId) return Promise.resolve(false);
+        var cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+        return sb.from('stories').select('id').eq('user_id', userId).gte('created_at', cutoff).limit(1).then(function(r) {
+            return (r.data && r.data.length > 0);
+        }).catch(function() {
+            return false;
         });
     }
 };
@@ -2512,14 +2231,8 @@ var Premium = {
     redeemPromo: function() {
         var input = document.getElementById('promo-input');
         var code = input.value.trim();
-        if (!code) {
-            Utils.toast('Введи промокод', 'error');
-            return;
-        }
-        if (!Auth.user) {
-            Utils.toast('Нужен аккаунт', 'error');
-            return;
-        }
+        if (!code) { Utils.toast('Введи промокод', 'error'); return; }
+        if (!Auth.user) { Utils.toast('Нужен аккаунт', 'error'); return; }
         DB.redeemPromo(code, Auth.user.id).then(function(res) {
             if (res.ok) {
                 App.closeModal();
@@ -2556,10 +2269,7 @@ var Reg = {
     },
 
     select: function(type, idx) {
-        if (type === 'photo') {
-            this.openPhotoPicker();
-            return;
-        }
+        if (type === 'photo') { this.openPhotoPicker(); return; }
         this.avatarType = type;
         this.avatarIndex = idx || 0;
         if (type === 'classic') this.avatarBlob = null;
@@ -2588,7 +2298,7 @@ var Reg = {
             self.updatePreview();
             Utils.toast('Фото загружено! 📸', 'success');
         }).catch(function() {
-            Utils.toast('Ошибка', 'error');
+            Utils.toast('Ошибка загрузки фото', 'error');
         });
         input.value = '';
     },
@@ -2624,22 +2334,10 @@ var Auth = {
         var password = document.getElementById('reg-password').value;
         var display = document.getElementById('reg-displayname').value.trim();
         var bio = document.getElementById('reg-bio').value.trim();
-        if (username.length < 3) {
-            Utils.toast('Имя минимум 3 символа', 'error');
-            return;
-        }
-        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-            Utils.toast('Только латиница, цифры и _', 'error');
-            return;
-        }
-        if (password.length < 6) {
-            Utils.toast('Пароль минимум 6 символов', 'error');
-            return;
-        }
-        if (!display) {
-            Utils.toast('Введи отображаемое имя', 'error');
-            return;
-        }
+        if (username.length < 3) { Utils.toast('Имя минимум 3 символа', 'error'); return; }
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) { Utils.toast('Только латиница, цифры и _', 'error'); return; }
+        if (password.length < 6) { Utils.toast('Пароль минимум 6 символов', 'error'); return; }
+        if (!display) { Utils.toast('Введи отображаемое имя', 'error'); return; }
         var btn = document.getElementById('reg-submit');
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner"></div>';
@@ -2674,25 +2372,14 @@ var Auth = {
     login: function() {
         var username = document.getElementById('login-username').value.trim();
         var password = document.getElementById('login-password').value;
-        if (!username || !password) {
-            Utils.toast('Введи имя и пароль', 'error');
-            return;
-        }
+        if (!username || !password) { Utils.toast('Введи имя и пароль', 'error'); return; }
         var btn = document.getElementById('login-submit');
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner"></div>';
         var self = this;
         DB.findUser(username, password).then(function(res) {
-            if (!res.ok) {
-                Utils.toast(res.error, 'error');
-                btn.disabled = false;
-                btn.textContent = 'Войти';
-                return;
-            }
-            if (res.user.banned) {
-                App.showBanScreen(res.user);
-                return;
-            }
+            if (!res.ok) { Utils.toast(res.error, 'error'); btn.disabled = false; btn.textContent = 'Войти'; return; }
+            if (res.user.banned) { App.showBanScreen(res.user); return; }
             self.user = res.user;
             self.session = { user_id: res.user.id, username: username, password: password };
             localStorage.setItem('shadow_session', JSON.stringify(self.session));
@@ -2714,21 +2401,13 @@ var Auth = {
             var self = this;
             return DB.getUserById(this.session.user_id).then(function(u) {
                 if (!u) return false;
-                if (u.banned) {
-                    App.showBanScreen(u);
-                    return false;
-                }
+                if (u.banned) { App.showBanScreen(u); return false; }
                 return DB.findUser(u.username, self.session.password).then(function(chk) {
-                    if (!chk.ok) {
-                        localStorage.removeItem('shadow_session');
-                        return false;
-                    }
+                    if (!chk.ok) { localStorage.removeItem('shadow_session'); return false; }
                     self.user = u;
                     return true;
                 });
-            }).catch(function() {
-                return false;
-            });
+            }).catch(function() { return false; });
         } catch (e) {
             return Promise.resolve(false);
         }
@@ -2751,26 +2430,17 @@ var Limits = {
     weekUploads: function(uid) {
         return DB.getUploads(uid).then(function(uploads) {
             var weekAgo = Date.now() - CONFIG.WEEK_MS;
-            return uploads.filter(function(t) {
-                return t > weekAgo;
-            }).length;
+            return uploads.filter(function(t) { return t > weekAgo; }).length;
         });
     },
-
     canUpload: function(user) {
         var limit = Premium.isActive(user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT;
-        return this.weekUploads(user.id).then(function(count) {
-            return count < limit;
-        });
+        return this.weekUploads(user.id).then(function(count) { return count < limit; });
     },
-
     remaining: function(user) {
         var limit = Premium.isActive(user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT;
-        return this.weekUploads(user.id).then(function(count) {
-            return Math.max(0, limit - count);
-        });
+        return this.weekUploads(user.id).then(function(count) { return Math.max(0, limit - count); });
     },
-
     maxMB: function(user) {
         return Premium.isActive(user) ? CONFIG.PREMIUM_MAX_MB : CONFIG.FREE_MAX_MB;
     }
@@ -2786,7 +2456,7 @@ var Stories = {
     timer: null,
     _vs: null,
     _vu: null,
-    slides: [],
+    _pendingSlide: null,
 
     loadBar: function() {
         var container = document.getElementById('stories-bar-container');
@@ -2796,33 +2466,54 @@ var Stories = {
             self.allStories = stories;
             var html = '<div class="stories-bar">';
             if (Auth.user && !Auth.isGuest) {
-                html += '<div class="story-avatar-wrap" onclick="Stories.openUpload()"><div class="story-add-btn">+</div><div class="story-avatar-name">Моя история</div></div>';
-            }
-            var seen = {};
-            for (var i = 0; i < self.allStories.length; i++) {
-                var s = self.allStories[i];
-                if (seen[s.user_id]) continue;
-                seen[s.user_id] = true;
-                var author = s.author || {};
-                var isMe = Auth.user && Auth.user.id === s.user_id;
-                html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')">';
-                html += '<div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div>';
-                html += '<div class="story-avatar-name">' + Utils.esc(isMe ? 'Вы' : (author.display_name || '?')) + '</div>';
+                DB.hasActiveStory(Auth.user.id).then(function(hasMy) {
+                    if (hasMy) {
+                        html += '<div class="story-avatar-wrap" onclick="Stories.viewMyStory()"><div class="avatar has-story ' + (Premium.isActive(Auth.user) ? 'premium' : 'regular') + '">' + avatarContent(Auth.user) + '</div><div class="story-avatar-name">Моя</div></div>';
+                    } else {
+                        html += '<div class="story-avatar-wrap" onclick="Stories.openUpload()"><div class="story-add-btn">+</div><div class="story-avatar-name">Добавить</div></div>';
+                    }
+                    var seen = {};
+                    seen[Auth.user.id] = true;
+                    for (var i = 0; i < self.allStories.length; i++) {
+                        var s = self.allStories[i];
+                        if (seen[s.user_id]) continue;
+                        seen[s.user_id] = true;
+                        var author = s.author || {};
+                        html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')">';
+                        html += '<div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div>';
+                        html += '<div class="story-avatar-name">' + Utils.esc(author.display_name || '?') + '</div>';
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                    container.innerHTML = html;
+                });
+            } else {
+                var seen2 = {};
+                for (var i = 0; i < self.allStories.length; i++) {
+                    var s = self.allStories[i];
+                    if (seen2[s.user_id]) continue;
+                    seen2[s.user_id] = true;
+                    var author = s.author || {};
+                    html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')">';
+                    html += '<div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div>';
+                    html += '<div class="story-avatar-name">' + Utils.esc(author.display_name || '?') + '</div>';
+                    html += '</div>';
+                }
                 html += '</div>';
+                container.innerHTML = html;
             }
-            html += '</div>';
-            container.innerHTML = html;
         });
     },
 
+    viewMyStory: function() {
+        if (!Auth.user) return;
+        var myStories = this.allStories.filter(function(s) { return s.user_id === Auth.user.id; });
+        if (myStories.length > 0) this.openViewer(Auth.user.id);
+    },
+
     openViewer: function(userId) {
-        var stories = this.allStories.filter(function(s) {
-            return s.user_id === userId;
-        });
-        if (!stories.length) {
-            Utils.toast('История не найдена', 'error');
-            return;
-        }
+        var stories = this.allStories.filter(function(s) { return s.user_id === userId; });
+        if (!stories.length) { Utils.toast('История не найдена', 'error'); return; }
         this.currentStoryIdx = 0;
         this.currentSlideIdx = 0;
         this._vs = stories;
@@ -2837,63 +2528,23 @@ var Stories = {
 
     renderSlide: function() {
         var story = this._vs[this.currentStoryIdx];
-        if (!story) {
-            this.closeViewer();
-            return;
-        }
+        if (!story) { this.closeViewer(); return; }
         var slide = story.slides[this.currentSlideIdx];
-        if (!slide) {
-            this.closeViewer();
-            return;
-        }
+        if (!slide) { this.closeViewer(); return; }
         var prog = document.getElementById('story-progress');
-        var progHtml = '';
-        for (var i = 0; i < story.slides.length; i++) {
-            var cls = 'story-progress-segment';
-            if (i < this.currentSlideIdx) cls += ' done';
-            else if (i === this.currentSlideIdx) cls += ' active';
-            var dur = slide.duration || 5;
-            progHtml += '<div class="' + cls + '" style="' + (i === this.currentSlideIdx ? 'animation-duration:' + dur + 's' : '') + '"><div class="story-progress-fill"></div></div>';
-        }
-        prog.innerHTML = progHtml;
+        var dur = slide.duration || 5;
+        prog.innerHTML = '<div class="story-progress-segment active" style="animation-duration:' + dur + 's"><div class="story-progress-fill"></div></div>';
         var user = this._vu || {};
         document.getElementById('story-header').innerHTML = '<div class="avatar ' + (Premium.isActive(user) ? 'premium' : 'regular') + '">' + avatarContent(user) + '</div><div><div class="story-header-name">' + Utils.esc(user.display_name || '?') + ' ' + Premium.badge(user) + '</div><div class="story-header-time">' + Utils.timeAgo(story.created_at) + '</div></div>';
         var content = document.getElementById('story-content');
-        content.innerHTML = '<img src="' + slide.media_url + '" alt="" style="max-width:100%;max-height:100%;object-fit:contain;">';
+        if (slide.media_type === 'video') {
+            content.innerHTML = '<video src="' + slide.media_url + '" autoplay muted playsinline style="max-width:100%;max-height:100%;object-fit:contain;"></video>';
+        } else {
+            content.innerHTML = '<img src="' + slide.media_url + '" alt="" style="max-width:100%;max-height:100%;object-fit:contain;">';
+        }
         var self = this;
         clearTimeout(this.timer);
-        this.timer = setTimeout(function() {
-            self.nextSlide();
-        }, (slide.duration || 5) * 1000);
-    },
-
-    nextSlide: function() {
-        clearTimeout(this.timer);
-        var story = this._vs[this.currentStoryIdx];
-        if (this.currentSlideIdx < story.slides.length - 1) {
-            this.currentSlideIdx++;
-            this.renderSlide();
-        } else if (this.currentStoryIdx < this._vs.length - 1) {
-            this.currentStoryIdx++;
-            this.currentSlideIdx = 0;
-            this.renderSlide();
-        } else {
-            this.closeViewer();
-        }
-    },
-
-    prevSlide: function() {
-        clearTimeout(this.timer);
-        if (this.currentSlideIdx > 0) {
-            this.currentSlideIdx--;
-            this.renderSlide();
-        } else if (this.currentStoryIdx > 0) {
-            this.currentStoryIdx--;
-            this.currentSlideIdx = 0;
-            this.renderSlide();
-        } else {
-            this.renderSlide();
-        }
+        this.timer = setTimeout(function() { self.closeViewer(); }, dur * 1000);
     },
 
     closeViewer: function() {
@@ -2903,67 +2554,51 @@ var Stories = {
     },
 
     openUpload: function() {
-        if (!Auth.user || Auth.isGuest) {
-            Utils.toast('Войди в аккаунт', 'error');
-            return;
-        }
-        this.slides = [];
-        this.renderUploadModal();
+        if (!Auth.user || Auth.isGuest) { Utils.toast('Войди в аккаунт', 'error'); return; }
+        this._pendingSlide = null;
+        App.modal('<div class="modal-header"><div class="modal-title">📸 Новая история</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div style="font-size:13px;color:var(--text-sec);margin-bottom:12px;">Одно фото (7 сек) или видео (макс 15 сек) · живёт 24 часа</div><div id="story-upload-area"><div class="upload-dropzone" onclick="document.getElementById(\'story-file-input\').click()"><div class="upload-dropzone-icon">📷</div><div style="font-weight:600;">Выбери фото или видео</div><div style="font-size:13px;color:var(--text-sec);">Фото = 7 сек · Видео = макс 15 сек</div></div><input type="file" id="story-file-input" accept="image/*,video/*" style="display:none;" onchange="Stories.handleFile(this)"></div><button class="btn btn-primary btn-block" id="story-submit-btn" onclick="Stories.submitStory()" disabled style="margin-top:16px;">Опубликовать</button>');
     },
 
-    renderUploadModal: function() {
-        var max = CONFIG.MAX_STORY_SLIDES;
-        var slidesHtml = '';
-        for (var i = 0; i < this.slides.length; i++) {
-            var sl = this.slides[i];
-            var url = URL.createObjectURL(sl.blob);
-            var preview = '<img src="' + url + '" style="width:100%;height:100%;object-fit:cover;">';
-            slidesHtml += '<div class="story-slide-preview"><div class="story-slide-number">' + (i + 1) + '</div>' + preview + '<button class="story-slide-remove" onclick="Stories.removeSlide(' + i + ')">✕</button></div>';
-        }
-        if (this.slides.length < max) {
-            slidesHtml += '<div class="story-slide-add" onclick="document.getElementById(\'story-file-input\').click()"><div style="font-size:24px;">+</div><div>Добавить</div></div>';
-        }
-        App.modal('<div class="modal-header"><div class="modal-title">📸 Новая история</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div style="font-size:13px;color:var(--text-sec);margin-bottom:12px;">Максимум ' + max + ' фото · живут 24 часа</div><input type="file" id="story-file-input" accept="image/*" multiple style="display:none;" onchange="Stories.pickFiles(this)"><div class="story-upload-slides">' + slidesHtml + '</div><button class="btn btn-primary" style="width:100%;margin-top:16px;" id="story-submit" onclick="Stories.submit()" ' + (this.slides.length === 0 ? 'disabled' : '') + '>Опубликовать (' + this.slides.length + '/' + max + ')</button>');
-    },
-
-    pickFiles: function(input) {
-        var self = this;
-        var files = Array.from(input.files);
+    handleFile: function(input) {
+        var f = input.files[0];
+        if (!f) return;
+        var isVideo = f.type.startsWith('video/');
+        if (!isVideo && !f.type.startsWith('image/')) { Utils.toast('Выбери фото или видео', 'error'); return; }
         var maxMB = Limits.maxMB(Auth.user);
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            if (self.slides.length >= CONFIG.MAX_STORY_SLIDES) {
-                Utils.toast('Максимум ' + CONFIG.MAX_STORY_SLIDES + ' слайда', 'error');
-                break;
-            }
-            if (!file.type.startsWith('image/')) {
-                Utils.toast('Только фотографии для историй', 'error');
-                continue;
-            }
-            if (file.size > maxMB * 1024 * 1024) {
-                Utils.toast('Файл слишком большой', 'error');
-                continue;
-            }
-            self.slides.push({ blob: file, type: 'photo', duration: 5 });
+        if (f.size > maxMB * 1024 * 1024) { Utils.toast('Файл больше ' + maxMB + ' МБ', 'error'); return; }
+        var area = document.getElementById('story-upload-area');
+        if (isVideo) {
+            var url = URL.createObjectURL(f);
+            var tv = document.createElement('video');
+            tv.preload = 'metadata';
+            tv.src = url;
+            tv.onloadedmetadata = function() {
+                URL.revokeObjectURL(url);
+                if (tv.duration > CONFIG.STORY_VIDEO_SEC) {
+                    Utils.toast('Видео ' + Math.round(tv.duration) + ' сек. Максимум ' + CONFIG.STORY_VIDEO_SEC + '!', 'error');
+                    return;
+                }
+                Stories._pendingSlide = { blob: f, type: 'video', duration: Math.round(tv.duration) };
+                area.innerHTML = '<div style="text-align:center;padding:20px;"><div style="font-size:36px;">✅</div><div style="margin-top:8px;font-weight:600;">Видео готово (' + Math.round(tv.duration) + ' сек)</div></div>';
+                document.getElementById('story-submit-btn').disabled = false;
+            };
+        } else {
+            Stories._pendingSlide = { blob: f, type: 'photo', duration: CONFIG.STORY_PHOTO_SEC };
+            area.innerHTML = '<div style="text-align:center;padding:20px;"><div style="font-size:36px;">✅</div><div style="margin-top:8px;font-weight:600;">Фото готово (7 сек)</div></div>';
+            document.getElementById('story-submit-btn').disabled = false;
         }
         input.value = '';
-        self.renderUploadModal();
     },
 
-    removeSlide: function(idx) {
-        this.slides.splice(idx, 1);
-        this.renderUploadModal();
-    },
-
-    submit: function() {
-        if (!this.slides.length) return;
-        var btn = document.getElementById('story-submit');
+    submitStory: function() {
+        if (!Stories._pendingSlide) return;
+        var btn = document.getElementById('story-submit-btn');
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner"></div>';
         DB.createStory({
             userId: Auth.user.id,
             username: Auth.user.username || Auth.user.display_name || 'unknown',
-            slides: this.slides
+            slide: Stories._pendingSlide
         }).then(function(res) {
             if (!res.ok) {
                 Utils.toast(res.error, 'error');
@@ -2971,6 +2606,7 @@ var Stories = {
                 btn.textContent = 'Опубликовать';
                 return;
             }
+            Stories._pendingSlide = null;
             App.closeModal();
             Utils.toast('История опубликована! 📸', 'success');
             Stories.loadBar();
@@ -2983,22 +2619,14 @@ var Stories = {
    ============================================ */
 var HomeSearch = {
     timeout: null,
-
     run: function() {
         var self = this;
         clearTimeout(this.timeout);
         var q = document.getElementById('home-search-input').value.trim().toLowerCase();
         var results = document.getElementById('home-search-results');
-        if (!q) {
-            results.style.display = 'none';
-            results.innerHTML = '';
-            return;
-        }
-        this.timeout = setTimeout(function() {
-            self.doSearch(q);
-        }, 300);
+        if (!q) { results.style.display = 'none'; results.innerHTML = ''; return; }
+        this.timeout = setTimeout(function() { self.doSearch(q); }, 300);
     },
-
     doSearch: function(q) {
         var results = document.getElementById('home-search-results');
         sb.from('profiles').select('*').eq('banned', false).or('username.ilike.%' + q + '%,display_name.ilike.%' + q + '%').limit(10).then(function(usersResult) {
@@ -3047,9 +2675,7 @@ var Feed = {
             var followPromise = Promise.resolve();
             if (Auth.user) {
                 followPromise = sb.from('follows').select('following_id').eq('follower_id', Auth.user.id).then(function(r) {
-                    (r.data || []).forEach(function(f) {
-                        following[f.following_id] = true;
-                    });
+                    (r.data || []).forEach(function(f) { following[f.following_id] = true; });
                 }).catch(function() {});
             }
             return followPromise.then(function() {
@@ -3062,9 +2688,7 @@ var Feed = {
                     score += Math.max(0, 60 - ageDays * 15);
                     v._score = score;
                 }
-                self.videos.sort(function(a, b) {
-                    return b._score - a._score;
-                });
+                self.videos.sort(function(a, b) { return b._score - a._score; });
             });
         });
     },
@@ -3082,13 +2706,9 @@ var Feed = {
             }
             var chain = Promise.resolve();
             self.videos.forEach(function(v) {
-                chain = chain.then(function() {
-                    return self.createCard(v, container);
-                });
+                chain = chain.then(function() { return self.createCard(v, container); });
             });
-            return chain.then(function() {
-                self.setupAutoplay(container);
-            });
+            return chain.then(function() { self.setupAutoplay(container); });
         }).catch(function() {
             container.innerHTML = '<div class="video-card"><div class="video-empty"><div style="font-size:48px;">😞</div></div></div>';
         });
@@ -3110,9 +2730,7 @@ var Feed = {
             html += '<div class="avatar small ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div>';
             html += '<div class="video-author-name" onclick="App.viewProfile(\'' + v.user_id + '\')">@' + Utils.esc(author.username || v.username) + ' ' + Premium.badge(author) + '</div>';
             html += '</div><div class="video-desc">' + Utils.esc(v.title) + '</div>';
-            html += '<div class="video-tags">' + (v.tags || []).map(function(t) {
-                return '<span class="video-tag">#' + Utils.esc(t) + '</span>';
-            }).join('') + '</div></div>';
+            html += '<div class="video-tags">' + (v.tags || []).map(function(t) { return '<span class="video-tag">#' + Utils.esc(t) + '</span>'; }).join('') + '</div></div>';
             html += '<div class="video-actions"><div class="avatar-follow-wrap">';
             html += '<div class="avatar big ' + (Premium.isActive(author) ? 'premium' : 'regular') + '" onclick="App.viewProfile(\'' + v.user_id + '\')">' + avatarContent(author) + '</div>';
             if (showFollow) {
@@ -3134,10 +2752,7 @@ var Feed = {
     },
 
     toggleFollow: function(userId) {
-        if (!Auth.user) {
-            Utils.toast('Войди', 'error');
-            return;
-        }
+        if (!Auth.user) { Utils.toast('Войди', 'error'); return; }
         DB.toggleFollow(userId, Auth.user.id).then(function(res) {
             if (!res) return;
             document.querySelectorAll('[data-follow-btn="' + userId + '"]').forEach(function(btn) {
@@ -3165,21 +2780,14 @@ var Feed = {
                 }
             });
         }, { threshold: 0.6, root: container });
-        container.querySelectorAll('.video-card').forEach(function(c) {
-            self.observer.observe(c);
-        });
+        container.querySelectorAll('.video-card').forEach(function(c) { self.observer.observe(c); });
     },
 
     togglePlayVideo: function(card) {
         var video = card.querySelector('video');
         if (!video) return;
-        if (video.paused) {
-            video.play().catch(function() {});
-            this.setPS(card, true);
-        } else {
-            video.pause();
-            this.setPS(card, false);
-        }
+        if (video.paused) { video.play().catch(function() {}); this.setPS(card, true); }
+        else { video.pause(); this.setPS(card, false); }
     },
 
     setPS: function(card, isPlaying) {
@@ -3192,13 +2800,8 @@ var Feed = {
     },
 
     like: function(videoId) {
-        if (!Auth.user) {
-            Utils.toast('Войди', 'error');
-            return;
-        }
-        var v = this.videos.find(function(x) {
-            return x.id === videoId;
-        });
+        if (!Auth.user) { Utils.toast('Войди', 'error'); return; }
+        var v = this.videos.find(function(x) { return x.id === videoId; });
         if (!v) return;
         var self = this;
         DB.toggleLike(videoId, Auth.user.id).then(function(res) {
@@ -3222,19 +2825,12 @@ var Feed = {
         heart.className = 'heart-pop';
         heart.innerHTML = Icons.heart();
         card.appendChild(heart);
-        setTimeout(function() {
-            heart.remove();
-        }, 900);
+        setTimeout(function() { heart.remove(); }, 900);
     },
 
     save: function(videoId) {
-        if (!Auth.user) {
-            Utils.toast('Войди', 'error');
-            return;
-        }
-        var v = this.videos.find(function(x) {
-            return x.id === videoId;
-        });
+        if (!Auth.user) { Utils.toast('Войди', 'error'); return; }
+        var v = this.videos.find(function(x) { return x.id === videoId; });
         if (!v) return;
         DB.toggleSave(videoId, Auth.user.id).then(function(res) {
             if (!res) return;
@@ -3291,15 +2887,12 @@ var Comments = {
             App.modal('<div class="modal-header"><div class="modal-title">Комментарии (' + comments.length + ')</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="comments-list">' + list + '</div>' + formHtml);
         });
     },
-
     send: function(event, videoId) {
         event.preventDefault();
         var input = document.getElementById('comment-input');
         var text = input.value.trim();
         if (!text || !Auth.user) return;
-        DB.addComment({ videoId: videoId, userId: Auth.user.id, text: text }).then(function() {
-            Comments.open(videoId);
-        });
+        DB.addComment({ videoId: videoId, userId: Auth.user.id, text: text }).then(function() { Comments.open(videoId); });
     }
 };
 
@@ -3311,25 +2904,17 @@ var Upload = {
     duration: 0,
 
     openMenu: function() {
-        if (!Auth.user || Auth.isGuest) {
-            Utils.toast('Войди в аккаунт', 'error');
-            return;
-        }
+        if (!Auth.user || Auth.isGuest) { Utils.toast('Войди в аккаунт', 'error'); return; }
         App.modal('<div class="modal-header"><div class="modal-title">Что публикуем?</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><button class="btn btn-secondary btn-block" style="margin-bottom:12px;" onclick="App.closeModal();Upload.openVideo()">🎬 Загрузить видео</button><button class="btn btn-secondary btn-block" onclick="App.closeModal();Stories.openUpload()">📸 Создать историю</button>');
     },
 
     openVideo: function() {
-        if (!Auth.user || Auth.isGuest) {
-            Utils.toast('Войди в аккаунт', 'error');
-            return;
-        }
+        if (!Auth.user || Auth.isGuest) { Utils.toast('Войди в аккаунт', 'error'); return; }
         var self = this;
         Limits.canUpload(Auth.user).then(function(canUpload) {
             if (!canUpload) {
                 Utils.toast('Лимит видео исчерпан 😔', 'error');
-                if (!Premium.isActive(Auth.user)) setTimeout(function() {
-                    Premium.open();
-                }, 600);
+                if (!Premium.isActive(Auth.user)) setTimeout(function() { Premium.open(); }, 600);
                 return;
             }
             self.file = null;
@@ -3347,15 +2932,9 @@ var Upload = {
         var self = this;
         var f = input.files[0];
         if (!f) return;
-        if (!f.type.startsWith('video/')) {
-            Utils.toast('Выбери видеофайл', 'error');
-            return;
-        }
+        if (!f.type.startsWith('video/')) { Utils.toast('Выбери видеофайл', 'error'); return; }
         var maxMB = Limits.maxMB(Auth.user);
-        if (f.size > maxMB * 1024 * 1024) {
-            Utils.toast('Файл больше ' + maxMB + ' МБ', 'error');
-            return;
-        }
+        if (f.size > maxMB * 1024 * 1024) { Utils.toast('Файл больше ' + maxMB + ' МБ', 'error'); return; }
         var url = URL.createObjectURL(f);
         var testVideo = document.createElement('video');
         testVideo.preload = 'metadata';
@@ -3383,9 +2962,7 @@ var Upload = {
             video.preload = 'metadata';
             video.muted = true;
             video.src = URL.createObjectURL(file);
-            video.onloadeddata = function() {
-                video.currentTime = Math.min(1, video.duration / 2);
-            };
+            video.onloadeddata = function() { video.currentTime = Math.min(1, video.duration / 2); };
             video.onseeked = function() {
                 var canvas = document.createElement('canvas');
                 canvas.width = 360;
@@ -3395,24 +2972,16 @@ var Upload = {
                 var w = video.videoWidth * ratio;
                 var h = video.videoHeight * ratio;
                 ctx.drawImage(video, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-                canvas.toBlob(function(blob) {
-                    URL.revokeObjectURL(video.src);
-                    resolve(blob);
-                }, 'image/jpeg', 0.8);
+                canvas.toBlob(function(blob) { URL.revokeObjectURL(video.src); resolve(blob); }, 'image/jpeg', 0.8);
             };
-            video.onerror = function() {
-                resolve(null);
-            };
+            video.onerror = function() { resolve(null); };
         });
     },
 
     submit: function() {
         var title = document.getElementById('upload-title').value.trim();
         var desc = document.getElementById('upload-desc').value.trim();
-        if (!this.file || !title) {
-            Utils.toast('Заполни название', 'error');
-            return;
-        }
+        if (!this.file || !title) { Utils.toast('Заполни название', 'error'); return; }
         var btn = document.getElementById('upload-btn');
         btn.disabled = true;
         btn.innerHTML = '<div class="spinner"></div>';
@@ -3424,27 +2993,11 @@ var Upload = {
         this.makeThumbnail(this.file).then(function(thumb) {
             bar.style.width = '60%';
             var tagsMatch = desc.match(/#([a-zA-Zа-яА-ЯёЁ0-9_]+)/g) || [];
-            var tags = tagsMatch.map(function(t) {
-                return t.slice(1);
-            });
-            return DB.uploadVideo({
-                userId: Auth.user.id,
-                username: Auth.user.username || Auth.user.display_name || 'unknown',
-                title: title,
-                description: desc,
-                tags: tags,
-                duration: Math.round(self.duration),
-                videoBlob: self.file,
-                thumbBlob: thumb
-            });
+            var tags = tagsMatch.map(function(t) { return t.slice(1); });
+            return DB.uploadVideo({ userId: Auth.user.id, username: Auth.user.username || Auth.user.display_name || 'unknown', title: title, description: desc, tags: tags, duration: Math.round(self.duration), videoBlob: self.file, thumbBlob: thumb });
         }).then(function(res) {
             bar.style.width = '100%';
-            if (!res.ok) {
-                Utils.toast(res.error, 'error');
-                btn.disabled = false;
-                btn.textContent = 'Загрузить';
-                return;
-            }
+            if (!res.ok) { Utils.toast(res.error, 'error'); btn.disabled = false; btn.textContent = 'Загрузить'; return; }
             App.closeModal();
             Utils.toast('Видео загружено! 🌍', 'success');
             App.nav('feed');
@@ -3466,10 +3019,7 @@ var Profile = {
         var targetId = userId || (Auth.user && Auth.user.id);
         var self = this;
         DB.getUserById(targetId).then(function(user) {
-            if (!user) {
-                document.getElementById('profile-content').innerHTML = '<div class="empty-state"><div class="empty-icon">🤷</div><div class="empty-title">Не найден</div></div>';
-                return;
-            }
+            if (!user) { document.getElementById('profile-content').innerHTML = '<div class="empty-state"><div class="empty-icon">🤷</div><div class="empty-title">Не найден</div></div>'; return; }
             var isOwn = Auth.user && !Auth.isGuest && Auth.user.id === user.id;
             var isPrem = Premium.isActive(user);
             return DB.getUserVideos(user.id).then(function(myVideos) {
@@ -3477,9 +3027,7 @@ var Profile = {
                     return DB.followingCount(user.id).then(function(followingCount) {
                         var iFollowPromise = !isOwn ? DB.isFollowing(user.id, Auth.user ? Auth.user.id : null) : Promise.resolve(false);
                         return iFollowPromise.then(function(iFollow) {
-                            var totalLikes = myVideos.reduce(function(sum, v) {
-                                return sum + (v.likes || 0);
-                            }, 0);
+                            var totalLikes = myVideos.reduce(function(sum, v) { return sum + (v.likes || 0); }, 0);
                             var gridHtml = '';
                             for (var i = 0; i < myVideos.length; i++) {
                                 var v = myVideos[i];
@@ -3547,17 +3095,12 @@ var Profile = {
         if (isOwn) this.renderTab(myVideos, gridHtml);
     },
 
-    switchTab: function(tab) {
-        this.currentTab = tab;
-        this.render();
-    },
+    switchTab: function(tab) { this.currentTab = tab; this.render(); },
 
     toggleFollow: function(userId) {
         Feed.toggleFollow(userId);
         var self = this;
-        setTimeout(function() {
-            self.render(userId);
-        }, 500);
+        setTimeout(function() { self.render(userId); }, 500);
     },
 
     renderTab: function(myVideos, gridHtml) {
@@ -3584,26 +3127,16 @@ var Profile = {
     activatePromo: function() {
         var input = document.getElementById('profile-promo-input');
         var code = input.value.trim();
-        if (!code) {
-            Utils.toast('Введи промокод', 'error');
-            return;
-        }
+        if (!code) { Utils.toast('Введи промокод', 'error'); return; }
         var self = this;
         DB.redeemPromo(code, Auth.user.id).then(function(res) {
-            if (res.ok) {
-                Utils.toast('👑 Премиум на ' + res.days + ' дней!', 'premium');
-                Feed.renderInto('feed-container');
-                self.render();
-            } else {
-                Utils.toast(res.error, 'error');
-            }
+            if (res.ok) { Utils.toast('👑 Премиум на ' + res.days + ' дней!', 'premium'); Feed.renderInto('feed-container'); self.render(); }
+            else { Utils.toast(res.error, 'error'); }
         });
     },
 
     openVideoMenu: function(videoId) {
-        var v = Feed.videos.find(function(x) {
-            return x.id === videoId;
-        });
+        var v = Feed.videos.find(function(x) { return x.id === videoId; });
         if (!v) return;
         App.modal('<div class="modal-header"><div class="modal-title">Меню видео</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div style="background:var(--bg-card-alt);border-radius:10px;padding:14px;margin-bottom:16px;"><div style="font-weight:600;">' + Utils.esc(v.title) + '</div><div style="font-size:12px;color:var(--text-sec);margin-top:4px;">❤ ' + Utils.fmtNum(v.likes) + '</div></div><button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" onclick="App.closeModal();Feed.jumpTo(\'' + v.id + '\')">▶️ Посмотреть</button><button class="btn btn-danger" style="width:100%;" onclick="Profile.deleteMyVideo(\'' + v.id + '\')">🗑 Удалить</button>');
     },
@@ -3628,10 +3161,7 @@ var Admin = {
 
     logoTap: function() {
         this.loginTaps++;
-        if (this.loginTaps >= 5) {
-            this.loginTaps = 0;
-            this.openLogin();
-        }
+        if (this.loginTaps >= 5) { this.loginTaps = 0; this.openLogin(); }
     },
 
     openLogin: function() {
@@ -3639,22 +3169,12 @@ var Admin = {
     },
 
     checkPass: function() {
-        if (document.getElementById('admin-pass').value === CONFIG.ADMIN_PASSWORD) {
-            this.openPanel();
-        } else {
-            Utils.toast('Неверный код', 'error');
-        }
+        if (document.getElementById('admin-pass').value === CONFIG.ADMIN_PASSWORD) { this.openPanel(); }
+        else { Utils.toast('Неверный код', 'error'); }
     },
 
-    openPanel: function() {
-        this.currentTab = 'users';
-        this.renderPanel();
-    },
-
-    switchTab: function(tab) {
-        this.currentTab = tab;
-        this.renderPanel();
-    },
+    openPanel: function() { this.currentTab = 'users'; this.renderPanel(); },
+    switchTab: function(tab) { this.currentTab = tab; this.renderPanel(); },
 
     renderPanel: function() {
         var self = this;
@@ -3668,11 +3188,8 @@ var Admin = {
                     content += '<div class="avatar small ' + (u.banned ? 'banned' : (Premium.isActive(u) ? 'premium' : 'regular')) + '">' + avatarContent(u) + '</div>';
                     content += '<div style="min-width:0;"><div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + Utils.esc(u.display_name) + ' ' + (u.banned ? '🚫' : Premium.badge(u)) + '</div>';
                     content += '<div style="font-size:12px;color:var(--text-sec);">@' + Utils.esc(u.username) + '</div></div></div>';
-                    if (u.banned) {
-                        content += '<button class="btn btn-secondary btn-small" onclick="Admin.unban(\'' + u.id + '\')">Разбанить</button>';
-                    } else {
-                        content += '<button class="btn btn-danger btn-small" onclick="Admin.banUser(\'' + u.id + '\')">🚫 Бан</button>';
-                    }
+                    if (u.banned) { content += '<button class="btn btn-secondary btn-small" onclick="Admin.unban(\'' + u.id + '\')">Разбанить</button>'; }
+                    else { content += '<button class="btn btn-danger btn-small" onclick="Admin.banUser(\'' + u.id + '\')">🚫 Бан</button>'; }
                     content += '</div>';
                 }
                 self.showPanel(content);
@@ -3690,12 +3207,8 @@ var Admin = {
             });
         } else if (this.currentTab === 'promos') {
             DB.getAllPromos().then(function(promos) {
-                var active = promos.filter(function(p) {
-                    return !p.used;
-                });
-                var used = promos.filter(function(p) {
-                    return p.used;
-                });
+                var active = promos.filter(function(p) { return !p.used; });
+                var used = promos.filter(function(p) { return p.used; });
                 content += '<button class="btn btn-premium" style="width:100%;margin-bottom:12px;" onclick="Admin.createPromo()">+ Создать</button>';
                 content += '<div id="new-promo-slot"></div>';
                 content += '<div class="admin-section-title">Активные (' + active.length + ')</div>';
@@ -3717,33 +3230,21 @@ var Admin = {
     },
 
     banUser: function(userId) {
-        if (Auth.user && Auth.user.id === userId) {
-            Utils.toast('Нельзя себя!', 'error');
-            return;
-        }
+        if (Auth.user && Auth.user.id === userId) { Utils.toast('Нельзя себя!', 'error'); return; }
         var reason = prompt('Причина:') || 'Нарушение';
         var self = this;
-        DB.banUser(userId, reason).then(function() {
-            Utils.toast('Забанен 🚫', 'error');
-            self.renderPanel();
-        });
+        DB.banUser(userId, reason).then(function() { Utils.toast('Забанен 🚫', 'error'); self.renderPanel(); });
     },
 
     unban: function(userId) {
         var self = this;
-        DB.unbanUser(userId).then(function() {
-            Utils.toast('Разбанен ✅', 'success');
-            self.renderPanel();
-        });
+        DB.unbanUser(userId).then(function() { Utils.toast('Разбанен ✅', 'success'); self.renderPanel(); });
     },
 
     deleteVideo: function(videoId) {
         if (!confirm('Удалить?')) return;
         var self = this;
-        DB.deleteVideo(videoId).then(function() {
-            Utils.toast('Удалено 🗑', 'success');
-            self.renderPanel();
-        });
+        DB.deleteVideo(videoId).then(function() { Utils.toast('Удалено 🗑', 'success'); self.renderPanel(); });
     },
 
     createPromo: function() {
@@ -3754,9 +3255,7 @@ var Admin = {
     },
 
     copyPromo: function(code) {
-        navigator.clipboard.writeText(code).then(function() {
-            Utils.toast('Скопирован 📋', 'success');
-        });
+        navigator.clipboard.writeText(code).then(function() { Utils.toast('Скопирован 📋', 'success'); });
     }
 };
 
@@ -3768,36 +3267,19 @@ var App = {
     profileBack: 'home',
 
     go: function(name) {
-        document.querySelectorAll('.screen').forEach(function(s) {
-            s.classList.remove('active');
-        });
+        document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
         var screen = document.getElementById('screen-' + name);
         if (screen) screen.classList.add('active');
         this.current = name;
-        if (name === 'register') setTimeout(function() {
-            Reg.buildPicker();
-        }, 50);
+        if (name === 'register') setTimeout(function() { Reg.buildPicker(); }, 50);
     },
 
     nav: function(name) {
-        if (name === 'home') {
-            this.go('home');
-            Feed.renderInto('home-feed-container');
-            Stories.loadBar();
-        } else if (name === 'feed') {
-            this.go('feed');
-            Feed.renderInto('feed-container');
-        } else if (name === 'inbox') {
-            this.go('inbox');
-        } else if (name === 'profile') {
-            if (!Auth.user) {
-                Utils.toast('Войди', 'error');
-                var self = this;
-                setTimeout(function() {
-                    self.go('welcome');
-                }, 500);
-                return;
-            }
+        if (name === 'home') { this.go('home'); Feed.renderInto('home-feed-container'); Stories.loadBar(); }
+        else if (name === 'feed') { this.go('feed'); Feed.renderInto('feed-container'); }
+        else if (name === 'inbox') { this.go('inbox'); }
+        else if (name === 'profile') {
+            if (!Auth.user) { Utils.toast('Войди', 'error'); var self = this; setTimeout(function() { self.go('welcome'); }, 500); return; }
             this.profileBack = 'home';
             this.go('profile');
             Profile.currentTab = 'videos';
@@ -3805,48 +3287,27 @@ var App = {
         }
     },
 
-    viewProfile: function(userId) {
-        this.profileBack = this.current;
-        this.go('profile');
-        Profile.render(userId);
-    },
+    viewProfile: function(userId) { this.profileBack = this.current; this.go('profile'); Profile.render(userId); },
 
-    enterGuest: function() {
-        Auth.user = null;
-        Auth.isGuest = true;
-        Utils.toast('Гостевой режим 👀', 'success');
-        this.startApp();
-    },
+    enterGuest: function() { Auth.user = null; Auth.isGuest = true; Utils.toast('Гостевой режим 👀', 'success'); this.startApp(); },
 
     modal: function(html) {
         document.getElementById('modals').innerHTML = '<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)App.closeModal()"><div class="modal">' + html + '</div></div>';
     },
 
-    closeModal: function() {
-        document.getElementById('modals').innerHTML = '';
-    },
+    closeModal: function() { document.getElementById('modals').innerHTML = ''; },
 
     showBanScreen: function(user) {
         this.go('banned');
         var reasonBox = document.getElementById('ban-reason');
-        if (user.ban_reason) {
-            reasonBox.style.display = 'block';
-            reasonBox.innerHTML = '<b>Причина:</b> ' + Utils.esc(user.ban_reason);
-        } else {
-            reasonBox.style.display = 'none';
-        }
+        if (user.ban_reason) { reasonBox.style.display = 'block'; reasonBox.innerHTML = '<b>Причина:</b> ' + Utils.esc(user.ban_reason); }
+        else { reasonBox.style.display = 'none'; }
     },
 
-    startApp: function() {
-        this.go('home');
-        Feed.renderInto('home-feed-container');
-        Stories.loadBar();
-    },
+    startApp: function() { this.go('home'); Feed.renderInto('home-feed-container'); Stories.loadBar(); },
 
     init: function() {
-        document.getElementById('welcome-logo').addEventListener('click', function() {
-            Admin.logoTap();
-        });
+        document.getElementById('welcome-logo').addEventListener('click', function() { Admin.logoTap(); });
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 var tag = document.activeElement.tagName;
@@ -3859,20 +3320,14 @@ var App = {
 };
 
 /* ============================================
-   ЗАПУСК ПРИЛОЖЕНИЯ
+   ЗАПУСК
    ============================================ */
 (function() {
-    if (!sb) {
-        Utils.toast('Ошибка Supabase. Проверь интернет.', 'error');
-        return;
-    }
+    if (!sb) { Utils.toast('Ошибка Supabase. Проверь интернет.', 'error'); return; }
     App.init();
     Auth.restoreSession().then(function(restored) {
-        if (restored && Auth.user && !Auth.user.banned) {
-            App.startApp();
-        } else {
-            App.go('welcome');
-        }
+        if (restored && Auth.user && !Auth.user.banned) { App.startApp(); }
+        else { App.go('welcome'); }
     });
 })();
 </script>
