@@ -290,23 +290,13 @@ img {
     object-fit: cover;
 }
 
-.avatar.has-story {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px var(--primary);
-}
-
-.avatar.has-story.premium {
-    border-color: var(--premium);
-    box-shadow: 0 0 0 2px var(--premium);
-}
-
 /* ============================================
-   STORIES BAR
+   FOLLOW BAR (кружки подписок)
    ============================================ */
-.stories-bar {
+.follow-bar {
     display: flex;
     gap: 8px;
-    padding: 6px 4px;
+    padding: 8px 4px;
     overflow-x: auto;
     scrollbar-width: none;
     background: #000;
@@ -314,11 +304,11 @@ img {
     flex-shrink: 0;
 }
 
-.stories-bar::-webkit-scrollbar {
+.follow-bar::-webkit-scrollbar {
     display: none;
 }
 
-.story-avatar-wrap {
+.follow-avatar-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -327,13 +317,13 @@ img {
     flex-shrink: 0;
 }
 
-.story-avatar-wrap .avatar {
+.follow-avatar-wrap .avatar {
     width: 50px;
     height: 50px;
     font-size: 18px;
 }
 
-.story-avatar-name {
+.follow-avatar-name {
     font-size: 9px;
     color: var(--text-sec);
     max-width: 52px;
@@ -341,150 +331,6 @@ img {
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: center;
-}
-
-.story-add-btn {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px dashed var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    color: var(--text-sec);
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: all 0.2s;
-}
-
-.story-add-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-/* ============================================
-   STORY VIEWER
-   ============================================ */
-.story-viewer {
-    position: fixed;
-    inset: 0;
-    z-index: 500;
-    background: #000;
-    display: none;
-    flex-direction: column;
-}
-
-.story-viewer.active {
-    display: flex;
-}
-
-.story-progress-bar {
-    display: flex;
-    gap: 3px;
-    padding: 8px 6px 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-}
-
-.story-progress-segment {
-    flex: 1;
-    height: 3px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.story-progress-fill {
-    height: 100%;
-    background: #fff;
-    width: 0%;
-    transition: width 0.1s linear;
-}
-
-.story-progress-segment.done .story-progress-fill {
-    width: 100%;
-}
-
-.story-progress-segment.active .story-progress-fill {
-    width: 0%;
-    animation: storyProgress linear forwards;
-}
-
-@keyframes storyProgress {
-    from {
-        width: 0%;
-    }
-    to {
-        width: 100%;
-    }
-}
-
-.story-header {
-    position: absolute;
-    top: 20px;
-    left: 6px;
-    right: 44px;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.story-header .avatar {
-    width: 30px;
-    height: 30px;
-    font-size: 12px;
-}
-
-.story-header-name {
-    font-weight: 700;
-    font-size: 13px;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-}
-
-.story-header-time {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.story-close {
-    position: absolute;
-    top: 18px;
-    right: 6px;
-    z-index: 10;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.story-close svg {
-    width: 16px;
-    height: 16px;
-    fill: #fff;
-}
-
-.story-content {
-    flex: 1;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.story-content img,
-.story-content video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
 }
 
 /* ============================================
@@ -997,8 +843,7 @@ img {
     margin-bottom: 10px;
 }
 
-.upload-preview-video,
-.upload-preview-img {
+.upload-preview-video {
     width: 100%;
     max-height: 280px;
     border-radius: 10px;
@@ -1517,7 +1362,7 @@ img {
         </svg>
     </div>
     <h1 class="welcome-title">Shadow</h1>
-    <p class="welcome-subtitle">Мультиплеер онлайн. Видео, истории, подписки.</p>
+    <p class="welcome-subtitle">Мультиплеер онлайн. Видео, подписки.</p>
     <div class="welcome-actions">
         <button class="btn btn-primary btn-block" onclick="App.go('register')">Создать аккаунт</button>
         <button class="btn btn-secondary btn-block" onclick="App.go('login')">Войти</button>
@@ -1594,14 +1439,14 @@ img {
 </div>
 
 <!-- ============================================
-     ГЛАВНАЯ (поиск + сторис + видео)
+     ГЛАВНАЯ (поиск + follow bar + видео)
      ============================================ -->
 <div class="screen" id="screen-home" style="flex-direction:column;">
     <div style="padding:8px 10px;background:#000;border-bottom:1px solid var(--border);flex-shrink:0;">
         <input type="text" style="width:100%;padding:10px 16px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;color:#fff;font-size:14px;" id="home-search-input" placeholder="🔍 Поиск людей и видео..." oninput="HomeSearch.run()">
     </div>
     <div id="home-search-results" style="display:none;max-height:250px;overflow-y:auto;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;"></div>
-    <div id="stories-bar-container" style="flex-shrink:0;"></div>
+    <div id="follow-bar-container" style="flex-shrink:0;"></div>
     <div class="home-feed" id="home-feed-container"></div>
     <nav class="bottom-nav-fixed">
         <button class="nav-btn active" data-nav="home" onclick="App.nav('home')">
@@ -1724,20 +1569,6 @@ img {
     </nav>
 </div>
 
-<!-- ============================================
-     STORY VIEWER
-     ============================================ -->
-<div class="story-viewer" id="story-viewer">
-    <div class="story-progress-bar" id="story-progress"></div>
-    <div class="story-header" id="story-header"></div>
-    <button class="story-close" onclick="Stories.closeViewer()">
-        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-    </button>
-    <div class="story-content" id="story-content"></div>
-    <div class="story-nav-zone story-nav-left" onclick="Stories.prevSlide()"></div>
-    <div class="story-nav-zone story-nav-right" onclick="Stories.nextSlide()"></div>
-</div>
-
 <div id="modals"></div>
 </div>
 
@@ -1747,15 +1578,13 @@ img {
    ============================================ */
 var SB_URL = 'https://rzahwdxsdvwojdklblbb.supabase.co';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
-
 var sb = null;
-
 try {
     if (window.supabase && window.supabase.createClient) {
         sb = window.supabase.createClient(SB_URL, SB_KEY);
     }
 } catch (e) {
-    console.error('Supabase init error:', e);
+    console.error('SB:', e);
 }
 
 function storageUrl(bucket, fname) {
@@ -1774,8 +1603,6 @@ var CONFIG = {
     PREMIUM_DAYS: 30,
     WEEK_MS: 7 * 24 * 60 * 60 * 1000,
     MAX_VIDEO_SEC: 30,
-    STORY_PHOTO_SEC: 7,
-    STORY_VIDEO_SEC: 15,
     ADMIN_PASSWORD: 'shadow2024',
     TELEGRAM_LINK: 'https://t.me/shadowlolthehome'
 };
@@ -1853,13 +1680,11 @@ var Utils = {
             el.remove();
         }, 3200);
     },
-
     esc: function(t) {
         var d = document.createElement('div');
         d.textContent = t || '';
         return d.innerHTML;
     },
-
     timeAgo: function(ts) {
         if (!ts) return '';
         var m = Math.floor((Date.now() - new Date(ts).getTime()) / 60000);
@@ -1870,17 +1695,14 @@ var Utils = {
         var d = Math.floor(h / 24);
         return d < 7 ? d + ' дн' : new Date(ts).toLocaleDateString('ru-RU');
     },
-
     genId: function() {
         return Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
     },
-
     fmtNum: function(n) {
         if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
         if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
         return String(n || 0);
     },
-
     genPromo: function() {
         var c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         var s = 'SHDW-';
@@ -1889,14 +1711,13 @@ var Utils = {
         }
         return s;
     },
-
     hash: function(str) {
         return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function(h) {
             return Array.from(new Uint8Array(h)).map(function(x) {
                 return x.toString(16).padStart(2, '0');
             }).join('');
+        });
     },
-
     compressImage: function(file, sz) {
         sz = sz || 400;
         return new Promise(function(res, rej) {
@@ -1921,9 +1742,7 @@ var Utils = {
             reader.readAsDataURL(file);
         });
     },
-
     _pc: new Map(),
-
     getProfile: function(uid) {
         if (this._pc.has(uid)) return Promise.resolve(this._pc.get(uid));
         var self = this;
@@ -1934,7 +1753,6 @@ var Utils = {
             return null;
         });
     },
-
     clearPC: function() {
         this._pc.clear();
     }
@@ -1977,7 +1795,6 @@ var DB = {
             return { ok: false, error: e.message };
         });
     },
-
     findUser: function(username, password) {
         if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
         return Utils.hash(password).then(function(ph) {
@@ -1989,7 +1806,6 @@ var DB = {
             return { ok: false, error: e.message };
         });
     },
-
     getUserById: function(id) {
         if (!sb || !id) return Promise.resolve(null);
         return sb.from('profiles').select('*').eq('id', id).single().then(function(r) {
@@ -1998,14 +1814,12 @@ var DB = {
             return null;
         });
     },
-
     updateUser: function(id, updates) {
         if (!sb) return Promise.resolve();
         return sb.from('profiles').update(updates).eq('id', id).then(function() {
             Utils.clearPC();
         });
     },
-
     getFeed: function(uid) {
         if (!sb) return Promise.resolve([]);
         return sb.from('videos').select('*, profiles!inner(id,username,display_name,avatar_type,avatar_index,avatar_url,premium_until,banned)').eq('profiles.banned', false).order('created_at', { ascending: false }).limit(50).then(function(vr) {
@@ -2058,7 +1872,6 @@ var DB = {
             return [];
         });
     },
-
     getUserVideos: function(uid) {
         if (!sb) return Promise.resolve([]);
         return sb.from('videos').select('*').eq('user_id', uid).order('created_at', { ascending: false }).then(function(vr) {
@@ -2080,7 +1893,6 @@ var DB = {
             return [];
         });
     },
-
     uploadVideo: function(p) {
         if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
         var vid = Utils.genId();
@@ -2116,7 +1928,6 @@ var DB = {
             return { ok: false, error: e.message };
         });
     },
-
     deleteVideo: function(videoId) {
         if (!sb) return Promise.resolve();
         return sb.from('videos').select('video_url,thumbnail_url').eq('id', videoId).single().then(function(r) {
@@ -2140,7 +1951,6 @@ var DB = {
             console.error(e);
         });
     },
-
     toggleLike: function(videoId, userId) {
         if (!sb) return Promise.resolve(null);
         return sb.from('likes').select('id').eq('video_id', videoId).eq('user_id', userId).maybeSingle().then(function(e) {
@@ -2157,7 +1967,6 @@ var DB = {
             return null;
         });
     },
-
     toggleSave: function(videoId, userId) {
         if (!sb) return Promise.resolve(null);
         return sb.from('saves').select('id').eq('video_id', videoId).eq('user_id', userId).maybeSingle().then(function(e) {
@@ -2174,7 +1983,6 @@ var DB = {
             return null;
         });
     },
-
     toggleFollow: function(targetId, currentId) {
         if (!sb) return Promise.resolve(null);
         return sb.from('follows').select('id').eq('follower_id', currentId).eq('following_id', targetId).maybeSingle().then(function(e) {
@@ -2191,7 +1999,6 @@ var DB = {
             return null;
         });
     },
-
     isFollowing: function(targetId, currentId) {
         if (!sb || !currentId) return Promise.resolve(false);
         return sb.from('follows').select('id').eq('follower_id', currentId).eq('following_id', targetId).maybeSingle().then(function(r) {
@@ -2200,7 +2007,6 @@ var DB = {
             return false;
         });
     },
-
     followersCount: function(uid) {
         if (!sb) return Promise.resolve(0);
         return sb.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', uid).then(function(r) {
@@ -2209,7 +2015,6 @@ var DB = {
             return 0;
         });
     },
-
     followingCount: function(uid) {
         if (!sb) return Promise.resolve(0);
         return sb.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', uid).then(function(r) {
@@ -2218,7 +2023,6 @@ var DB = {
             return 0;
         });
     },
-
     getComments: function(videoId) {
         if (!sb) return Promise.resolve([]);
         return sb.from('comments').select('*, profiles(id,display_name,avatar_type,avatar_index,avatar_url,premium_until)').eq('video_id', videoId).order('created_at', { ascending: true }).then(function(r) {
@@ -2227,7 +2031,6 @@ var DB = {
             return [];
         });
     },
-
     addComment: function(p) {
         if (!sb) return Promise.resolve(null);
         return sb.from('comments').insert({ video_id: p.videoId, user_id: p.userId, text: p.text }).select('*, profiles(id,display_name,avatar_type,avatar_index,avatar_url,premium_until)').single().then(function(r) {
@@ -2236,7 +2039,6 @@ var DB = {
             return null;
         });
     },
-
     redeemPromo: function(code, userId) {
         if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
         var cl = (code || '').trim().toUpperCase().replace(/\s/g, '');
@@ -2262,7 +2064,6 @@ var DB = {
             return { ok: false, error: e.message };
         });
     },
-
     getUploads: function(uid) {
         if (!sb) return Promise.resolve([]);
         return sb.from('uploads').select('uploaded_at').eq('user_id', uid).then(function(r) {
@@ -2273,17 +2074,14 @@ var DB = {
             return [];
         });
     },
-
     banUser: function(uid, reason) {
         if (!sb) return Promise.resolve();
         return sb.from('profiles').update({ banned: true, ban_reason: reason || 'Нарушение' }).eq('id', uid);
     },
-
     unbanUser: function(uid) {
         if (!sb) return Promise.resolve();
         return sb.from('profiles').update({ banned: false, ban_reason: '' }).eq('id', uid);
     },
-
     createPromo: function() {
         if (!sb) return Promise.resolve(null);
         var c = Utils.genPromo();
@@ -2293,7 +2091,6 @@ var DB = {
             return c;
         });
     },
-
     getAllPromos: function() {
         if (!sb) return Promise.resolve([]);
         return sb.from('promos').select('*').order('created_at', { ascending: false }).then(function(r) {
@@ -2302,71 +2099,32 @@ var DB = {
             return [];
         });
     },
-
-    getActiveStories: function() {
-        if (!sb) return Promise.resolve([]);
-        var cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-        return sb.from('stories').select('*, profiles(id,username,display_name,avatar_type,avatar_index,avatar_url,premium_until)').gte('created_at', cutoff).order('created_at', { ascending: false }).then(function(sr) {
-            var stories = sr.data || [];
-            var result = [];
-            var chain = Promise.resolve();
-            stories.forEach(function(s) {
-                chain = chain.then(function() {
-                    return sb.from('story_slides').select('*').eq('story_id', s.id).order('slide_order', { ascending: true }).then(function(slr) {
-                        if (slr.data && slr.data.length > 0) {
-                            s.slides = slr.data;
-                            s.author = s.profiles;
-                            result.push(s);
-                        }
-                    });
+    getMyFollowList: function(myId) {
+        if (!sb || !myId) return Promise.resolve([]);
+        return sb.from('follows').select('following_id').eq('follower_id', myId).then(function(followingResult) {
+            var followingIds = (followingResult.data || []).map(function(f) { return f.following_id; });
+            return sb.from('follows').select('follower_id').eq('following_id', myId).then(function(followersResult) {
+                var followerIds = (followersResult.data || []).map(function(f) { return f.follower_id; });
+                var allIds = {};
+                followingIds.forEach(function(id) { allIds[id] = true; });
+                followerIds.forEach(function(id) { allIds[id] = true; });
+                var uniqueIds = Object.keys(allIds);
+                if (uniqueIds.length === 0) return [];
+                return sb.from('profiles').select('id,username,display_name,avatar_type,avatar_index,avatar_url,premium_until,banned').in_('id', uniqueIds).eq('banned', false).then(function(profilesResult) {
+                    return profilesResult.data || [];
                 });
             });
-            return chain.then(function() {
-                return result;
-            });
         }).catch(function(e) {
-            console.error(e);
+            console.error('getMyFollowList:', e);
             return [];
         });
     },
-
-    createStory: function(p) {
-        if (!sb) return Promise.resolve({ ok: false, error: 'Нет соединения' });
-        if (!p.userId) return Promise.resolve({ ok: false, error: 'Ошибка: нет пользователя' });
-        return sb.from('stories').insert({ user_id: p.userId, username: p.username || 'unknown' }).select().single().then(function(storyResult) {
-            if (storyResult.error) throw new Error(storyResult.error.message);
-            var story = storyResult.data;
-            var sl = p.slide;
-            var ext = sl.type === 'video' ? 'mp4' : 'jpg';
-            var fname = story.id + '_0.' + ext;
-            var ct = sl.type === 'video' ? (sl.blob.type || 'video/mp4') : 'image/jpeg';
-            return sb.storage.from('stories').upload(fname, sl.blob, { contentType: ct, upsert: true }).then(function(ur) {
-                if (ur.error) throw new Error('Ошибка загрузки файла: ' + ur.error.message);
-                var pubUrl = storageUrl('stories', fname);
-                var dur = sl.type === 'video' ? sl.duration : CONFIG.STORY_PHOTO_SEC;
-                return sb.from('story_slides').insert({
-                    story_id: story.id,
-                    slide_order: 0,
-                    media_type: sl.type,
-                    media_url: pubUrl,
-                    duration: dur
-                });
-            }).then(function(si) {
-                if (si.error) throw new Error('Ошибка сохранения слайда: ' + si.error.message);
-                return { ok: true };
-            });
-        }).catch(function(e) {
-            return { ok: false, error: e.message || String(e) };
-        });
-    },
-
-    hasActiveStory: function(userId) {
-        if (!sb || !userId) return Promise.resolve(false);
-        var cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-        return sb.from('stories').select('id').eq('user_id', userId).gte('created_at', cutoff).limit(1).then(function(r) {
-            return (r.data && r.data.length > 0);
+    getLatestVideo: function(userId) {
+        if (!sb || !userId) return Promise.resolve(null);
+        return sb.from('videos').select('id,thumbnail_url,video_url,title').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).then(function(r) {
+            return (r.data && r.data.length > 0) ? r.data[0] : null;
         }).catch(function() {
-            return false;
+            return null;
         });
     }
 };
@@ -2378,7 +2136,6 @@ var Premium = {
     isActive: function(u) {
         return u && u.premium_until && new Date(u.premium_until).getTime() > Date.now();
     },
-
     activate: function(userId, days) {
         days = days || 30;
         if (!sb) return Promise.resolve();
@@ -2395,11 +2152,9 @@ var Premium = {
             });
         });
     },
-
     badge: function(u) {
         return this.isActive(u) ? '<span title="Премиум">' + Icons.verified() + '</span>' : '';
     },
-
     open: function() {
         var user = Auth.user;
         var isActive = user && this.isActive(user);
@@ -2414,11 +2169,9 @@ var Premium = {
         }
         App.modal('<div class="modal-header"><div class="modal-title">💎 Премиум</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div>' + body);
     },
-
     openTelegram: function() {
         if (CONFIG.TELEGRAM_LINK) window.open(CONFIG.TELEGRAM_LINK, '_blank');
     },
-
     redeemPromo: function() {
         var input = document.getElementById('promo-input');
         var code = input.value.trim();
@@ -2443,7 +2196,6 @@ var Reg = {
     avatarType: 'letter',
     avatarIndex: 0,
     avatarBlob: null,
-
     buildPicker: function() {
         var opts = document.getElementById('avatar-options');
         if (!opts) return;
@@ -2458,12 +2210,8 @@ var Reg = {
         this.avatarBlob = null;
         this.updatePreview();
     },
-
     select: function(type, idx) {
-        if (type === 'photo') {
-            this.openPhotoPicker();
-            return;
-        }
+        if (type === 'photo') { this.openPhotoPicker(); return; }
         this.avatarType = type;
         this.avatarIndex = idx || 0;
         if (type === 'classic') this.avatarBlob = null;
@@ -2474,11 +2222,9 @@ var Reg = {
         });
         this.updatePreview();
     },
-
     openPhotoPicker: function() {
         document.getElementById('avatar-file').click();
     },
-
     pickPhoto: function(input) {
         var self = this;
         var f = input.files[0];
@@ -2496,11 +2242,9 @@ var Reg = {
         });
         input.value = '';
     },
-
     onNameChange: function() {
         if (this.avatarType === 'letter') this.updatePreview();
     },
-
     updatePreview: function() {
         var p = document.getElementById('avatar-preview');
         if (!p) return;
@@ -2522,7 +2266,6 @@ var Auth = {
     user: null,
     isGuest: false,
     session: null,
-
     register: function() {
         var username = document.getElementById('reg-username').value.trim();
         var password = document.getElementById('reg-password').value;
@@ -2562,7 +2305,6 @@ var Auth = {
             btn.textContent = 'Создать аккаунт';
         });
     },
-
     login: function() {
         var username = document.getElementById('login-username').value.trim();
         var password = document.getElementById('login-password').value;
@@ -2585,7 +2327,6 @@ var Auth = {
             btn.textContent = 'Войти';
         });
     },
-
     restoreSession: function() {
         var raw = localStorage.getItem('shadow_session');
         if (!raw) return Promise.resolve(false);
@@ -2608,7 +2349,6 @@ var Auth = {
             return Promise.resolve(false);
         }
     },
-
     logout: function() {
         if (!confirm('Выйти?')) return;
         this.user = null;
@@ -2629,180 +2369,62 @@ var Limits = {
             return uploads.filter(function(t) { return t > weekAgo; }).length;
         });
     },
-
     canUpload: function(user) {
         var limit = Premium.isActive(user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT;
         return this.weekUploads(user.id).then(function(count) { return count < limit; });
     },
-
     remaining: function(user) {
         var limit = Premium.isActive(user) ? CONFIG.PREMIUM_LIMIT : CONFIG.FREE_LIMIT;
         return this.weekUploads(user.id).then(function(count) { return Math.max(0, limit - count); });
     },
-
     maxMB: function(user) {
         return Premium.isActive(user) ? CONFIG.PREMIUM_MAX_MB : CONFIG.FREE_MAX_MB;
     }
 };
 
 /* ============================================
-   STORIES
+   FOLLOW BAR (кружки подписок вместо сторис)
    ============================================ */
-var Stories = {
-    allStories: [],
-    currentStoryIdx: 0,
-    currentSlideIdx: 0,
-    timer: null,
-    _vs: null,
-    _vu: null,
-    _pendingSlide: null,
-
+var FollowBar = {
     loadBar: function() {
-        var container = document.getElementById('stories-bar-container');
+        var container = document.getElementById('follow-bar-container');
         if (!container) return;
-        var self = this;
-        DB.getActiveStories().then(function(stories) {
-            self.allStories = stories;
-            var html = '<div class="stories-bar">';
-            if (Auth.user && !Auth.isGuest) {
-                DB.hasActiveStory(Auth.user.id).then(function(hasMy) {
-                    if (hasMy) {
-                        html += '<div class="story-avatar-wrap" onclick="Stories.viewMyStory()"><div class="avatar has-story ' + (Premium.isActive(Auth.user) ? 'premium' : 'regular') + '">' + avatarContent(Auth.user) + '</div><div class="story-avatar-name">Моя</div></div>';
-                    } else {
-                        html += '<div class="story-avatar-wrap" onclick="Stories.openUpload()"><div class="story-add-btn">+</div><div class="story-avatar-name">Добавить</div></div>';
-                    }
-                    var seen = {};
-                    seen[Auth.user.id] = true;
-                    for (var i = 0; i < self.allStories.length; i++) {
-                        var s = self.allStories[i];
-                        if (seen[s.user_id]) continue;
-                        seen[s.user_id] = true;
-                        var author = s.author || {};
-                        html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')"><div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div><div class="story-avatar-name">' + Utils.esc(author.display_name || '?') + '</div></div>';
-                    }
+        if (!Auth.user || Auth.isGuest) {
+            container.innerHTML = '';
+            return;
+        }
+        DB.getMyFollowList(Auth.user.id).then(function(profiles) {
+            if (!profiles || profiles.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            var html = '<div class="follow-bar">';
+            DB.getLatestVideo(Auth.user.id).then(function(myLatest) {
+                if (myLatest) {
+                    var myAvatarHtml = avatarContent(Auth.user);
+                    var thumbStyle = myLatest.thumbnail_url ? 'background-image:url(' + myLatest.thumbnail_url + ');background-size:cover;background-position:center;' : '';
+                    html += '<div class="follow-avatar-wrap" onclick="Feed.jumpTo(\'' + myLatest.id + '\')">';
+                    html += '<div class="avatar has-story ' + (Premium.isActive(Auth.user) ? 'premium' : 'regular') + '" style="' + thumbStyle + '">' + (myLatest.thumbnail_url ? '' : myAvatarHtml) + '</div>';
+                    html += '<div class="follow-avatar-name">Моя</div></div>';
+                }
+                var chain = Promise.resolve();
+                profiles.forEach(function(p) {
+                    chain = chain.then(function() {
+                        return DB.getLatestVideo(p.id).then(function(latest) {
+                            if (!latest) return;
+                            var avHtml = avatarContent(p);
+                            var thumbStyle = latest.thumbnail_url ? 'background-image:url(' + latest.thumbnail_url + ');background-size:cover;background-position:center;' : '';
+                            html += '<div class="follow-avatar-wrap" onclick="Feed.jumpTo(\'' + latest.id + '\')">';
+                            html += '<div class="avatar has-story ' + (Premium.isActive(p) ? 'premium' : 'regular') + '" style="' + thumbStyle + '">' + (latest.thumbnail_url ? '' : avHtml) + '</div>';
+                            html += '<div class="follow-avatar-name">' + Utils.esc(p.display_name || '?') + '</div></div>';
+                        });
+                    });
+                });
+                return chain.then(function() {
                     html += '</div>';
                     container.innerHTML = html;
                 });
-            } else {
-                var seen2 = {};
-                for (var i = 0; i < self.allStories.length; i++) {
-                    var s = self.allStories[i];
-                    if (seen2[s.user_id]) continue;
-                    seen2[s.user_id] = true;
-                    var author = s.author || {};
-                    html += '<div class="story-avatar-wrap" onclick="Stories.openViewer(\'' + s.user_id + '\')"><div class="avatar has-story ' + (Premium.isActive(author) ? 'premium' : 'regular') + '">' + avatarContent(author) + '</div><div class="story-avatar-name">' + Utils.esc(author.display_name || '?') + '</div></div>';
-                }
-                html += '</div>';
-                container.innerHTML = html;
-            }
-        });
-    },
-
-    viewMyStory: function() {
-        if (!Auth.user) return;
-        var myStories = this.allStories.filter(function(s) { return s.user_id === Auth.user.id; });
-        if (myStories.length > 0) this.openViewer(Auth.user.id);
-    },
-
-    openViewer: function(userId) {
-        var stories = this.allStories.filter(function(s) { return s.user_id === userId; });
-        if (!stories.length) { Utils.toast('История не найдена', 'error'); return; }
-        this.currentStoryIdx = 0;
-        this.currentSlideIdx = 0;
-        this._vs = stories;
-        var self = this;
-        var authorPromise = stories[0].author ? Promise.resolve(stories[0].author) : Utils.getProfile(userId);
-        authorPromise.then(function(author) {
-            self._vu = author;
-            document.getElementById('story-viewer').classList.add('active');
-            self.renderSlide();
-        });
-    },
-
-    renderSlide: function() {
-        var story = this._vs[this.currentStoryIdx];
-        if (!story) { this.closeViewer(); return; }
-        var slide = story.slides[this.currentSlideIdx];
-        if (!slide) { this.closeViewer(); return; }
-        var prog = document.getElementById('story-progress');
-        var dur = slide.duration || 5;
-        prog.innerHTML = '<div class="story-progress-segment active" style="animation-duration:' + dur + 's"><div class="story-progress-fill"></div></div>';
-        var user = this._vu || {};
-        document.getElementById('story-header').innerHTML = '<div class="avatar ' + (Premium.isActive(user) ? 'premium' : 'regular') + '">' + avatarContent(user) + '</div><div><div class="story-header-name">' + Utils.esc(user.display_name || '?') + ' ' + Premium.badge(user) + '</div><div class="story-header-time">' + Utils.timeAgo(story.created_at) + '</div></div>';
-        var content = document.getElementById('story-content');
-        if (slide.media_type === 'video') {
-            content.innerHTML = '<video src="' + slide.media_url + '" autoplay muted playsinline style="max-width:100%;max-height:100%;object-fit:contain;"></video>';
-        } else {
-            content.innerHTML = '<img src="' + slide.media_url + '" alt="" style="max-width:100%;max-height:100%;object-fit:contain;">';
-        }
-        var self = this;
-        clearTimeout(this.timer);
-        this.timer = setTimeout(function() { self.closeViewer(); }, dur * 1000);
-    },
-
-    closeViewer: function() {
-        clearTimeout(this.timer);
-        document.getElementById('story-viewer').classList.remove('active');
-        document.getElementById('story-content').innerHTML = '';
-    },
-
-    openUpload: function() {
-        if (!Auth.user || Auth.isGuest) { Utils.toast('Войди в аккаунт', 'error'); return; }
-        this._pendingSlide = null;
-        App.modal('<div class="modal-header"><div class="modal-title">📸 Новая история</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div style="font-size:13px;color:var(--text-sec);margin-bottom:12px;">Одно фото (7 сек) или видео (макс 15 сек) · живёт 24 часа</div><div id="story-upload-area"><div class="upload-dropzone" onclick="document.getElementById(\'story-file-input\').click()"><div class="upload-dropzone-icon">📷</div><div style="font-weight:600;">Выбери фото или видео</div><div style="font-size:13px;color:var(--text-sec);">Фото = 7 сек · Видео = макс 15 сек</div></div><input type="file" id="story-file-input" accept="image/*,video/*" style="display:none;" onchange="Stories.handleFile(this)"></div><button class="btn btn-primary btn-block" id="story-submit-btn" onclick="Stories.submitStory()" disabled style="margin-top:16px;">Опубликовать</button>');
-    },
-
-    handleFile: function(input) {
-        var f = input.files[0];
-        if (!f) return;
-        var isVideo = f.type.startsWith('video/');
-        if (!isVideo && !f.type.startsWith('image/')) { Utils.toast('Выбери фото или видео', 'error'); return; }
-        var maxMB = Limits.maxMB(Auth.user);
-        if (f.size > maxMB * 1024 * 1024) { Utils.toast('Файл больше ' + maxMB + ' МБ', 'error'); return; }
-        var area = document.getElementById('story-upload-area');
-        if (isVideo) {
-            var url = URL.createObjectURL(f);
-            var tv = document.createElement('video');
-            tv.preload = 'metadata';
-            tv.src = url;
-            tv.onloadedmetadata = function() {
-                URL.revokeObjectURL(url);
-                if (tv.duration > CONFIG.STORY_VIDEO_SEC) {
-                    Utils.toast('Видео ' + Math.round(tv.duration) + ' сек. Максимум ' + CONFIG.STORY_VIDEO_SEC + '!', 'error');
-                    return;
-                }
-                Stories._pendingSlide = { blob: f, type: 'video', duration: Math.round(tv.duration) };
-                area.innerHTML = '<div style="text-align:center;padding:20px;"><div style="font-size:36px;">✅</div><div style="margin-top:8px;font-weight:600;">Видео готово (' + Math.round(tv.duration) + ' сек)</div></div>';
-                document.getElementById('story-submit-btn').disabled = false;
-            };
-        } else {
-            Stories._pendingSlide = { blob: f, type: 'photo', duration: CONFIG.STORY_PHOTO_SEC };
-            area.innerHTML = '<div style="text-align:center;padding:20px;"><div style="font-size:36px;">✅</div><div style="margin-top:8px;font-weight:600;">Фото готово (7 сек)</div></div>';
-            document.getElementById('story-submit-btn').disabled = false;
-        }
-        input.value = '';
-    },
-
-    submitStory: function() {
-        if (!Stories._pendingSlide) return;
-        var btn = document.getElementById('story-submit-btn');
-        btn.disabled = true;
-        btn.innerHTML = '<div class="spinner"></div>';
-        DB.createStory({
-            userId: Auth.user.id,
-            username: Auth.user.username || Auth.user.display_name || 'unknown',
-            slide: Stories._pendingSlide
-        }).then(function(res) {
-            if (!res.ok) {
-                Utils.toast(res.error, 'error');
-                btn.disabled = false;
-                btn.textContent = 'Опубликовать';
-                return;
-            }
-            Stories._pendingSlide = null;
-            App.closeModal();
-            Utils.toast('История опубликована! 📸', 'success');
-            Stories.loadBar();
+            });
         });
     }
 };
@@ -2812,16 +2434,20 @@ var Stories = {
    ============================================ */
 var HomeSearch = {
     timeout: null,
-
     run: function() {
         var self = this;
         clearTimeout(this.timeout);
         var q = document.getElementById('home-search-input').value.trim().toLowerCase();
         var results = document.getElementById('home-search-results');
-        if (!q) { results.style.display = 'none'; results.innerHTML = ''; return; }
-        this.timeout = setTimeout(function() { self.doSearch(q); }, 300);
+        if (!q) {
+            results.style.display = 'none';
+            results.innerHTML = '';
+            return;
+        }
+        this.timeout = setTimeout(function() {
+            self.doSearch(q);
+        }, 300);
     },
-
     doSearch: function(q) {
         var results = document.getElementById('home-search-results');
         sb.from('profiles').select('*').eq('banned', false).or('username.ilike.%' + q + '%,display_name.ilike.%' + q + '%').limit(10).then(function(usersResult) {
@@ -2856,7 +2482,6 @@ var Feed = {
     videos: [],
     observer: null,
     currentCard: null,
-
     load: function() {
         var self = this;
         return DB.getFeed(Auth.user ? Auth.user.id : null).then(function(videos) {
@@ -2882,7 +2507,6 @@ var Feed = {
             });
         });
     },
-
     renderInto: function(containerId) {
         var container = document.getElementById(containerId);
         if (!container) return;
@@ -2903,7 +2527,6 @@ var Feed = {
             container.innerHTML = '<div class="video-card"><div class="video-empty"><div style="font-size:48px;">😞</div></div></div>';
         });
     },
-
     createCard: function(v, container) {
         var author = v.author || {};
         var self = this;
@@ -2927,7 +2550,6 @@ var Feed = {
             container.appendChild(card);
         });
     },
-
     toggleFollow: function(userId) {
         if (!Auth.user) { Utils.toast('Войди', 'error'); return; }
         DB.toggleFollow(userId, Auth.user.id).then(function(res) {
@@ -2939,7 +2561,6 @@ var Feed = {
             Utils.toast(res.following ? 'Подписался! 🎯' : 'Отписался', 'success');
         });
     },
-
     setupAutoplay: function(container) {
         var self = this;
         if (this.observer) this.observer.disconnect();
@@ -2959,23 +2580,19 @@ var Feed = {
         }, { threshold: 0.6, root: container });
         container.querySelectorAll('.video-card').forEach(function(c) { self.observer.observe(c); });
     },
-
     togglePlayVideo: function(card) {
         var video = card.querySelector('video');
         if (!video) return;
         if (video.paused) { video.play().catch(function() {}); this.setPS(card, true); }
         else { video.pause(); this.setPS(card, false); }
     },
-
     setPS: function(card, isPlaying) {
         var indicator = card.querySelector('.play-indicator');
         if (indicator) indicator.classList.toggle('visible', !isPlaying);
     },
-
     toggleCurrent: function() {
         if (this.currentCard) this.togglePlayVideo(this.currentCard);
     },
-
     like: function(videoId) {
         if (!Auth.user) { Utils.toast('Войди', 'error'); return; }
         var v = this.videos.find(function(x) { return x.id === videoId; });
@@ -2994,7 +2611,6 @@ var Feed = {
             }
         });
     },
-
     showHeart: function(videoId) {
         var card = document.querySelector('.video-card[data-id="' + videoId + '"]');
         if (!card) return;
@@ -3004,7 +2620,6 @@ var Feed = {
         card.appendChild(heart);
         setTimeout(function() { heart.remove(); }, 900);
     },
-
     save: function(videoId) {
         if (!Auth.user) { Utils.toast('Войди', 'error'); return; }
         var v = this.videos.find(function(x) { return x.id === videoId; });
@@ -3017,7 +2632,6 @@ var Feed = {
             Utils.toast(v.saved_by_me ? 'Сохранено ✨' : 'Удалено', 'success');
         });
     },
-
     share: function() {
         if (navigator.share) {
             navigator.share({ title: 'Shadow', url: location.href }).catch(function() {});
@@ -3025,7 +2639,6 @@ var Feed = {
             Utils.toast('Ссылка скопирована 📋', 'success');
         }
     },
-
     jumpTo: function(videoId) {
         App.nav('feed');
         setTimeout(function() {
@@ -3061,7 +2674,6 @@ var Comments = {
             App.modal('<div class="modal-header"><div class="modal-title">Комментарии (' + comments.length + ')</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="comments-list">' + list + '</div>' + formHtml);
         });
     },
-
     send: function(event, videoId) {
         event.preventDefault();
         var input = document.getElementById('comment-input');
@@ -3077,12 +2689,10 @@ var Comments = {
 var Upload = {
     file: null,
     duration: 0,
-
     openMenu: function() {
         if (!Auth.user || Auth.isGuest) { Utils.toast('Войди в аккаунт', 'error'); return; }
-        App.modal('<div class="modal-header"><div class="modal-title">Что публикуем?</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><button class="btn btn-secondary btn-block" style="margin-bottom:12px;" onclick="App.closeModal();Upload.openVideo()">🎬 Загрузить видео</button><button class="btn btn-secondary btn-block" onclick="App.closeModal();Stories.openUpload()">📸 Создать историю</button>');
+        App.modal('<div class="modal-header"><div class="modal-title">Что публикуем?</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><button class="btn btn-primary btn-block" style="margin-bottom:12px;" onclick="App.closeModal();Upload.openVideo()">🎬 Загрузить видео</button>');
     },
-
     openVideo: function() {
         if (!Auth.user || Auth.isGuest) { Utils.toast('Войди в аккаунт', 'error'); return; }
         var self = this;
@@ -3102,7 +2712,6 @@ var Upload = {
             });
         });
     },
-
     pickFile: function(input) {
         var self = this;
         var f = input.files[0];
@@ -3130,7 +2739,6 @@ var Upload = {
             document.getElementById('upload-btn').disabled = false;
         };
     },
-
     makeThumbnail: function(file) {
         return new Promise(function(resolve) {
             var video = document.createElement('video');
@@ -3152,7 +2760,6 @@ var Upload = {
             video.onerror = function() { resolve(null); };
         });
     },
-
     submit: function() {
         var title = document.getElementById('upload-title').value.trim();
         var desc = document.getElementById('upload-desc').value.trim();
@@ -3189,7 +2796,6 @@ var Upload = {
    ============================================ */
 var Profile = {
     currentTab: 'videos',
-
     render: function(userId) {
         var targetId = userId || (Auth.user && Auth.user.id);
         var self = this;
@@ -3232,7 +2838,6 @@ var Profile = {
             document.getElementById('profile-content').innerHTML = '<div class="empty-state"><div class="empty-icon">😞</div><div class="empty-title">Ошибка</div></div>';
         });
     },
-
     buildProfileHtml: function(user, isOwn, isPrem, myVideos, totalLikes, followers, followingCount, followBtn, limitBadge, gridHtml) {
         var html = '<div class="profile-header"><div class="avatar xxl ' + (isPrem ? 'premium' : 'regular') + '" style="margin:0 auto;">' + avatarContent(user) + '</div><div class="profile-name-row"><span class="profile-name">' + Utils.esc(user.display_name) + '</span> ' + Premium.badge(user) + '</div><div class="profile-username">@' + Utils.esc(user.username) + '</div>';
         if (user.bio) html += '<div class="profile-bio">' + Utils.esc(user.bio) + '</div>';
@@ -3252,15 +2857,12 @@ var Profile = {
         document.getElementById('profile-content').innerHTML = html;
         if (isOwn) this.renderTab(myVideos, gridHtml);
     },
-
     switchTab: function(tab) { this.currentTab = tab; this.render(); },
-
     toggleFollow: function(userId) {
         Feed.toggleFollow(userId);
         var self = this;
         setTimeout(function() { self.render(userId); }, 500);
     },
-
     renderTab: function(myVideos, gridHtml) {
         var container = document.getElementById('profile-tab-content');
         if (!container) return;
@@ -3278,7 +2880,6 @@ var Profile = {
             container.innerHTML = html;
         }
     },
-
     activatePromo: function() {
         var input = document.getElementById('profile-promo-input');
         var code = input.value.trim();
@@ -3289,13 +2890,11 @@ var Profile = {
             else { Utils.toast(res.error, 'error'); }
         });
     },
-
     openVideoMenu: function(videoId) {
         var v = Feed.videos.find(function(x) { return x.id === videoId; });
         if (!v) return;
         App.modal('<div class="modal-header"><div class="modal-title">Меню видео</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div style="background:var(--bg-card-alt);border-radius:10px;padding:14px;margin-bottom:16px;"><div style="font-weight:600;">' + Utils.esc(v.title) + '</div><div style="font-size:12px;color:var(--text-sec);margin-top:4px;">❤ ' + Utils.fmtNum(v.likes) + '</div></div><button class="btn btn-secondary" style="width:100%;margin-bottom:10px;" onclick="App.closeModal();Feed.jumpTo(\'' + v.id + '\')">▶️ Посмотреть</button><button class="btn btn-danger" style="width:100%;" onclick="Profile.deleteMyVideo(\'' + v.id + '\')">🗑 Удалить</button>');
     },
-
     deleteMyVideo: function(videoId) {
         if (!confirm('Удалить навсегда?')) return;
         DB.deleteVideo(videoId).then(function() {
@@ -3313,21 +2912,16 @@ var Profile = {
 var Admin = {
     loginTaps: 0,
     currentTab: 'users',
-
     logoTap: function() { this.loginTaps++; if (this.loginTaps >= 5) { this.loginTaps = 0; this.openLogin(); } },
-
     openLogin: function() {
         App.modal('<div class="modal-header"><div class="modal-title">🔐 Код админа</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="form-group"><input type="password" class="form-input" id="admin-pass"></div><button class="btn btn-primary" style="width:100%;" onclick="Admin.checkPass()">Войти</button>');
     },
-
     checkPass: function() {
         if (document.getElementById('admin-pass').value === CONFIG.ADMIN_PASSWORD) { this.openPanel(); }
         else { Utils.toast('Неверный код', 'error'); }
     },
-
     openPanel: function() { this.currentTab = 'users'; this.renderPanel(); },
     switchTab: function(tab) { this.currentTab = tab; this.renderPanel(); },
-
     renderPanel: function() {
         var self = this;
         var content = '';
@@ -3368,36 +2962,30 @@ var Admin = {
             });
         }
     },
-
     showPanel: function(content) {
         App.modal('<div class="modal-header"><div class="modal-title">⚙️ Админ</div><button class="modal-close" onclick="App.closeModal()">' + Icons.close() + '</button></div><div class="admin-tab-bar"><div class="admin-tab ' + (this.currentTab === 'users' ? 'active' : '') + '" onclick="Admin.switchTab(\'users\')">👥 Юзеры</div><div class="admin-tab ' + (this.currentTab === 'videos' ? 'active' : '') + '" onclick="Admin.switchTab(\'videos\')">🎬 Видео</div><div class="admin-tab ' + (this.currentTab === 'promos' ? 'active' : '') + '" onclick="Admin.switchTab(\'promos\')">🎁 Промо</div></div><div style="max-height:60vh;overflow-y:auto;">' + content + '</div>');
     },
-
     banUser: function(userId) {
         if (Auth.user && Auth.user.id === userId) { Utils.toast('Нельзя себя!', 'error'); return; }
         var reason = prompt('Причина:') || 'Нарушение';
         var self = this;
         DB.banUser(userId, reason).then(function() { Utils.toast('Забанен 🚫', 'error'); self.renderPanel(); });
     },
-
     unban: function(userId) {
         var self = this;
         DB.unbanUser(userId).then(function() { Utils.toast('Разбанен ✅', 'success'); self.renderPanel(); });
     },
-
     deleteVideo: function(videoId) {
         if (!confirm('Удалить?')) return;
         var self = this;
         DB.deleteVideo(videoId).then(function() { Utils.toast('Удалено 🗑', 'success'); self.renderPanel(); });
     },
-
     createPromo: function() {
         DB.createPromo().then(function(code) {
             document.getElementById('new-promo-slot').innerHTML = '<div class="promo-code-box">' + code + '</div><button class="btn btn-secondary btn-small" style="width:100%;" onclick="Admin.copyPromo(\'' + code + '\')">📋 Скопировать</button>';
             Utils.toast('Создан! 🎉', 'premium');
         });
     },
-
     copyPromo: function(code) {
         navigator.clipboard.writeText(code).then(function() { Utils.toast('Скопирован 📋', 'success'); });
     }
@@ -3409,7 +2997,6 @@ var Admin = {
 var App = {
     current: 'welcome',
     profileBack: 'home',
-
     go: function(name) {
         document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
         var screen = document.getElementById('screen-' + name);
@@ -3417,9 +3004,8 @@ var App = {
         this.current = name;
         if (name === 'register') setTimeout(function() { Reg.buildPicker(); }, 50);
     },
-
     nav: function(name) {
-        if (name === 'home') { this.go('home'); Feed.renderInto('home-feed-container'); Stories.loadBar(); }
+        if (name === 'home') { this.go('home'); Feed.renderInto('home-feed-container'); FollowBar.loadBar(); }
         else if (name === 'feed') { this.go('feed'); Feed.renderInto('feed-container'); }
         else if (name === 'inbox') { this.go('inbox'); }
         else if (name === 'profile') {
@@ -3430,26 +3016,19 @@ var App = {
             Profile.render();
         }
     },
-
     viewProfile: function(userId) { this.profileBack = this.current; this.go('profile'); Profile.render(userId); },
-
     enterGuest: function() { Auth.user = null; Auth.isGuest = true; Utils.toast('Гостевой режим 👀', 'success'); this.startApp(); },
-
     modal: function(html) {
         document.getElementById('modals').innerHTML = '<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)App.closeModal()"><div class="modal">' + html + '</div></div>';
     },
-
     closeModal: function() { document.getElementById('modals').innerHTML = ''; },
-
     showBanScreen: function(user) {
         this.go('banned');
         var reasonBox = document.getElementById('ban-reason');
         if (user.ban_reason) { reasonBox.style.display = 'block'; reasonBox.innerHTML = '<b>Причина:</b> ' + Utils.esc(user.ban_reason); }
         else { reasonBox.style.display = 'none'; }
     },
-
-    startApp: function() { this.go('home'); Feed.renderInto('home-feed-container'); Stories.loadBar(); },
-
+    startApp: function() { this.go('home'); Feed.renderInto('home-feed-container'); FollowBar.loadBar(); },
     init: function() {
         document.getElementById('welcome-logo').addEventListener('click', function() { Admin.logoTap(); });
         document.addEventListener('keydown', function(e) {
