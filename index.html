@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ПУСЬ</title>
+    <title>ПУЛЬС</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,8 +20,8 @@
 
     <style>
         body {
-            background-color: #0f172a; /* Темно-синий */
-            color: #e2e8f0;
+            background-color: #020617; /* Очень темный синий */
+            color: #f8fafc;
             font-family: sans-serif;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
@@ -42,7 +42,7 @@
             border-radius: 50%;
             padding: 2px;
             box-shadow: 0 0 8px rgba(255, 165, 0, 0.8);
-            border: 2px solid #0f172a;
+            border: 2px solid #020617;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -50,36 +50,49 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* TikTok Style Video Container */
+        .tiktok-container {
+            height: calc(100vh - 80px); /* Высота минус навигация */
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+        }
+        .tiktok-item {
+            height: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            background: #000;
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect } = React;
 
-        // --- БАЗА ДАННЫХ ---
+        // --- БАЗА ДАННЫХ (LocalStorage для демо) ---
         const initDB = () => {
-            if (!localStorage.getItem('pussy_db_v3')) {
+            if (!localStorage.getItem('pulse_db')) {
                 const codes = {};
-                for(let i=0; i<100; i++) codes['PROMO'+i] = { days: 30, used: false };
-                codes['GOD_MODE'] = { days: Infinity, used: false };
+                for(let i=0; i<100; i++) codes['PULSE'+i] = { days: 30, used: false };
+                codes['GOD_PULSE'] = { days: Infinity, used: false };
 
-                localStorage.setItem('pussy_db_v3', JSON.stringify({
+                localStorage.setItem('pulse_db', JSON.stringify({
                     users: [],
-                    posts: [],
+                    posts: [], // Фото
+                    videos: [], // Для ленты (TikTok)
                     stories: [],
                     promoCodes: codes
                 }));
             }
         };
         initDB();
+        const getDB = () => JSON.parse(localStorage.getItem('pulse_db'));
+        const saveDB = (data) => localStorage.setItem('pulse_db', JSON.stringify(data));
 
-        const getDB = () => JSON.parse(localStorage.getItem('pussy_db_v3'));
-        const saveDB = (data) => localStorage.setItem('pussy_db_v3', JSON.stringify(data));
-
-        // SVG для "Голова и плечи" (Unknown User)
-        const DefaultAvatarSVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E`;
+        // SVG "Голова и плечи"
+        const DefaultAvatarSVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E`;
 
         // --- КОМПОНЕНТЫ ---
 
@@ -90,12 +103,8 @@
 
         const Avatar = ({ url, isPremium, size = "w-10 h-10" }) => (
             <div className={`relative ${isPremium ? 'premium-ring' : ''}`}>
-                <div className={`${size} rounded-full bg-slate-700 overflow-hidden border-2 border-[#0f172a]`}>
-                    <img 
-                        src={url || DefaultAvatarSVG} 
-                        className="w-full h-full object-cover" 
-                        onError={(e) => { e.target.src = DefaultAvatarSVG; }}
-                    />
+                <div className={`${size} rounded-full bg-slate-800 overflow-hidden border-2 border-[#020617]`}>
+                    <img src={url || DefaultAvatarSVG} className="w-full h-full object-cover" />
                 </div>
                 {isPremium && (
                     <div className="neon-check w-4 h-4">
@@ -107,209 +116,167 @@
 
         // --- ЭКРАН АВТОРИЗАЦИИ ---
         const AuthScreen = ({ onLogin }) => {
-            const [mode, setMode] = useState('login'); // login, register, guest
             const [username, setUsername] = useState('');
             const [password, setPassword] = useState('');
-            const [useCustomAvatar, setUseCustomAvatar] = useState(false);
-            const [avatarFile, setAvatarFile] = useState(null);
-            const [error, setError] = useState('');
+            const [mode, setMode] = useState('login');
+            const [useCustomAv, setUseCustomAv] = useState(false);
+            const [file, setFile] = useState(null);
 
-            const handleRegister = () => {
+            const handleAuth = () => {
                 const db = getDB();
-                if (!username || username.length < 3) return setError("Никнейм слишком короткий");
-                if (db.users.find(u => u.username.toLowerCase() === username.toLowerCase())) {
-                    return setError("Этот никнейм уже занят!");
-                }
-
-                let finalAvatar = DefaultAvatarSVG;
-                
-                const finishReg = (av) => {
-                    const newUser = {
-                        id: Date.now().toString(),
-                        username, password,
-                        avatar: av,
-                        isPremium: false,
-                        premiumUntil: 0,
-                        postCountThisWeek: 0,
-                        lastReset: Date.now()
+                if (mode === 'register') {
+                    if (db.users.find(u => u.username === username)) return alert("Ник занят");
+                    
+                    let av = DefaultAvatarSVG;
+                    const finish = (finalAv) => {
+                        const newUser = {
+                            id: Date.now().toString(),
+                            username, password, avatar: finalAv,
+                            isPremium: false, premiumUntil: 0,
+                            postCount: 0, lastReset: Date.now()
+                        };
+                        db.users.push(newUser);
+                        saveDB(db);
+                        onLogin(newUser);
                     };
-                    db.users.push(newUser);
-                    saveDB(db);
-                    onLogin(newUser);
-                };
 
-                if (useCustomAvatar && avatarFile) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => finishReg(e.target.result);
-                    reader.readAsDataURL(avatarFile);
+                    if (useCustomAv && file) {
+                        const r = new FileReader();
+                        r.onload = (e) => finish(e.target.result);
+                        r.readAsDataURL(file);
+                    } else {
+                        finish(av);
+                    }
                 } else {
-                    finishReg(finalAvatar);
+                    const user = db.users.find(u => u.username === username && u.password === password);
+                    if (user) onLogin(user);
+                    else alert("Ошибка входа");
                 }
-            };
-
-            const handleLogin = () => {
-                const db = getDB();
-                const user = db.users.find(u => u.username === username && u.password === password);
-                if (user) onLogin(user);
-                else setError("Неверный логин или пароль");
             };
 
             return (
-                <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-slate-900">
-                    <h1 className="text-5xl font-black text-blue-500 mb-8 tracking-tighter">ПУСЬ</h1>
+                <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#020617]">
+                    <h1 className="text-5xl font-black text-blue-500 mb-8 tracking-widest">ПУЛЬС</h1>
                     <div className="w-full max-w-sm space-y-4">
-                        <input type="text" placeholder="Никнейм" value={username} onChange={e=>setUsername(e.target.value)} className="w-full p-3 bg-slate-800 rounded-xl border border-slate-700 focus:border-blue-500 outline-none text-white" />
+                        <input type="text" placeholder="Никнейм" value={username} onChange={e=>setUsername(e.target.value)} className="w-full p-3 bg-slate-900 rounded-xl border border-slate-800 text-white outline-none focus:border-blue-500" />
+                        <input type="password" placeholder="Пароль" value={password} onChange={e=>setPassword(e.target.value)} className="w-full p-3 bg-slate-900 rounded-xl border border-slate-800 text-white outline-none focus:border-blue-500" />
                         
-                        {mode !== 'guest' && (
-                            <input type="password" placeholder="Пароль" value={password} onChange={e=>setPassword(e.target.value)} className="w-full p-3 bg-slate-800 rounded-xl border border-slate-700 focus:border-blue-500 outline-none text-white" />
-                        )}
-
                         {mode === 'register' && (
-                            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
-                                <p className="text-sm text-slate-400 mb-2">Аватарка:</p>
-                                <div className="flex space-x-2 mb-3">
-                                    <button 
-                                        onClick={() => setUseCustomAvatar(false)}
-                                        className={`flex-1 py-2 text-xs rounded-lg ${!useCustomAvatar ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}
-                                    >
-                                        Стандарт (Голова/Плечи)
-                                    </button>
-                                    <button 
-                                        onClick={() => setUseCustomAvatar(true)}
-                                        className={`flex-1 py-2 text-xs rounded-lg ${useCustomAvatar ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}
-                                    >
-                                        Свое фото
-                                    </button>
+                            <div className="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                                <div className="flex gap-2 mb-2">
+                                    <button onClick={()=>setUseCustomAv(false)} className={`flex-1 text-xs py-1 rounded ${!useCustomAv?'bg-blue-600':'bg-slate-800'}`}>Стандарт</button>
+                                    <button onClick={()=>setUseCustomAv(true)} className={`flex-1 text-xs py-1 rounded ${useCustomAv?'bg-blue-600':'bg-slate-800'}`}>Свое фото</button>
                                 </div>
-                                
-                                {useCustomAvatar && (
-                                    <input 
-                                        type="file" 
-                                        accept="image/*" 
-                                        onChange={e => setAvatarFile(e.target.files[0])}
-                                        className="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-blue-400 hover:file:bg-slate-600"
-                                    />
-                                )}
-                                
-                                {!useCustomAvatar && (
-                                    <div className="flex justify-center py-2">
-                                        <img src={DefaultAvatarSVG} className="w-12 h-12 opacity-50" />
-                                    </div>
-                                )}
+                                {useCustomAv && <input type="file" onChange={e=>setFile(e.target.files[0])} className="text-xs text-slate-400 w-full" />}
+                                {!useCustomAv && <img src={DefaultAvatarSVG} className="w-10 h-10 mx-auto opacity-50" />}
                             </div>
                         )}
-                        
-                        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-                        <button onClick={mode === 'register' ? handleRegister : handleLogin} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition">
-                            {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
-                        </button>
-                        
-                        <div className="flex justify-between text-sm text-slate-400 mt-4">
-                            <button onClick={() => setMode(mode==='login'?'register':'login')} className="hover:text-white">
-                                {mode === 'login' ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}
-                            </button>
-                            <button onClick={() => setMode('guest')} className="hover:text-white">Гость</button>
-                        </div>
+                        <button onClick={handleAuth} className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl">{mode==='login'?'Войти':'Регистрация'}</button>
+                        <p onClick={()=>setMode(mode==='login'?'register':'login')} className="text-center text-slate-500 text-sm cursor-pointer">
+                            {mode==='login'?'Нет аккаунта?':'Есть аккаунт?'}
+                        </p>
                     </div>
                 </div>
             );
         };
 
-        // --- ОСНОВНОЕ ПРИЛОЖЕНИЕ ---
+        // --- ПРИЛОЖЕНИЕ ---
         const App = ({ user, onLogout }) => {
-            const [activeTab, setActiveTab] = useState('feed');
+            const [activeTab, setActiveTab] = useState('main'); // main, feed, create, inbox, profile
             const [db, setDb] = useState(getDB());
             const [searchQuery, setSearchQuery] = useState('');
             
+            // Sync DB
             useEffect(() => {
-                const interval = setInterval(() => setDb(getDB()), 1000);
-                return () => clearInterval(interval);
+                const i = setInterval(() => setDb(getDB()), 1000);
+                return () => clearInterval(i);
             }, []);
 
             const currentUser = db.users.find(u => u.id === user.id) || user;
             const isPremium = currentUser.isPremium || (currentUser.premiumUntil && currentUser.premiumUntil > Date.now());
 
-            // --- СОЗДАНИЕ ПОСТА ---
-            const handleCreatePost = (text, file) => {
-                if (user.id === 'guest') return alert("Гости не могут постить");
+            // --- ЛОГИКА СОЗДАНИЯ ---
+            const handleCreate = (type, text, file) => {
+                if (!file) return alert("Файл не выбран");
                 
-                const limit = isPremium ? 4 : 2;
-                if (currentUser.postCountThisWeek >= limit) {
-                    return alert(`Лимит постов исчерпан! (${limit}/неделю)`);
+                // Проверка лимитов для постов
+                if (type === 'post') {
+                    const limit = isPremium ? 4 : 2;
+                    if (currentUser.postCount >= limit) return alert("Лимит постов исчерпан");
                 }
-
-                if (!file) return alert("Выберите фото!");
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    const db = getDB();
-                    const newPost = {
+                    const dbData = getDB();
+                    const item = {
                         id: Date.now(),
                         authorId: user.id,
                         authorName: user.username,
                         authorAvatar: user.avatar,
-                        authorIsPremium: isPremium,
+                        authorPremium: isPremium,
                         text: text,
-                        image: e.target.result,
-                        likes: 0,
+                        media: e.target.result,
                         createdAt: Date.now()
                     };
+
+                    if (type === 'post') {
+                        dbData.posts.unshift(item);
+                        const uIdx = dbData.users.findIndex(u => u.id === user.id);
+                        dbData.users[uIdx].postCount += 1;
+                    } else if (type === 'story') {
+                        dbData.stories.unshift(item);
+                    } else if (type === 'video') {
+                        dbData.videos.unshift(item);
+                    }
                     
-                    const userIdx = db.users.findIndex(u => u.id === user.id);
-                    db.users[userIdx].postCountThisWeek += 1;
-                    
-                    db.posts.unshift(newPost);
-                    saveDB(db);
-                    setActiveTab('feed');
+                    saveDB(dbData);
+                    setActiveTab('main');
                 };
                 reader.readAsDataURL(file);
             };
 
-            // --- ПРОМОКОДЫ ---
             const applyPromo = (code) => {
-                const db = getDB();
-                const promo = db.promoCodes[code];
-                if (!promo) return alert("Неверный код");
-                if (promo.used) return alert("Код использован");
-
-                const days = promo.days;
-                const until = days === Infinity ? Infinity : Date.now() + (days * 24 * 60 * 60 * 1000);
-                
-                const userIdx = db.users.findIndex(u => u.id === user.id);
-                db.users[userIdx].isPremium = true;
-                db.users[userIdx].premiumUntil = until;
-                
-                promo.used = true;
-                saveDB(db);
-                alert(`Премиум активирован!`);
+                const dbData = getDB();
+                const p = dbData.promoCodes[code];
+                if (p && !p.used) {
+                    p.used = true;
+                    const uIdx = dbData.users.findIndex(u => u.id === user.id);
+                    dbData.users[uIdx].isPremium = true;
+                    dbData.users[uIdx].premiumUntil = p.days === Infinity ? Infinity : Date.now() + (p.days * 86400000);
+                    saveDB(dbData);
+                    alert("Премиум активирован!");
+                } else {
+                    alert("Неверный код");
+                }
             };
 
             // --- ВКЛАДКИ ---
 
-            const FeedTab = () => {
+            // 1. ГЛАВНАЯ
+            const MainTab = () => {
                 const filteredPosts = db.posts.filter(p => 
                     p.text.toLowerCase().includes(searchQuery.toLowerCase()) || 
                     p.authorName.toLowerCase().includes(searchQuery.toLowerCase())
                 );
 
                 return (
-                    <div className="pb-20">
-                        {/* Поиск сверху */}
-                        <div className="sticky top-0 z-30 bg-[#0f172a]/95 backdrop-blur p-4 border-b border-slate-800">
+                    <div className="pb-20 min-h-screen">
+                        {/* Поиск */}
+                        <div className="sticky top-0 z-30 bg-[#020617]/95 backdrop-blur p-4 border-b border-slate-800">
                             <div className="relative">
                                 <Icon name="search" className="absolute left-3 top-2.5 text-slate-500" size={18} />
                                 <input 
                                     type="text" 
-                                    placeholder="Поиск..." 
+                                    placeholder="Поиск видео, людей..." 
                                     value={searchQuery}
                                     onChange={e => setSearchQuery(e.target.value)}
-                                    className="w-full bg-slate-800 text-white pl-10 pr-4 py-2 rounded-xl border border-slate-700 focus:border-blue-500 outline-none"
+                                    className="w-full bg-slate-900 text-white pl-10 pr-4 py-2 rounded-xl border border-slate-800 focus:border-blue-500 outline-none"
                                 />
                             </div>
                         </div>
 
-                        {/* Истории */}
+                        {/* Stories */}
                         {!searchQuery && (
                             <div className="py-4 border-b border-slate-800">
                                 <div className="flex space-x-4 overflow-x-auto no-scrollbar px-4">
@@ -321,31 +288,30 @@
                                     </div>
                                     {db.stories.map(s => (
                                         <div key={s.id} className="flex flex-col items-center space-y-1 min-w-[70px]">
-                                            <Avatar url={s.avatar} isPremium={s.isPremium} size="w-16 h-16" />
-                                            <span className="text-xs text-slate-300 truncate w-16 text-center">{s.username}</span>
+                                            <Avatar url={s.authorAvatar} isPremium={s.authorPremium} size="w-16 h-16" />
+                                            <span className="text-xs text-slate-300 truncate w-16 text-center">{s.authorName}</span>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         )}
 
-                        {/* Посты */}
-                        <div className="space-y-4 mt-2">
+                        {/* Posts */}
+                        <div className="space-y-4 mt-2 px-2">
+                            {filteredPosts.length === 0 && !searchQuery && (
+                                <div className="text-center text-slate-600 py-10">Постов пока нет</div>
+                            )}
                             {filteredPosts.map(post => (
-                                <div key={post.id} className="bg-slate-900 border-b border-slate-800 pb-4">
+                                <div key={post.id} className="bg-slate-900 rounded-xl overflow-hidden border border-slate-800">
                                     <div className="flex items-center p-3 space-x-3">
-                                        <Avatar url={post.authorAvatar} isPremium={post.authorIsPremium} />
+                                        <Avatar url={post.authorAvatar} isPremium={post.authorPremium} />
                                         <div>
                                             <p className="font-bold text-sm text-white">{post.authorName}</p>
                                             <p className="text-xs text-slate-500">Только что</p>
                                         </div>
                                     </div>
-                                    {post.image && <img src={post.image} className="w-full aspect-square object-cover bg-slate-800" />}
-                                    <div className="px-3 pt-3">
-                                        <div className="flex space-x-4 mb-2">
-                                            <Icon name="heart" className="text-white" />
-                                            <Icon name="message-circle" className="text-white" />
-                                        </div>
+                                    {post.media && <img src={post.media} className="w-full aspect-square object-cover bg-black" />}
+                                    <div className="p-3">
                                         <p className="text-sm text-slate-300"><span className="font-bold text-white mr-2">{post.authorName}</span>{post.text}</p>
                                     </div>
                                 </div>
@@ -355,15 +321,33 @@
                 );
             };
 
-            const SearchTab = () => (
-                <div className="p-4 pb-24">
-                    <h2 className="text-2xl font-bold mb-4">Поиск</h2>
-                    <input type="text" placeholder="Найти друзей..." className="w-full bg-slate-800 p-3 rounded-xl border border-slate-700 text-white outline-none mb-4" />
-                    <p className="text-slate-500 text-center">Здесь будет поиск людей</p>
+            // 2. ЛЕНТА (TIKTOK STYLE)
+            const FeedTab = () => (
+                <div className="tiktok-container bg-black pb-20">
+                    {db.videos.length === 0 ? (
+                        <div className="h-full flex items-center justify-center text-slate-500">Нет видео</div>
+                    ) : (
+                        db.videos.map(v => (
+                            <div key={v.id} className="tiktok-item flex items-center justify-center relative">
+                                {/* Здесь должно быть видео тег <video>, но для демо используем картинку с оверлеем */}
+                                <img src={v.media} className="w-full h-full object-cover opacity-80" />
+                                <div className="absolute bottom-20 left-4 text-white drop-shadow-md">
+                                    <p className="font-bold">@{v.authorName}</p>
+                                    <p className="text-sm">{v.text}</p>
+                                </div>
+                                <div className="absolute bottom-20 right-4 flex flex-col space-y-4 items-center">
+                                    <div className="bg-slate-800/50 p-3 rounded-full"><Icon name="heart" /></div>
+                                    <div className="bg-slate-800/50 p-3 rounded-full"><Icon name="message-square" /></div>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             );
 
+            // 3. СОЗДАНИЕ (+)
             const CreateTab = () => {
+                const [type, setType] = useState('post'); // post, story, video
                 const [text, setText] = useState('');
                 const [file, setFile] = useState(null);
                 const [preview, setPreview] = useState(null);
@@ -378,31 +362,46 @@
 
                 return (
                     <div className="p-4 pb-24 min-h-screen">
-                        <h2 className="text-xl font-bold mb-6">Новый пост</h2>
+                        <h2 className="text-xl font-bold mb-4">Создать</h2>
+                        
+                        <div className="flex space-x-2 mb-4 bg-slate-900 p-1 rounded-lg">
+                            {['post', 'story', 'video'].map(t => (
+                                <button 
+                                    key={t} 
+                                    onClick={() => setType(t)}
+                                    className={`flex-1 py-2 text-sm rounded-md capitalize ${type===t ? 'bg-blue-600 text-white' : 'text-slate-400'}`}
+                                >
+                                    {t === 'post' ? 'Пост (Фото)' : t === 'story' ? 'История' : 'Видео (Лента)'}
+                                </button>
+                            ))}
+                        </div>
+
                         <textarea 
                             placeholder="Описание..." 
-                            className="w-full bg-slate-800 p-3 rounded-xl border border-slate-700 text-white outline-none mb-4 h-32 resize-none"
+                            className="w-full bg-slate-900 p-3 rounded-xl border border-slate-800 text-white outline-none mb-4 h-24 resize-none"
                             value={text}
                             onChange={e => setText(e.target.value)}
                         />
+
                         <div className="mb-6">
                             {!preview ? (
-                                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-600 rounded-xl cursor-pointer hover:bg-slate-800 transition">
-                                    <Icon name="image" size={32} className="text-slate-500 mb-2" />
-                                    <span className="text-slate-400 text-sm">Выбрать фото</span>
-                                    <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
+                                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-700 rounded-xl cursor-pointer hover:bg-slate-900 transition">
+                                    <Icon name="upload" size={32} className="text-slate-500 mb-2" />
+                                    <span className="text-slate-400 text-sm">Выбрать файл</span>
+                                    <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFile} />
                                 </label>
                             ) : (
-                                <div className="relative w-full h-64 rounded-xl overflow-hidden">
-                                    <img src={preview} className="w-full h-full object-cover" />
+                                <div className="relative w-full h-64 rounded-xl overflow-hidden bg-black">
+                                    <img src={preview} className="w-full h-full object-contain" />
                                     <button onClick={() => {setFile(null); setPreview(null)}} className="absolute top-2 right-2 bg-red-500 p-1 rounded-full"><Icon name="x" size={16} /></button>
                                 </div>
                             )}
                         </div>
+
                         <button 
-                            onClick={() => text && file && handleCreatePost(text, file)}
+                            onClick={() => text && file && handleCreate(type, text, file)}
                             disabled={!text || !file}
-                            className="w-full bg-blue-600 disabled:bg-slate-700 text-white font-bold py-3 rounded-xl"
+                            className="w-full bg-blue-600 disabled:bg-slate-800 disabled:text-slate-500 text-white font-bold py-3 rounded-xl"
                         >
                             Опубликовать
                         </button>
@@ -410,59 +409,93 @@
                 );
             };
 
+            // 4. ВХОДЯЩИЕ
+            const InboxTab = () => (
+                <div className="p-4 pb-24 text-center text-slate-500 pt-20">
+                    <Icon name="inbox" size={48} className="mx-auto mb-4 opacity-20" />
+                    <p>Входящие пусты</p>
+                </div>
+            );
+
+            // 5. ПРОФИЛЬ
             const ProfileTab = () => {
-                const [promo, setPromo] = useState('');
+                const [promoCode, setPromoCode] = useState('');
                 const myPosts = db.posts.filter(p => p.authorId === user.id);
+
                 return (
-                    <div className="pb-24">
-                        <div className="p-6 flex flex-col items-center border-b border-slate-800">
+                    <div className="pb-24 min-h-screen bg-[#020617]">
+                        {/* Стрелка назад для телефонов */}
+                        <div className="p-4 flex items-center border-b border-slate-800">
+                            <button onClick={() => setActiveTab('main')} className="p-2 -ml-2 text-slate-400 hover:text-white">
+                                <Icon name="arrow-left" size={24} />
+                            </button>
+                            <h2 className="text-lg font-bold ml-2">Профиль</h2>
+                        </div>
+
+                        <div className="p-6 flex flex-col items-center">
                             <Avatar url={user.avatar} isPremium={isPremium} size="w-24 h-24" />
                             <h2 className="text-2xl font-bold mt-4">{user.username}</h2>
-                            {isPremium && <span className="text-yellow-500 text-sm font-bold mt-1">PREMIUM</span>}
-                        </div>
-                        {!isPremium && (
-                            <div className="p-4 m-4 bg-slate-800 rounded-xl">
-                                <div className="flex space-x-2">
-                                    <input type="text" placeholder="Промокод" className="flex-1 bg-slate-900 p-2 rounded text-sm text-white" value={promo} onChange={e=>setPromo(e.target.value)} />
-                                    <button onClick={()=>applyPromo(promo)} className="bg-blue-600 px-4 rounded text-sm font-bold">OK</button>
-                                </div>
+                            {isPremium && <span className="text-yellow-500 text-xs font-bold mt-1 border border-yellow-500 px-2 py-0.5 rounded">PREMIUM</span>}
+                            
+                            <div className="flex space-x-8 mt-6 text-center">
+                                <div><p className="font-bold text-lg">{myPosts.length}</p><p className="text-xs text-slate-500">Постов</p></div>
+                                <div><p className="font-bold text-lg">0</p><p className="text-xs text-slate-500">Друзей</p></div>
                             </div>
-                        )}
-                        <div className="grid grid-cols-3 gap-1 p-1">
-                            {myPosts.map(p => <div key={p.id} className="aspect-square bg-slate-800"><img src={p.image} className="w-full h-full object-cover"/></div>)}
+                        </div>
+
+                        {/* Вкладка Промокоды */}
+                        <div className="px-4">
+                            <div className="bg-slate-900 rounded-xl border border-slate-800 p-4">
+                                <h3 className="font-bold text-blue-400 mb-3 flex items-center"><Icon name="ticket" size={16} className="mr-2"/> Промокоды</h3>
+                                {!isPremium ? (
+                                    <div className="flex space-x-2">
+                                        <input 
+                                            type="text" 
+                                            placeholder="Введите код" 
+                                            className="flex-1 bg-[#020617] p-2 rounded border border-slate-700 text-sm text-white outline-none"
+                                            value={promoCode}
+                                            onChange={e => setPromoCode(e.target.value)}
+                                        />
+                                        <button onClick={() => applyPromo(promoCode)} className="bg-blue-600 px-4 rounded text-sm font-bold">OK</button>
+                                    </div>
+                                ) : (
+                                    <p className="text-green-500 text-sm">У вас активен Премиум!</p>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-1 p-4 mt-4">
+                            {myPosts.map(p => (
+                                <div key={p.id} className="aspect-square bg-slate-800 rounded overflow-hidden">
+                                    <img src={p.media} className="w-full h-full object-cover" />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 );
             };
 
-            const ActivityTab = () => (
-                <div className="p-4 pb-24 text-center text-slate-500">
-                    <Icon name="bell" size={48} className="mx-auto mb-4 opacity-20" />
-                    <p>Уведомлений нет</p>
-                </div>
-            );
-
             return (
-                <div className="min-h-screen bg-[#0f172a]">
+                <div className="min-h-screen bg-[#020617]">
+                    {activeTab === 'main' && <MainTab />}
                     {activeTab === 'feed' && <FeedTab />}
-                    {activeTab === 'search' && <SearchTab />}
                     {activeTab === 'create' && <CreateTab />}
-                    {activeTab === 'activity' && <ActivityTab />}
+                    {activeTab === 'inbox' && <InboxTab />}
                     {activeTab === 'profile' && <ProfileTab />}
 
-                    {/* Нижняя навигация (5 вкладок) */}
-                    <div className="fixed bottom-0 w-full bg-[#0f172a] border-t border-slate-800 flex justify-around py-2 z-50 pb-safe">
+                    {/* Нижняя навигация */}
+                    <div className="fixed bottom-0 w-full bg-[#020617] border-t border-slate-800 flex justify-around py-3 z-50 pb-safe">
                         {[
-                            { id: 'feed', icon: 'layout-grid', label: 'Лента' },
-                            { id: 'search', icon: 'search', label: 'Поиск' },
-                            { id: 'create', icon: 'plus-square', label: 'Пост' },
-                            { id: 'activity', icon: 'heart', label: 'Активность' },
+                            { id: 'main', icon: 'home', label: 'Главная' },
+                            { id: 'feed', icon: 'play-circle', label: 'Лента' },
+                            { id: 'create', icon: 'plus-square', label: '+' },
+                            { id: 'inbox', icon: 'mail', label: 'Входящие' },
                             { id: 'profile', icon: 'user', label: 'Профиль' }
                         ].map(tab => (
                             <button 
                                 key={tab.id} 
                                 onClick={() => setActiveTab(tab.id)} 
-                                className={`flex flex-col items-center p-2 rounded-lg transition-colors ${activeTab===tab.id ? 'text-blue-500' : 'text-slate-500'}`}
+                                className={`flex flex-col items-center w-1/5 ${activeTab===tab.id ? 'text-blue-500' : 'text-slate-500'}`}
                             >
                                 <Icon name={tab.icon} size={24} />
                                 <span className="text-[10px] mt-1">{tab.label}</span>
