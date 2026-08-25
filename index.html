@@ -2,449 +2,1683 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ПУЛЬС</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Пульс - Социальная сеть</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-dark: #000000;
-            --bg-card: #121212;
-            --accent: #0095f6;
-        }
-        body {
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-        
-        /* Скрытие скроллбара */
-        .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Premium Styles */
-        .premium-gradient {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+        :root {
+            --primary: #fe2c55;
+            --secondary: #25f4ee;
+            --bg-dark: #000000;
+            --bg-light: #ffffff;
+            --text-dark: #ffffff;
+            --text-light: #000000;
+            --gradient-premium: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
         }
-        .premium-ring {
-            padding: 2px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #ff00cc, #333399, #00ccff);
-        }
-        
-        /* Анимации */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
 
-        /* TikTok Scroll */
-        .video-feed {
-            height: calc(100vh - 60px);
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            background: #000;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            touch-action: manipulation;
         }
-        .video-item {
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .pulse-logo {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Auth Modal */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-modal.hidden {
+            display: none;
+        }
+
+        .auth-container {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-title {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #1a1a1a;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(254, 44, 85, 0.3);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, var(--primary), #ff6b8a);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(254, 44, 85, 0.4);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+        }
+
+        .auth-switch a {
+            color: var(--secondary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Main App Container */
+        .app-container {
+            display: none;
+            height: 100vh;
+            position: relative;
+        }
+
+        .app-container.active {
+            display: block;
+        }
+
+        /* Video Feed */
+        .video-feed {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .video-feed::-webkit-scrollbar {
+            display: none;
+        }
+
+        .video-item {
+            height: 100vh;
             scroll-snap-align: start;
             position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        }
+
+        .video-info {
+            margin-bottom: 80px;
+        }
+
+        .video-author {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+            object-fit: cover;
+        }
+
+        .author-avatar.premium::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 50%;
+            background: var(--gradient-premium);
+            z-index: -1;
+        }
+
+        .author-avatar.premium::after {
+            content: '✓';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--primary);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .author-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .video-description {
+            font-size: 14px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .video-music {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .video-music i {
+            margin-right: 5px;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            position: absolute;
+            right: 15px;
+            bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn i {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .action-btn span {
+            font-size: 12px;
+        }
+
+        .action-btn.liked i {
+            color: var(--primary);
+            animation: heartBeat 0.5s;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+            border-top: 1px solid #333;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 5px 15px;
+        }
+
+        .nav-item.active {
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 24px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+        }
+
+        .nav-item.upload {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        /* Upload Modal */
+        .upload-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+        }
+
+        .upload-modal.active {
+            display: flex;
+        }
+
+        .upload-container {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .upload-area {
+            border: 2px dashed #555;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(254, 44, 85, 0.1);
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-preview {
+            width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .upload-preview.active {
+            display: block;
+        }
+
+        .upload-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #2a2a2a;
+            color: white;
+            font-size: 14px;
+        }
+
+        .upload-submit {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, var(--primary), #ff6b8a);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        /* Profile Page */
+        .profile-page {
+            display: none;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .profile-page.active {
+            display: block;
+        }
+
+        .profile-header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-avatar.premium {
+            border: 3px solid transparent;
+            background: var(--gradient-premium);
+            background-clip: padding-box;
+            position: relative;
+        }
+
+        .profile-avatar.premium::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            right: -6px;
+            bottom: -6px;
+            border-radius: 50%;
+            background: var(--gradient-premium);
+            z-index: -1;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .profile-videos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            padding: 2px;
+        }
+
+        .profile-video-thumb {
+            aspect-ratio: 9/16;
+            background: #333;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-video-thumb .views {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Comments Modal */
+        .comments-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70vh;
+            background: #1a1a1a;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+            z-index: 9997;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .comments-modal.active {
+            transform: translateY(0);
+        }
+
+        .comments-header {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comments-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .comment-item {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .comment-input-container {
+            padding: 15px;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 20px;
+            background: #2a2a2a;
+            color: white;
+        }
+
+        .comment-send {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 20px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Search Page */
+        .search-page {
+            display: none;
+            padding: 20px;
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+
+        .search-page.active {
+            display: block;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #333;
+            border-radius: 25px;
+            background: #1a1a1a;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .trending-section h3 {
+            margin-bottom: 15px;
+            color: #888;
+        }
+
+        .trending-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .trending-tag {
+            padding: 8px 15px;
+            background: #2a2a2a;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .trending-tag:hover {
+            background: var(--primary);
+        }
+
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .video-feed {
+                max-width: 500px;
+                margin: 0 auto;
+                border-left: 1px solid #333;
+                border-right: 1px solid #333;
+            }
+
+            .bottom-nav {
+                max-width: 500px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .action-buttons {
+                right: 30px;
+            }
+        }
+
+        /* Premium Badge */
+        .premium-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: var(--gradient-premium);
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 10001;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Hamburger Menu for Mobile */
+        .hamburger-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100%;
+            background: #1a1a1a;
+            z-index: 9996;
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+            padding: 20px;
+        }
+
+        .hamburger-menu.active {
+            transform: translateX(0);
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9995;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover {
+            background: #2a2a2a;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-trigger {
+                display: block;
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                font-size: 24px;
+                color: white;
+                z-index: 1001;
+                cursor: pointer;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #333;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="pulse-logo">⚡ ПУЛЬС</div>
+    </div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef, useMemo } = React;
-
-        // --- ICONS (SVG Components to prevent flickering) ---
-        const Icons = {
-            Home: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
-            Search: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
-            Plus: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>,
-            Heart: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
-            User: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-            Play: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>,
-            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-            LogOut: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>,
-            Image: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>,
-            Upload: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-        };
-
-        // --- DB LOGIC ---
-        const initDB = () => {
-            if (!localStorage.getItem('pulse_final_db')) {
-                const codes = {};
-                for(let i=0; i<100; i++) codes['PULSE30_' + Math.random().toString(36).substring(2, 6).toUpperCase()] = { days: 30, used: false };
-                codes['PULSE_GOD'] = { days: Infinity, used: false };
-                localStorage.setItem('pulse_final_db', JSON.stringify({
-                    users: [], posts: [], videos: [], stories: [], promoCodes: codes
-                }));
-            }
-        };
-        initDB();
-        const getDB = () => JSON.parse(localStorage.getItem('pulse_final_db'));
-        const saveDB = (data) => localStorage.setItem('pulse_final_db', JSON.stringify(data));
-
-        const DefaultAvatar = "https://ui-avatars.com/api/?background=random&color=fff&name=User";
-
-        // --- COMPONENTS ---
-
-        const Avatar = ({ url, isPremium, size = "w-8 h-8" }) => (
-            <div className={`relative ${isPremium ? 'premium-ring' : ''}`}>
-                <img src={url || DefaultAvatar} className={`${size} rounded-full object-cover border border-gray-800 bg-gray-900`} />
-                {isPremium && (
-                    <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-0.5 border border-black">
-                        <Icons.Check />
-                    </div>
-                )}
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <h2 class="auth-title">⚡ ПУЛЬС</h2>
+            <div id="loginForm">
+                <input type="email" class="auth-input" id="loginEmail" placeholder="Email">
+                <input type="password" class="auth-input" id="loginPassword" placeholder="Пароль">
+                <button class="auth-button" onclick="handleLogin()">Войти</button>
+                <button class="auth-button" style="background: #333;" onclick="handleGuestLogin()">Гостевой вход</button>
+                <div class="auth-switch">
+                    Нет аккаунта? <a onclick="showRegister()">Зарегистрироваться</a>
+                </div>
             </div>
-        );
+            <div id="registerForm" style="display: none;">
+                <input type="text" class="auth-input" id="regUsername" placeholder="Имя пользователя">
+                <input type="email" class="auth-input" id="regEmail" placeholder="Email">
+                <input type="password" class="auth-input" id="regPassword" placeholder="Пароль">
+                <button class="auth-button" onclick="handleRegister()">Создать аккаунт</button>
+                <div class="auth-switch">
+                    Уже есть аккаунт? <a onclick="showLogin()">Войти</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        const AuthScreen = ({ onLogin }) => {
-            const [username, setUsername] = useState('');
-            const [password, setPassword] = useState('');
-            const [mode, setMode] = useState('login');
-            const [useCustomAv, setUseCustomAv] = useState(false);
-            const [avatarFile, setAvatarFile] = useState(null);
-            const [preview, setPreview] = useState(null);
-            const [error, setError] = useState('');
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <!-- Hamburger Menu Trigger (Mobile) -->
+        <div class="hamburger-trigger" onclick="toggleHamburger()">
+            <i class="fas fa-bars"></i>
+        </div>
 
-            useEffect(() => {
-                const saved = localStorage.getItem('pulse_current_user');
-                if (saved) onLogin(JSON.parse(saved));
-            }, []);
+        <!-- Hamburger Menu -->
+        <div class="hamburger-menu" id="hamburgerMenu">
+            <h3 style="margin-bottom: 20px;">Меню</h3>
+            <div class="menu-item" onclick="navigateTo('feed')">
+                <i class="fas fa-home"></i> Лента
+            </div>
+            <div class="menu-item" onclick="navigateTo('search')">
+                <i class="fas fa-search"></i> Поиск
+            </div>
+            <div class="menu-item" onclick="navigateTo('profile')">
+                <i class="fas fa-user"></i> Профиль
+            </div>
+            <div class="menu-item" onclick="showUploadModal()">
+                <i class="fas fa-plus"></i> Загрузить видео
+            </div>
+            <div class="menu-item" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i> Выйти
+            </div>
+        </div>
+        <div class="menu-overlay" id="menuOverlay" onclick="toggleHamburger()"></div>
 
-            const handleFile = (e) => {
-                const f = e.target.files[0];
-                if (f) {
-                    setAvatarFile(f);
-                    setPreview(URL.createObjectURL(f));
-                }
-            };
+        <!-- Video Feed Page -->
+        <div class="video-feed" id="feedPage">
+            <!-- Videos will be loaded here dynamically -->
+        </div>
 
-            const submit = () => {
-                const db = getDB();
-                if (mode === 'register') {
-                    if (!username) return setError("Введите ник");
-                    if (db.users.find(u => u.username === username)) return setError("Ник занят");
-                    
-                    let av = DefaultAvatar;
-                    const finish = (finalAv) => {
-                        const newUser = {
-                            id: Date.now().toString(), username, password, avatar: finalAv,
-                            isPremium: false, premiumUntil: 0, postCount: 0, lastReset: Date.now()
-                        };
-                        db.users.push(newUser);
-                        saveDB(db);
-                        alert("Готово! Войдите.");
-                        setMode('login');
-                    };
+        <!-- Search Page -->
+        <div class="search-page" id="searchPage">
+            <input type="text" class="search-bar" placeholder="🔍 Поиск пользователей и видео..." oninput="handleSearch(this.value)">
+            <div class="trending-section">
+                <h3>🔥 В тренде</h3>
+                <div class="trending-tags">
+                    <div class="trending-tag">#танцы</div>
+                    <div class="trending-tag">#комедия</div>
+                    <div class="trending-tag">#музыка</div>
+                    <div class="trending-tag">#лайфхаки</div>
+                    <div class="trending-tag">#еда</div>
+                    <div class="trending-tag">#путешествия</div>
+                </div>
+            </div>
+            <div id="searchResults" style="margin-top: 30px;"></div>
+        </div>
 
-                    if (useCustomAv && avatarFile) {
-                        const r = new FileReader();
-                        r.onload = (e) => finish(e.target.result);
-                        r.readAsDataURL(avatarFile);
-                    } else {
-                        finish(av);
-                    }
+        <!-- Profile Page -->
+        <div class="profile-page" id="profilePage">
+            <div class="profile-header">
+                <div class="profile-avatar-container">
+                    <img src="" alt="Avatar" class="profile-avatar" id="profileAvatar">
+                </div>
+                <h2 id="profileUsername">Username</h2>
+                <div id="premiumBadge" class="premium-badge" style="display: none;">PREMIUM</div>
+                <p id="profileBio" style="color: #888; margin-top: 10px;">Биография</p>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="followingCount">0</div>
+                        <div class="stat-label">Подписки</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="followersCount">0</div>
+                        <div class="stat-label">Подписчики</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="likesCount">0</div>
+                        <div class="stat-label">Лайки</div>
+                    </div>
+                </div>
+                <button class="auth-button" onclick="editProfile()" style="margin-top: 15px;">
+                    Редактировать профиль
+                </button>
+            </div>
+            <div class="profile-videos" id="profileVideos">
+                <!-- User videos will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="navigateTo('feed')">
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('search')">
+                <i class="fas fa-search"></i>
+                <span>Поиск</span>
+            </div>
+            <div class="nav-item upload" onclick="showUploadModal()">
+                <i class="fas fa-plus"></i>
+            </div>
+            <div class="nav-item" onclick="showNotifications()" style="position: relative;">
+                <i class="fas fa-bell"></i>
+                <span>Уведомления</span>
+                <div class="notification-badge" id="notifBadge" style="display: none;">0</div>
+            </div>
+            <div class="nav-item" onclick="navigateTo('profile')">
+                <i class="fas fa-user"></i>
+                <span>Профиль</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="upload-modal" id="uploadModal">
+        <div class="close-modal" onclick="hideUploadModal()">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="upload-container">
+            <h2 style="margin-bottom: 20px;">Загрузить видео</h2>
+            <div class="upload-area" onclick="document.getElementById('videoFile').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Нажмите для выбора видео</p>
+                <p style="font-size: 12px; color: #888; margin-top: 10px;">Максимум 60 секунд</p>
+            </div>
+            <input type="file" id="videoFile" accept="video/*" style="display: none;" onchange="handleVideoSelect(event)">
+            <video class="upload-preview" id="uploadPreview" controls></video>
+            <input type="text" class="upload-input" id="videoDescription" placeholder="Описание видео...">
+            <input type="text" class="upload-input" id="videoHashtags" placeholder="#хэштеги">
+            <button class="upload-submit" onclick="uploadVideo()">Опубликовать</button>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div class="comments-modal" id="commentsModal">
+        <div class="comments-header">
+            <h3>Комментарии (<span id="commentsCount">0</span>)</h3>
+            <i class="fas fa-times" style="cursor: pointer;" onclick="hideComments()"></i>
+        </div>
+        <div class="comments-list" id="commentsList">
+            <!-- Comments will be loaded here -->
+        </div>
+        <div class="comment-input-container">
+            <input type="text" class="comment-input" id="commentInput" placeholder="Добавить комментарий...">
+            <button class="comment-send" onclick="postComment()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://rzahwdxsdvwojdklblbb.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
+        
+        let supabase;
+        let currentUser = null;
+        let currentVideoId = null;
+        let selectedVideoFile = null;
+
+        // Initialize Supabase
+        async function initSupabase() {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('✅ Supabase initialized');
+                await checkAuth();
+            } catch (error) {
+                console.error('❌ Supabase error:', error);
+                showToast('Ошибка подключения');
+            }
+        }
+
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    currentUser = session.user;
+                    showApp();
+                    loadFeed();
                 } else {
-                    const u = db.users.find(x => x.username === username && x.password === password);
-                    if (u) {
-                        localStorage.setItem('pulse_current_user', JSON.stringify(u));
-                        onLogin(u);
-                    } else setError("Ошибка входа");
+                    document.getElementById('authModal').classList.remove('hidden');
                 }
-            };
+            } catch (error) {
+                console.error('Auth error:', error);
+                document.getElementById('authModal').classList.remove('hidden');
+            }
+        }
 
-            return (
-                <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-black fade-in">
-                    <h1 className="text-5xl font-bold text-white mb-10 tracking-widest">ПУЛЬС</h1>
-                    <div className="w-full max-w-xs space-y-4">
-                        <input type="text" placeholder="Никнейм" value={username} onChange={e=>setUsername(e.target.value)} className="w-full p-3 bg-gray-900 border border-gray-800 rounded text-white focus:border-blue-500 outline-none" />
-                        <input type="password" placeholder="Пароль" value={password} onChange={e=>setPassword(e.target.value)} className="w-full p-3 bg-gray-900 border border-gray-800 rounded text-white focus:border-blue-500 outline-none" />
-                        
-                        {mode === 'register' && (
-                            <div className="bg-gray-900 p-3 rounded border border-gray-800">
-                                <div className="flex gap-2 mb-2">
-                                    <button onClick={()=>{setUseCustomAv(false); setPreview(null)}} className={`flex-1 text-xs py-1 rounded ${!useCustomAv?'bg-blue-600':'bg-gray-800'}`}>Стандарт</button>
-                                    <button onClick={()=>setUseCustomAv(true)} className={`flex-1 text-xs py-1 rounded ${useCustomAv?'bg-blue-600':'bg-gray-800'}`}>Свое фото</button>
-                                </div>
-                                {useCustomAv && <input type="file" onChange={handleFile} className="text-xs text-gray-400 w-full" />}
-                                {preview && <img src={preview} className="w-10 h-10 rounded-full mx-auto mt-2" />}
-                            </div>
-                        )}
+        // Show app after loading
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            initSupabase();
+        }, 2000);
 
-                        {error && <p className="text-red-500 text-xs text-center">{error}</p>}
-                        
-                        <button onClick={submit} className="w-full bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-500 transition">
-                            {mode==='login'?'Войти':'Регистрация'}
-                        </button>
-                        <p onClick={()=>setMode(mode==='login'?'register':'login')} className="text-center text-gray-500 text-xs cursor-pointer mt-4">
-                            {mode==='login'?'Нет аккаунта?':'Есть аккаунт?'}
-                        </p>
-                    </div>
-                </div>
-            );
-        };
+        // Auth Functions
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+        }
 
-        const App = ({ user, onLogout }) => {
-            const [tab, setTab] = useState('home');
-            const [db, setDb] = useState(getDB());
-            const [search, setSearch] = useState('');
-            
-            // Stable data fetching
-            useEffect(() => {
-                const timer = setInterval(() => setDb(getDB()), 2000);
-                return () => clearInterval(timer);
-            }, []);
+        function showRegister() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
 
-            const me = db.users.find(u => u.id === user.id) || user;
-            const isPrem = me.isPremium || (me.premiumUntil && me.premiumUntil > Date.now());
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
-            const createPost = (type, title, text, file) => {
-                if(!file) return alert("Файл!");
-                if(type==='post' && me.postCount >= (isPrem?4:2)) return alert("Лимит постов!");
+            if (!email || !password) {
+                showToast('Заполните все поля');
+                return;
+            }
 
-                const r = new FileReader();
-                r.onload = (e) => {
-                    const data = getDB();
-                    const item = {
-                        id: Date.now(), authorId: user.id, authorName: user.username,
-                        authorAvatar: user.avatar, authorPrem: isPrem,
-                        title, text, media: e.target.result, created: Date.now()
-                    };
-                    
-                    if(type==='post') {
-                        data.posts.unshift(item);
-                        const idx = data.users.findIndex(u=>u.id===user.id);
-                        data.users[idx].postCount++;
-                    } else if (type==='story') {
-                        data.stories.unshift(item);
-                    } else {
-                        data.videos.unshift(item);
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+
+                currentUser = data.user;
+                document.getElementById('authModal').classList.add('hidden');
+                showApp();
+                loadFeed();
+                showToast('Добро пожаловать!');
+            } catch (error) {
+                showToast('Ошибка: ' + error.message);
+            }
+        }
+
+        async function handleRegister() {
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            if (!username || !email || !password) {
+                showToast('Заполните все поля');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: { username }
                     }
-                    saveDB(data);
-                    setTab('home');
-                };
-                r.readAsDataURL(file);
-            };
+                });
 
-            const applyPromo = (code) => {
-                const data = getDB();
-                const p = data.promoCodes[code];
-                if(p && !p.used) {
-                    p.used = true;
-                    const idx = data.users.findIndex(u=>u.id===user.id);
-                    data.users[idx].isPremium = true;
-                    data.users[idx].premiumUntil = p.days===Infinity ? Infinity : Date.now() + (p.days*86400000);
-                    saveDB(data);
-                    alert("Премиум активирован!");
-                    window.location.reload();
-                } else alert("Неверный код");
-            };
+                if (error) throw error;
 
-            // --- TABS ---
+                currentUser = data.user;
+                document.getElementById('authModal').classList.add('hidden');
+                showApp();
+                loadFeed();
+                showToast('Аккаунт создан!');
+            } catch (error) {
+                showToast('Ошибка: ' + error.message);
+            }
+        }
 
-            const HomeTab = () => {
-                const filtered = db.posts.filter(p => p.text.toLowerCase().includes(search.toLowerCase()) || p.authorName.toLowerCase().includes(search.toLowerCase()));
+        async function handleGuestLogin() {
+            const guestEmail = `guest_${Date.now()}@pulse.app`;
+            const guestPassword = 'guest123';
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: guestEmail,
+                    password: guestPassword,
+                    options: {
+                        data: {
+                            username: `Гость_${Math.floor(Math.random() * 1000)}`
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                currentUser = data.user;
+                document.getElementById('authModal').classList.add('hidden');
+                showApp();
+                loadFeed();
+                showToast('Гостевой вход выполнен');
+            } catch (error) {
+                showToast('Ошибка: ' + error.message);
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await supabase.auth.signOut();
+                location.reload();
+            } catch (error) {
+                showToast('Ошибка выхода');
+            }
+        }
+
+        // Navigation
+        function showApp() {
+            document.getElementById('appContainer').classList.add('active');
+            loadUserProfile();
+        }
+
+        function navigateTo(page) {
+            document.getElementById('feedPage').style.display = 'none';
+            document.getElementById('searchPage').classList.remove('active');
+            document.getElementById('profilePage').classList.remove('active');
+
+            if (page === 'feed') {
+                document.getElementById('feedPage').style.display = 'block';
+            } else if (page === 'search') {
+                document.getElementById('searchPage').classList.add('active');
+            } else if (page === 'profile') {
+                document.getElementById('profilePage').classList.add('active');
+                loadUserProfile();
+            }
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            document.getElementById('hamburgerMenu').classList.remove('active');
+            document.getElementById('menuOverlay').classList.remove('active');
+        }
+
+        function toggleHamburger() {
+            document.getElementById('hamburgerMenu').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+
+        // Load Video Feed
+        async function loadFeed() {
+            try {
+                const { data: videos, error } = await supabase
+                    .from('videos')
+                    .select(`
+                        *,
+                        profiles:user_id (username, avatar_url, is_premium)
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                if (error) {
+                    console.error('Feed error:', error);
+                    // Fallback without join
+                    const { data: fallbackVideos } = await supabase
+                        .from('videos')
+                        .select('*')
+                        .order('created_at', { ascending: false })
+                        .limit(20);
+                    
+                    renderFeed(fallbackVideos || []);
+                    return;
+                }
+
+                renderFeed(videos || []);
+                setupRealtimeUpdates();
+            } catch (error) {
+                console.error('Load feed error:', error);
+                showToast('Ошибка загрузки ленты');
+            }
+        }
+
+        function renderFeed(videos) {
+            const feedContainer = document.getElementById('feedPage');
+            feedContainer.innerHTML = '';
+
+            if (videos.length === 0) {
+                feedContainer.innerHTML = `
+                    <div style="text-align: center; padding: 50px; color: #888;">
+                        <h3>Пока нет видео</h3>
+                        <p>Будь первым, кто загрузит видео!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            videos.forEach(video => {
+                const videoElement = createVideoElement(video);
+                feedContainer.appendChild(videoElement);
+            });
+        }
+
+        function createVideoElement(video) {
+            const div = document.createElement('div');
+            div.className = 'video-item';
+            div.dataset.videoId = video.id;
+
+            const profile = video.profiles || {};
+            const isPremium = profile.is_premium || false;
+            const avatarClass = isPremium ? 'author-avatar premium' : 'author-avatar';
+            const avatarUrl = profile.avatar_url || 'https://via.placeholder.com/40';
+            const username = profile.username || 'Unknown';
+
+            div.innerHTML = `
+                <video class="video-player" loop playsinline muted
+                       src="${video.video_url}" 
+                       onclick="togglePlay(this)">
+                </video>
+                <div class="video-overlay">
+                    <div class="video-info">
+                        <div class="video-author">
+                            <img src="${avatarUrl}" 
+                                 class="${avatarClass}" 
+                                 onclick="viewProfile('${video.user_id}')">
+                            <span class="author-name">${username}</span>
+                            ${isPremium ? '<span class="premium-badge">PRO</span>' : ''}
+                        </div>
+                        <div class="video-description">${video.description || ''}</div>
+                        <div class="video-music">
+                            <i class="fas fa-music"></i>
+                            <span>${video.hashtags || '#пульс'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <div class="action-btn" onclick="toggleLike('${video.id}', this)">
+                        <i class="fas fa-heart"></i>
+                        <span>${video.likes_count || 0}</span>
+                    </div>
+                    <div class="action-btn" onclick="showComments('${video.id}')">
+                        <i class="fas fa-comment"></i>
+                        <span>${video.comments_count || 0}</span>
+                    </div>
+                    <div class="action-btn" onclick="shareVideo('${video.id}')">
+                        <i class="fas fa-share"></i>
+                        <span>Поделиться</span>
+                    </div>
+                </div>
+            `;
+
+            // Auto-play on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const videoEl = entry.target.querySelector('video');
+                    if (entry.isIntersecting) {
+                        videoEl.play().catch(() => {});
+                    } else {
+                        videoEl.pause();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(div);
+            return div;
+        }
+
+        function togglePlay(video) {
+            video.paused ? video.play() : video.pause();
+        }
+
+        // Like functionality
+        async function toggleLike(videoId, btn) {
+            if (!currentUser) {
+                showToast('Войдите для лайков');
+                return;
+            }
+
+            try {
+                const { data: existingLike } = await supabase
+                    .from('likes')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .eq('video_id', videoId)
+                    .single();
+
+                if (existingLike) {
+                    await supabase.from('likes').delete().eq('id', existingLike.id);
+                    btn.classList.remove('liked');
+                } else {
+                    await supabase.from('likes').insert([{
+                        user_id: currentUser.id,
+                        video_id: videoId
+                    }]);
+                    btn.classList.add('liked');
+                }
+
+                // Update count
+                const { data: video } = await supabase
+                    .from('videos')
+                    .select('likes_count')
+                    .eq('id', videoId)
+                    .single();
+
+                btn.querySelector('span').textContent = video?.likes_count || 0;
+            } catch (error) {
+                console.error('Like error:', error);
+            }
+        }
+
+        // Comments
+        async function showComments(videoId) {
+            currentVideoId = videoId;
+            document.getElementById('commentsModal').classList.add('active');
+            
+            try {
+                const { data: comments, error } = await supabase
+                    .from('comments')
+                    .select(`
+                        *,
+                        profiles:user_id (username, avatar_url)
+                    `)
+                    .eq('video_id', videoId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const commentsList = document.getElementById('commentsList');
+                commentsList.innerHTML = '';
+                document.getElementById('commentsCount').textContent = comments?.length || 0;
+
+                if (!comments || comments.length === 0) {
+                    commentsList.innerHTML = '<div style="text-align: center; color: #888; padding: 20px;">Нет комментариев</div>';
+                    return;
+                }
+
+                comments.forEach(comment => {
+                    const profile = comment.profiles || {};
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'comment-item';
+                    commentDiv.innerHTML = `
+                        <img src="${profile.avatar_url || 'https://via.placeholder.com/40'}" 
+                             class="comment-avatar">
+                        <div class="comment-content">
+                            <div class="comment-author">${profile.username || 'Unknown'}</div>
+                            <div class="comment-text">${comment.text}</div>
+                        </div>
+                    `;
+                    commentsList.appendChild(commentDiv);
+                });
+            } catch (error) {
+                console.error('Comments error:', error);
+            }
+        }
+
+        function hideComments() {
+            document.getElementById('commentsModal').classList.remove('active');
+            currentVideoId = null;
+        }
+
+        async function postComment() {
+            if (!currentUser || !currentVideoId) return;
+
+            const text = document.getElementById('commentInput').value.trim();
+            if (!text) return;
+
+            try {
+                await supabase.from('comments').insert([{
+                    video_id: currentVideoId,
+                    user_id: currentUser.id,
+                    text: text
+                }]);
+
+                document.getElementById('commentInput').value = '';
+                showComments(currentVideoId);
+                showToast('Комментарий добавлен');
+            } catch (error) {
+                showToast('Ошибка отправки');
+            }
+        }
+
+        // Upload Video
+        function showUploadModal() {
+            document.getElementById('uploadModal').classList.add('active');
+        }
+
+        function hideUploadModal() {
+            document.getElementById('uploadModal').classList.remove('active');
+            document.getElementById('uploadPreview').classList.remove('active');
+            document.getElementById('videoFile').value = '';
+            selectedVideoFile = null;
+        }
+
+        function handleVideoSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+            video.onloadedmetadata = function() {
+                if (video.duration > 60) {
+                    showToast('Видео должно быть не длиннее 60 секунд');
+                    return;
+                }
                 
-                return (
-                    <div className="pb-16 min-h-screen bg-black">
-                        {/* Search Header */}
-                        <div className="sticky top-0 z-20 bg-black/90 backdrop-blur p-3 border-b border-gray-900">
-                            <div className="relative">
-                                <span className="absolute left-3 top-2.5 text-gray-500"><Icons.Search /></span>
-                                <input 
-                                    type="text" 
-                                    placeholder="Поиск" 
-                                    value={search} 
-                                    onChange={e=>setSearch(e.target.value)}
-                                    className="w-full bg-gray-900 text-white pl-10 pr-4 py-2 rounded-lg border border-gray-800 focus:border-gray-600 outline-none"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Stories */}
-                        {!search && (
-                            <div className="py-3 border-b border-gray-900 overflow-x-auto hide-scroll flex px-3 gap-4">
-                                <div className="flex flex-col items-center gap-1 min-w-[64px]">
-                                    <div className="w-16 h-16 rounded-full border-2 border-dashed border-gray-600 flex items-center justify-center bg-gray-900">
-                                        <span className="text-2xl text-gray-500">+</span>
-                                    </div>
-                                    <span className="text-xs text-gray-400">Вы</span>
-                                </div>
-                                {db.stories.map(s => (
-                                    <div key={s.id} className="flex flex-col items-center gap-1 min-w-[64px]">
-                                        <Avatar url={s.authorAvatar} isPremium={s.authorPrem} size="w-16 h-16" />
-                                        <span className="text-xs text-gray-300 truncate w-16 text-center">{s.authorName}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* Feed */}
-                        <div className="max-w-md mx-auto">
-                            {filtered.length === 0 && !search && <div className="p-10 text-center text-gray-600">Лента пуста</div>}
-                            {filtered.map(post => (
-                                <div key={post.id} className="border-b border-gray-900 pb-4 mb-2">
-                                    <div className="flex items-center p-3 gap-3">
-                                        <Avatar url={post.authorAvatar} isPremium={post.authorPrem} />
-                                        <span className="font-semibold text-sm">{post.authorName}</span>
-                                    </div>
-                                    {post.media && <img src={post.media} className="w-full aspect-square object-cover bg-gray-900" />}
-                                    <div className="px-3 pt-2">
-                                        <div className="flex gap-4 mb-2">
-                                            <Icons.Heart />
-                                        </div>
-                                        <p className="text-sm"><span className="font-bold mr-2">{post.authorName}</span>{post.text}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
+                selectedVideoFile = file;
+                const preview = document.getElementById('uploadPreview');
+                preview.src = URL.createObjectURL(file);
+                preview.classList.add('active');
             };
+            video.src = URL.createObjectURL(file);
+        }
 
-            const FeedTab = () => (
-                <div className="video-feed bg-black">
-                    {db.videos.map(v => (
-                        <div key={v.id} className="video-item flex items-center justify-center relative border-b border-gray-900">
-                            <img src={v.media} className="w-full h-full object-cover opacity-90" />
-                            <div className="absolute bottom-10 left-4 text-white drop-shadow-md">
-                                <p className="font-bold">@{v.authorName}</p>
-                                <p className="text-sm">{v.title}</p>
+        async function uploadVideo() {
+            if (!selectedVideoFile || !currentUser) {
+                showToast('Выберите видео');
+                return;
+            }
+
+            const description = document.getElementById('videoDescription').value;
+            const hashtags = document.getElementById('videoHashtags').value;
+
+            try {
+                showToast('Загрузка...');
+
+                // Upload to storage
+                const fileName = `${currentUser.id}/${Date.now()}_${selectedVideoFile.name}`;
+                const { error: uploadError } = await supabase.storage
+                    .from('videos')
+                    .upload(fileName, selectedVideoFile);
+
+                if (uploadError) throw uploadError;
+
+                // Get public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('videos')
+                    .getPublicUrl(fileName);
+
+                // Create video record
+                await supabase.from('videos').insert([{
+                    user_id: currentUser.id,
+                    video_url: publicUrl,
+                    description: description,
+                    hashtags: hashtags,
+                    likes_count: 0,
+                    comments_count: 0,
+                    views_count: 0
+                }]);
+
+                showToast('Видео опубликовано!');
+                hideUploadModal();
+                loadFeed();
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast('Ошибка: ' + error.message);
+            }
+        }
+
+        // Profile
+        async function loadUserProfile() {
+            if (!currentUser) return;
+
+            try {
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error) {
+                    console.error('Profile error:', error);
+                    return;
+                }
+
+                document.getElementById('profileUsername').textContent = profile.username;
+                document.getElementById('profileBio').textContent = profile.bio || 'Нет биографии';
+                
+                const avatar = document.getElementById('profileAvatar');
+                avatar.src = profile.avatar_url || 'https://via.placeholder.com/100';
+                
+                if (profile.is_premium) {
+                    avatar.classList.add('premium');
+                    document.getElementById('premiumBadge').style.display = 'inline-block';
+                }
+
+                // Load user videos
+                const { data: videos } = await supabase
+                    .from('videos')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                const videosContainer = document.getElementById('profileVideos');
+                videosContainer.innerHTML = '';
+
+                if (!videos || videos.length === 0) {
+                    videosContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #888;">Нет видео</div>';
+                } else {
+                    videos.forEach(video => {
+                        const thumb = document.createElement('div');
+                        thumb.className = 'profile-video-thumb';
+                        thumb.innerHTML = `
+                            <img src="${video.thumbnail_url || video.video_url}" alt="Video">
+                            <div class="views">
+                                <i class="fas fa-play"></i>
+                                ${video.views_count || 0}
                             </div>
+                        `;
+                        videosContainer.appendChild(thumb);
+                    });
+                }
+
+                document.getElementById('followersCount').textContent = profile.followers_count || 0;
+                document.getElementById('followingCount').textContent = profile.following_count || 0;
+                document.getElementById('likesCount').textContent = profile.total_likes || 0;
+            } catch (error) {
+                console.error('Profile load error:', error);
+            }
+        }
+
+        function editProfile() {
+            showToast('Редактирование профиля в разработке');
+        }
+
+        function viewProfile(userId) {
+            showToast('Просмотр профиля');
+        }
+
+        // Search
+        async function handleSearch(query) {
+            if (!query.trim()) {
+                document.getElementById('searchResults').innerHTML = '';
+                return;
+            }
+
+            try {
+                const { data: users, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .ilike('username', `%${query}%`)
+                    .limit(10);
+
+                if (error) throw error;
+
+                const resultsContainer = document.getElementById('searchResults');
+                resultsContainer.innerHTML = '';
+
+                if (!users || users.length === 0) {
+                    resultsContainer.innerHTML = '<div style="text-align: center; color: #888; padding: 20px;">Ничего не найдено</div>';
+                    return;
+                }
+
+                users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.style.cssText = 'display: flex; align-items: center; padding: 15px; background: #1a1a1a; margin-bottom: 10px; border-radius: 10px; cursor: pointer;';
+                    userDiv.innerHTML = `
+                        <img src="${user.avatar_url || 'https://via.placeholder.com/40'}" 
+                             style="width: 40px; height: 40px; border-radius: 50%; margin-right: 15px;">
+                        <div>
+                            <div style="font-weight: bold;">${user.username}</div>
+                            <div style="font-size: 12px; color: #888;">${user.followers_count || 0} подписчиков</div>
                         </div>
-                    ))}
-                    {db.videos.length===0 && <div className="h-full flex items-center justify-center text-gray-500">Нет видео</div>}
-                </div>
-            );
+                    `;
+                    resultsContainer.appendChild(userDiv);
+                });
+            } catch (error) {
+                console.error('Search error:', error);
+            }
+        }
 
-            const CreateTab = () => {
-                const [type, setType] = useState('post');
-                const [title, setTitle] = useState('');
-                const [text, setText] = useState('');
-                const [file, setFile] = useState(null);
-                const [prev, setPrev] = useState(null);
+        // Real-time updates
+        function setupRealtimeUpdates() {
+            supabase
+                .channel('public:videos')
+                .on('postgres_changes', 
+                    { event: 'INSERT', schema: 'public', table: 'videos' },
+                    () => loadFeed()
+                )
+                .subscribe();
+        }
 
-                return (
-                    <div className="p-4 pb-20 bg-black min-h-screen fade-in">
-                        <h2 className="text-xl font-bold mb-6">Создать</h2>
-                        <div className="flex bg-gray-900 rounded-lg p-1 mb-6">
-                            {['post','story','video'].map(t => (
-                                <button key={t} onClick={()=>setType(t)} className={`flex-1 py-2 text-sm rounded ${type===t?'bg-gray-700 text-white':'text-gray-400'}`}>
-                                    {t==='post'?'Пост':t==='story'?'История':'Видео'}
-                                </button>
-                            ))}
-                        </div>
-                        <input placeholder="Заголовок" value={title} onChange={e=>setTitle(e.target.value)} className="w-full bg-gray-900 p-3 rounded mb-3 text-white outline-none" />
-                        <textarea placeholder="Описание" value={text} onChange={e=>setText(e.target.value)} className="w-full bg-gray-900 p-3 rounded mb-3 text-white outline-none h-24 resize-none" />
-                        
-                        <div className="mb-6">
-                            {!prev ? (
-                                <label className="flex flex-col items-center justify-center h-48 border-2 border-dashed border-gray-700 rounded-lg cursor-pointer">
-                                    <Icons.Upload />
-                                    <span className="text-xs text-gray-500 mt-2">Выбрать файл</span>
-                                    <input type="file" className="hidden" onChange={e=>{setFile(e.target.files[0]); setPrev(URL.createObjectURL(e.target.files[0]))}} />
-                                </label>
-                            ) : (
-                                <div className="relative h-48 rounded-lg overflow-hidden bg-gray-900">
-                                    <img src={prev} className="w-full h-full object-contain" />
-                                    <button onClick={()=>{setFile(null); setPrev(null)}} className="absolute top-2 right-2 bg-red-500 p-1 rounded">X</button>
-                                </div>
-                            )}
-                        </div>
-                        <button onClick={()=>title&&file&&createPost(type,title,text,file)} disabled={!title||!file} className="w-full bg-blue-600 disabled:bg-gray-800 text-white font-bold py-3 rounded">
-                            Опубликовать
-                        </button>
-                    </div>
-                );
-            };
+        // Share
+        function shareVideo(videoId) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Пульс',
+                    text: 'Посмотри это видео!',
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                showToast('Ссылка скопирована');
+            }
+        }
 
-            const ProfileTab = () => {
-                const [sub, setSub] = useState('posts');
-                const [promo, setPromo] = useState('');
-                const myPosts = db.posts.filter(p=>p.authorId===user.id);
+        function showNotifications() {
+            showToast('Уведомления в разработке');
+        }
 
-                return (
-                    <div className="pb-20 bg-black min-h-screen fade-in">
-                        <div className="p-4 border-b border-gray-900 flex items-center gap-4">
-                            <button onClick={onLogout}><Icons.LogOut /></button>
-                            <h2 className="font-bold text-lg">Профиль</h2>
-                        </div>
-                        <div className="p-6 flex flex-col items-center">
-                            <Avatar url={user.avatar} isPremium={isPrem} size="w-24 h-24" />
-                            <h3 className="text-xl font-bold mt-3">{user.username}</h3>
-                            {isPrem && <span className="text-xs text-yellow-500 border border-yellow-500 px-2 py-0.5 rounded mt-1">PREMIUM</span>}
-                        </div>
-                        
-                        <div className="flex border-b border-gray-900">
-                            <button onClick={()=>setSub('posts')} className={`flex-1 py-3 text-sm ${sub==='posts'?'text-white border-b-2 border-white':'text-gray-500'}`}>Публикации</button>
-                            <button onClick={()=>setSub('promo')} className={`flex-1 py-3 text-sm ${sub==='promo'?'text-white border-b-2 border-white':'text-gray-500'}`}>Промокоды</button>
-                        </div>
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
 
-                        {sub === 'posts' ? (
-                            <div className="grid grid-cols-3 gap-0.5 mt-0.5">
-                                {myPosts.map(p => <div key={p.id} className="aspect-square bg-gray-900"><img src={p.media} className="w-full h-full object-cover"/></div>)}
-                            </div>
-                        ) : (
-                            <div className="p-4">
-                                {!isPrem ? (
-                                    <div className="flex gap-2">
-                                        <input value={promo} onChange={e=>setPromo(e.target.value)} placeholder="Код" className="flex-1 bg-gray-900 p-2 rounded text-white outline-none" />
-                                        <button onClick={()=>applyPromo(promo)} className="bg-blue-600 px-4 rounded font-bold">OK</button>
-                                    </div>
-                                ) : <p className="text-green-500 text-center">Премиум активен</p>}
-                            </div>
-                        )}
-                    </div>
-                );
-            };
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideUploadModal();
+                hideComments();
+            }
+        });
 
-            return (
-                <div className="bg-black min-h-screen text-white">
-                    {tab==='home' && <HomeTab />}
-                    {tab==='feed' && <FeedTab />}
-                    {tab==='create' && <CreateTab />}
-                    {tab==='profile' && <ProfileTab />}
+        // Prevent double-tap zoom
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) e.preventDefault();
+            lastTouchEnd = now;
+        }, false);
 
-                    <div className="fixed bottom-0 w-full bg-black border-t border-gray-900 flex justify-around py-3 z-50 pb-safe">
-                        {[
-                            {id:'home', icon:<Icons.Home/>, label:'Главная'},
-                            {id:'feed', icon:<Icons.Play/>, label:'Лента'},
-                            {id:'create', icon:<Icons.Plus/>, label:'+'},
-                            {id:'profile', icon:<Icons.User/>, label:'Профиль'}
-                        ].map(t => (
-                            <button key={t.id} onClick={()=>setTab(t.id)} className={`flex flex-col items-center ${tab===t.id?'text-white':'text-gray-500'}`}>
-                                {t.icon}
-                                <span className="text-[10px] mt-1">{t.label}</span>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            );
-        };
-
-        const Root = () => {
-            const [user, setUser] = useState(null);
-            return user ? <App user={user} onLogout={()=>{localStorage.removeItem('pulse_current_user'); setUser(null)}} /> : <AuthScreen onLogin={setUser} />;
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<Root />);
+        // Orientation change
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => window.scrollTo(0, 0), 100);
+        });
     </script>
 </body>
 </html>
