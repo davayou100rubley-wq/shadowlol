@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Пульс</title>
+    <title>Пульс — Социальная сеть</title>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS через CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- React 18 -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <!-- React 18 через CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-    <!-- Babel для JSX транспиляции в браузере -->
+    <!-- Babel для JSX в браузере -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Supabase JS Client v2 -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- Supabase JS v2 через CDN (UMD сборка) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
+        // Настройка цветов Tailwind
         tailwind.config = {
             theme: {
                 extend: {
@@ -35,7 +36,11 @@
     </script>
 
     <style>
-        /* Сброс тап-подсветки на мобильных */
+        /* ============================================
+           ГЛОБАЛЬНЫЕ СТИЛИ
+           ============================================ */
+
+        /* Убираем подсветку при тапе на мобильных */
         * {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
@@ -46,210 +51,339 @@
             margin: 0;
             padding: 0;
             background: #0f172a;
-            color: #fff;
+            color: #ffffff;
             overflow-x: hidden;
         }
 
-        /* Убираем скроллбары везде */
+        /* Убираем все скроллбары */
         ::-webkit-scrollbar {
             width: 0;
             height: 0;
         }
 
-        /* Горизонтальный скролл без скроллбара (сторис) */
-        .stories-scroll {
+        /* Горизонтальный скролл без полосы (для сторис) */
+        .no-scrollbar {
             scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        .stories-scroll::-webkit-scrollbar {
+        .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
 
-        /* Анимация плавного появления снизу */
+        /* ============================================
+           АНИМАЦИИ
+           ============================================ */
+
+        /* Плавное появление снизу */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .fade-in {
-            animation: fadeInUp 0.3s ease-out;
+        .animate-fade-in {
+            animation: fadeInUp 0.3s ease-out forwards;
         }
 
-        /* Пульсация логотипа */
-        @keyframes pulseLogo {
-            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-            70% { box-shadow: 0 0 0 12px rgba(99, 102, 241, 0); }
+        /* Пульсация логотипа на экране входа */
+        @keyframes pulseGlow {
+            0%   { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.6); }
+            70%  { box-shadow: 0 0 0 14px rgba(99, 102, 241, 0); }
             100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
         }
-        .pulse-logo {
-            animation: pulseLogo 2s infinite;
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
         }
 
-        /* Неоновая галочка премиум (градиентная, не синяя) */
-        .premium-check {
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            box-shadow: 0 0 8px rgba(220, 39, 67, 0.6);
+        /* Вращение спиннера загрузки */
+        @keyframes spinRotate {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            animation: spinRotate 0.7s linear infinite;
         }
 
-        /* Градиентная обводка аватара для премиум */
-        .premium-ring {
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            padding: 2.5px;
+        /* Анимация лайка */
+        @keyframes heartPop {
+            0%   { transform: scale(1); }
+            30%  { transform: scale(1.4); }
+            60%  { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        .heart-pop {
+            animation: heartPop 0.35s ease-out;
+        }
+
+        /* ============================================
+           PREMIUM СТИЛИ
+           ============================================ */
+
+        /* Градиентная обводка аватара (премиум) */
+        .ring-premium {
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            padding: 3px;
             border-radius: 50%;
-            box-shadow: 0 0 12px rgba(220, 39, 67, 0.4);
+            box-shadow: 0 0 14px rgba(220, 39, 67, 0.5);
         }
 
-        /* Синяя обводка для обычных пользователей */
-        .free-ring {
+        /* Синяя обводка аватара (обычный пользователь) */
+        .ring-free {
             background: #3b82f6;
             padding: 2px;
             border-radius: 50%;
         }
 
-        /* TikTok-style вертикальный snap scroll */
-        .video-feed {
+        /* Неоновая галочка премиум (градиентная, НЕ синяя) */
+        .badge-premium {
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            box-shadow: 0 0 10px rgba(220, 39, 67, 0.7);
+        }
+
+        /* ============================================
+           TIKTOK-ЛЕНТА (вертикальный snap scroll)
+           ============================================ */
+        .tiktok-feed {
             scroll-snap-type: y mandatory;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
-        .video-feed::-webkit-scrollbar {
+        .tiktok-feed::-webkit-scrollbar {
             display: none;
         }
-        .video-snap {
+        .tiktok-item {
             scroll-snap-align: start;
             scroll-snap-stop: always;
         }
 
-        /* Горизонтальная карусель внутри поста */
-        .carousel-scroll {
+        /* ============================================
+           КАРУСЕЛЬ МЕДИА ВНУТРИ ПОСТА
+           ============================================ */
+        .media-carousel {
             scroll-snap-type: x mandatory;
             overflow-x: auto;
             scrollbar-width: none;
         }
-        .carousel-scroll::-webkit-scrollbar {
+        .media-carousel::-webkit-scrollbar {
             display: none;
         }
-        .carousel-item {
+        .media-carousel-item {
             scroll-snap-align: center;
+            flex-shrink: 0;
             min-width: 100%;
         }
 
-        /* Safe area для iPhone с чёлкой */
-        .safe-bottom {
+        /* Safe area для iPhone с чёлкой / домашней полосой */
+        .safe-area-bottom {
             padding-bottom: env(safe-area-inset-bottom, 0px);
-        }
-
-        /* Спиннер загрузки */
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .spinner {
-            animation: spin 0.8s linear infinite;
         }
     </style>
 </head>
 <body>
 
-    <!-- Корневой элемент React -->
+    <!-- Сюда React отрендерит всё приложение -->
     <div id="root"></div>
 
     <script type="text/babel">
 
-        // Деструктуризация хуков React
-        const { useState, useEffect, useRef, useMemo, createContext, useContext, useCallback } = React;
+        // Деструктуризация всех нужных хуков React
+        const {
+            useState,
+            useEffect,
+            useRef,
+            useMemo,
+            createContext,
+            useContext,
+            useCallback
+        } = React;
 
 
-        // ==========================================
-        // 🔌 SUPABASE CONFIG — КЛЮЧИ УЖЕ ВСТАВЛЕНЫ
-        // ==========================================
+        // ================================================================
+        // 🔌 SUPABASE — КЛЮЧИ УЖЕ ВСТАВЛЕНЫ, НИЧЕГО МЕНЯТЬ НЕ НАДО
+        // ================================================================
         const SUPABASE_URL = 'https://rzahwdhsdvwojdklblbb.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
 
-        // Создаём клиент Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        console.log('✅ Supabase подключён к:', SUPABASE_URL);
+        // Инициализация клиента Supabase
+        // Используем window.supabase.createClient из UMD-сборки
+        let supabase = null;
+        try {
+            if (window.supabase && typeof window.supabase.createClient === 'function') {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase клиент создан успешно');
+            } else {
+                console.error('❌ Библиотека Supabase не загрузилась с CDN');
+            }
+        } catch (initError) {
+            console.error('❌ Ошибка инициализации Supabase:', initError);
+        }
 
 
-        // ==========================================
-        // 🎨 SVG ИКОНКИ
-        // ==========================================
-        const Icon = ({ name, size = 24, filled = false, className = "" }) => {
+        // ================================================================
+        // 🎨 КОМПОНЕНТ SVG-ИКОНОК
+        // Все иконки в одном месте для удобства
+        // ================================================================
+        function Icon({ name, size = 24, filled = false, className = '' }) {
 
-            // Карта путей для каждой иконки
-            const iconPaths = {
-                home: <>
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    {!filled && <polyline points="9 22 9 12 15 12 15 22"/>}
-                </>,
-                play: <polygon points="5 3 19 12 5 21 5 3"/>,
-                plus: <>
-                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                    <line x1="12" y1="8" x2="12" y2="16"/>
-                    <line x1="8" y1="12" x2="16" y2="12"/>
-                </>,
-                heart: <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>,
-                user: <>
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </>,
-                search: <>
-                    <circle cx="11" cy="11" r="8"/>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </>,
-                comment: <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>,
-                share: <>
-                    <line x1="22" y1="2" x2="11" y2="13"/>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </>,
-                bookmark: <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>,
-                more: <>
-                    <circle cx="12" cy="12" r="1"/>
-                    <circle cx="19" cy="12" r="1"/>
-                    <circle cx="5" cy="12" r="1"/>
-                </>,
-                x: <>
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                </>,
-                crown: <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>,
-                gift: <>
-                    <polyline points="20 12 20 22 4 22 4 12"/>
-                    <rect x="2" y="7" width="20" height="5"/>
-                    <line x1="12" y1="22" x2="12" y2="7"/>
-                    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
-                    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
-                </>,
-                lock: <>
-                    <rect x="3" y="11" width="18" height="11" rx="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </>,
-                settings: <>
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                </>,
-                pulse: <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>,
-                edit: <>
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                </>,
-                grid: <>
-                    <rect x="3" y="3" width="7" height="7"/>
-                    <rect x="14" y="3" width="7" height="7"/>
-                    <rect x="14" y="14" width="7" height="7"/>
-                    <rect x="3" y="14" width="7" height="7"/>
-                </>,
-                camera: <>
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                    <circle cx="12" cy="13" r="4"/>
-                </>,
-                trash: <>
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                </>,
-                check: <polyline points="20 6 9 17 4 12"/>,
+            const paths = {
+                // Домик (Главная)
+                home: (
+                    <>
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        {!filled && <polyline points="9 22 9 12 15 12 15 22" />}
+                    </>
+                ),
+                // Треугольник play (Лента видео)
+                play: <polygon points="5 3 19 12 5 21 5 3" />,
+                // Плюс в квадрате (Создать)
+                plus: (
+                    <>
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <line x1="12" y1="8" x2="12" y2="16" />
+                        <line x1="8" y1="12" x2="16" y2="12" />
+                    </>
+                ),
+                // Сердечко (лайк / активность)
+                heart: <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />,
+                // Человечек (профиль)
+                user: (
+                    <>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </>
+                ),
+                // Лупа (поиск)
+                search: (
+                    <>
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </>
+                ),
+                // Облачко комментария
+                comment: <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />,
+                // Самолётик (поделиться)
+                share: (
+                    <>
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </>
+                ),
+                // Закладка
+                bookmark: <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />,
+                // Три точки
+                more: (
+                    <>
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="19" cy="12" r="1" />
+                        <circle cx="5" cy="12" r="1" />
+                    </>
+                ),
+                // Крестик (закрыть)
+                x: (
+                    <>
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </>
+                ),
+                // Корона (премиум)
+                crown: <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />,
+                // Подарок (промокоды)
+                gift: (
+                    <>
+                        <polyline points="20 12 20 22 4 22 4 12" />
+                        <rect x="2" y="7" width="20" height="5" />
+                        <line x1="12" y1="22" x2="12" y2="7" />
+                        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+                        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+                    </>
+                ),
+                // Замок
+                lock: (
+                    <>
+                        <rect x="3" y="11" width="18" height="11" rx="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </>
+                ),
+                // Шестерёнка (настройки)
+                settings: (
+                    <>
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </>
+                ),
+                // Пульс (логотип)
+                pulse: <path d="M22 12h-4l-3 9L9 3l-3 9H2" />,
+                // Карандаш (редактировать)
+                edit: (
+                    <>
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </>
+                ),
+                // Сетка (посты в профиле)
+                grid: (
+                    <>
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </>
+                ),
+                // Камера
+                camera: (
+                    <>
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                        <circle cx="12" cy="13" r="4" />
+                    </>
+                ),
+                // Корзина (удалить)
+                trash: (
+                    <>
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </>
+                ),
+                // Галочка
+                check: <polyline points="20 6 9 17 4 12" />,
+                // Стрелка назад
+                chevronLeft: <polyline points="15 18 9 12 15 6" />,
+                // Стрелка вправо
+                chevronRight: <polyline points="9 18 15 12 9 6" />,
+                // Глаз
+                eye: (
+                    <>
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </>
+                ),
+                // Видеокамера
+                video: (
+                    <>
+                        <polygon points="23 7 16 12 23 17 23 7" />
+                        <rect x="1" y="5" width="15" height="14" rx="2" />
+                    </>
+                ),
+                // Изображение
+                image: (
+                    <>
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                    </>
+                ),
+                // Загрузка
+                upload: (
+                    <>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </>
+                ),
+                // Выйти
+                logOut: (
+                    <>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </>
+                ),
             };
 
             return (
@@ -257,131 +391,222 @@
                     width={size}
                     height={size}
                     viewBox="0 0 24 24"
-                    fill={filled ? "currentColor" : "none"}
+                    fill={filled ? 'currentColor' : 'none'}
                     stroke="currentColor"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className={className}
                 >
-                    {iconPaths[name]}
+                    {paths[name] || null}
                 </svg>
             );
-        };
+        }
 
 
-        // ==========================================
+        // ================================================================
         // 🔧 УТИЛИТЫ
-        // ==========================================
+        // ================================================================
 
         /**
-         * Сжатие изображения через Canvas API
-         * Уменьшает размер перед загрузкой в Supabase Storage
-         * чтобы не превышать лимиты localStorage и ускорить загрузку
+         * Сжатие изображения через Canvas API.
+         * Уменьшает размер файла перед загрузкой в Supabase Storage.
+         * Возвращает Blob (не base64), чтобы можно было напрямую
+         * отправить в storage.from().upload()
          */
-        const compressImage = (file, maxWidth = 1080, quality = 0.7) => {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
+        function compressImage(file, maxWidth, quality) {
+            maxWidth = maxWidth || 1080;
+            quality = quality || 0.7;
 
-                        // Пропорциональное уменьшение если шире maxWidth
+            return new Promise(function(resolve, reject) {
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                    var img = new Image();
+
+                    img.onload = function() {
+                        var canvas = document.createElement('canvas');
+                        var width = img.width;
+                        var height = img.height;
+
+                        // Пропорционально уменьшаем если шире maxWidth
                         if (width > maxWidth) {
-                            height *= maxWidth / width;
+                            height = Math.round(height * (maxWidth / width));
                             width = maxWidth;
                         }
 
                         canvas.width = width;
                         canvas.height = height;
-                        const ctx = canvas.getContext('2d');
+
+                        var ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
 
-                        // Возвращаем Blob (не base64!) для загрузки в Storage
-                        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', quality);
+                        // Конвертируем в Blob
+                        canvas.toBlob(function(blob) {
+                            if (blob) {
+                                resolve(blob);
+                            } else {
+                                reject(new Error('Не удалось сжать изображение'));
+                            }
+                        }, 'image/jpeg', quality);
                     };
+
+                    img.onerror = function() {
+                        reject(new Error('Не удалось загрузить изображение'));
+                    };
+
+                    img.src = event.target.result;
                 };
+
+                reader.onerror = function() {
+                    reject(new Error('Не удалось прочитать файл'));
+                };
+
+                reader.readAsDataURL(file);
             });
-        };
+        }
 
         /**
-         * Получение длительности видеофайла
-         * Используется для проверки лимита 60 секунд
+         * Получение длительности видеофайла в секундах.
+         * Используется для проверки лимита 60 секунд.
          */
-        const getVideoDuration = (file) => {
-            return new Promise((resolve) => {
-                const video = document.createElement('video');
+        function getVideoDuration(file) {
+            return new Promise(function(resolve) {
+                var video = document.createElement('video');
                 video.preload = 'metadata';
-                video.onloadedmetadata = () => resolve(video.duration);
-                video.onerror = () => resolve(0);
+
+                video.onloadedmetadata = function() {
+                    URL.revokeObjectURL(video.src);
+                    resolve(video.duration);
+                };
+
+                video.onerror = function() {
+                    resolve(0);
+                };
+
                 video.src = URL.createObjectURL(file);
             });
-        };
+        }
 
         /**
-         * Форматирование даты в относительное время
-         * Например: "5 мин", "3 ч", "2 д"
+         * Форматирование даты в относительное время.
+         * "только что", "5 мин", "3 ч", "2 д"
          */
-        const formatTime = (dateStr) => {
-            const diff = Date.now() - new Date(dateStr).getTime();
-            const minutes = Math.floor(diff / 60000);
+        function formatTimeAgo(dateString) {
+            var now = Date.now();
+            var then = new Date(dateString).getTime();
+            var diffMs = now - then;
+            var diffMinutes = Math.floor(diffMs / 60000);
 
-            if (minutes < 1) return 'только что';
-            if (minutes < 60) return `${minutes} мин`;
+            if (diffMinutes < 1) {
+                return 'только что';
+            }
+            if (diffMinutes < 60) {
+                return diffMinutes + ' мин';
+            }
 
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours} ч`;
+            var diffHours = Math.floor(diffMinutes / 60);
+            if (diffHours < 24) {
+                return diffHours + ' ч';
+            }
 
-            const days = Math.floor(hours / 24);
-            return `${days} д`;
-        };
+            var diffDays = Math.floor(diffHours / 24);
+            if (diffDays < 30) {
+                return diffDays + ' д';
+            }
+
+            return new Date(dateString).toLocaleDateString('ru-RU');
+        }
+
+        /**
+         * Форматирование числа для отображения.
+         * 1234 → "1.2K", 1234567 → "1.2M"
+         */
+        function formatCount(num) {
+            if (!num || num === 0) return '0';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return String(num);
+        }
 
 
-        // ==========================================
-        // 🔐 AUTH CONTEXT (Supabase Auth)
-        // ==========================================
-        const AuthContext = createContext(null);
+        // ================================================================
+        // 🔐 AUTH CONTEXT
+        // Управление состоянием авторизации через Supabase Auth
+        // ================================================================
+        var AuthContext = createContext(null);
 
-        const AuthProvider = ({ children }) => {
-            const [user, setUser] = useState(null);
-            const [profile, setProfile] = useState(null);
-            const [isGuest, setIsGuest] = useState(false);
-            const [loading, setLoading] = useState(true);
+        /**
+         * Провайдер авторизации.
+         * Обёртывает всё приложение и предоставляет:
+         * - user: объект пользователя Supabase Auth (или null)
+         * - profile: данные из таблицы profiles (или null)
+         * - isGuest: флаг гостевого режима
+         * - loading: флаг начальной загрузки
+         * - register(), login(), logout(), guest(), refreshProfile()
+         */
+        function AuthProvider(props) {
+            var children = props.children;
+
+            var userState = useState(null);
+            var user = userState[0];
+            var setUser = userState[1];
+
+            var profileState = useState(null);
+            var profile = profileState[0];
+            var setProfile = profileState[1];
+
+            var guestState = useState(false);
+            var isGuest = guestState[0];
+            var setIsGuest = guestState[1];
+
+            var loadingState = useState(true);
+            var loading = loadingState[0];
+            var setLoading = loadingState[1];
 
             /**
-             * Загрузка профиля пользователя из таблицы profiles
-             * Вызывается после входа/регистрации и при обновлении данных
+             * Загрузка профиля из таблицы profiles по ID пользователя.
+             * Вызывается после входа, регистрации и при обновлении данных.
              */
-            const loadProfile = useCallback(async (userId) => {
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', userId)
-                    .single();
+            var loadProfile = useCallback(async function(userId) {
+                if (!supabase) return;
+                try {
+                    var result = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', userId)
+                        .single();
 
-                if (data && !error) {
-                    setProfile(data);
+                    if (result.data && !result.error) {
+                        setProfile(result.data);
+                    }
+                } catch (err) {
+                    console.error('Ошибка загрузки профиля:', err);
                 }
             }, []);
 
-            // При монтировании проверяем существующую сессию (авто-вход)
-            useEffect(() => {
-                supabase.auth.getSession().then(({ data: { session } }) => {
-                    if (session?.user) {
+            // При монтировании: проверяем существующую сессию (авто-вход)
+            useEffect(function() {
+                if (!supabase) {
+                    setLoading(false);
+                    return;
+                }
+
+                // Проверяем сохранённую сессию
+                supabase.auth.getSession().then(function(result) {
+                    var session = result.data ? result.data.session : null;
+                    if (session && session.user) {
                         setUser(session.user);
                         loadProfile(session.user.id);
                     }
                     setLoading(false);
+                }).catch(function() {
+                    setLoading(false);
                 });
 
-                // Слушатель изменений состояния авторизации
-                const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-                    if (session?.user) {
+                // Слушаем изменения состояния auth (вход/выход)
+                var listener = supabase.auth.onAuthStateChange(function(event, session) {
+                    if (session && session.user) {
                         setUser(session.user);
                         loadProfile(session.user.id);
                     } else {
@@ -390,420 +615,625 @@
                     }
                 });
 
-                return () => subscription.unsubscribe();
+                // Очищаем подписку при размонтировании
+                return function() {
+                    if (listener && listener.data && listener.data.subscription) {
+                        listener.data.subscription.unsubscribe();
+                    }
+                };
             }, [loadProfile]);
 
             /**
-             * Регистрация нового пользователя
-             * 1. Создаёт аккаунт в Supabase Auth
-             * 2. Триггер автоматически создаёт запись в profiles
-             * 3. Если есть аватарка — загружает в Storage и обновляет профиль
+             * Регистрация нового пользователя.
+             * 1. Создаёт аккаунт в Supabase Auth (email + password)
+             * 2. Триггер handle_new_user автоматически создаёт запись в profiles
+             * 3. Если выбрана аватарка — сжимает, загружает в Storage, обновляет профиль
              */
-            const register = async (email, password, username, avatarFile) => {
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: { data: { username } }
+            async function register(email, password, username, avatarFile) {
+                if (!supabase) throw new Error('Supabase не подключён');
+
+                var result = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: { username: username }
+                    }
                 });
 
-                if (error) throw error;
-
-                // Загрузка аватарки если пользователь выбрал файл
-                if (avatarFile && data.user) {
-                    const ext = avatarFile.name.split('.').pop();
-                    const path = `${data.user.id}/avatar.${ext}`;
-                    const compressedBlob = await compressImage(avatarFile, 400, 0.8);
-
-                    await supabase.storage.from('avatars').upload(path, compressedBlob, {
-                        upsert: true,
-                        contentType: 'image/jpeg'
-                    });
-
-                    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path);
-                    await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', data.user.id);
+                if (result.error) {
+                    throw result.error;
                 }
 
-                await loadProfile(data.user.id);
-                return data;
-            };
+                // Загрузка аватарки если пользователь выбрал файл
+                if (avatarFile && result.data && result.data.user) {
+                    try {
+                        var extension = avatarFile.name.split('.').pop() || 'jpg';
+                        var avatarPath = result.data.user.id + '/avatar.' + extension;
+                        var compressedBlob = await compressImage(avatarFile, 400, 0.8);
+
+                        await supabase.storage.from('avatars').upload(avatarPath, compressedBlob, {
+                            upsert: true,
+                            contentType: 'image/jpeg'
+                        });
+
+                        var urlResult = supabase.storage.from('avatars').getPublicUrl(avatarPath);
+                        var publicUrl = urlResult.data.publicUrl;
+
+                        await supabase.from('profiles').update({
+                            avatar_url: publicUrl
+                        }).eq('id', result.data.user.id);
+                    } catch (avatarErr) {
+                        console.error('Ошибка загрузки аватарки:', avatarErr);
+                        // Не блокируем регистрацию если аватарка не загрузилась
+                    }
+                }
+
+                // Загружаем свежий профиль
+                if (result.data && result.data.user) {
+                    await loadProfile(result.data.user.id);
+                }
+
+                return result.data;
+            }
 
             /**
-             * Вход по email и паролю
+             * Вход по email и паролю.
              */
-            const login = async (email, password) => {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                return data;
-            };
+            async function login(email, password) {
+                if (!supabase) throw new Error('Supabase не подключён');
+
+                var result = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (result.error) {
+                    throw result.error;
+                }
+
+                return result.data;
+            }
 
             /**
-             * Выход из аккаунта
+             * Выход из аккаунта.
              */
-            const logout = async () => {
-                await supabase.auth.signOut();
+            async function logout() {
+                if (supabase) {
+                    await supabase.auth.signOut();
+                }
                 setUser(null);
                 setProfile(null);
                 setIsGuest(false);
-            };
+            }
 
             /**
-             * Гостевой режим — просмотр без аккаунта
+             * Переключение в гостевой режим.
+             * Гость может только смотреть контент и ставить лайки.
              */
-            const guest = () => {
+            function enterGuestMode() {
                 setIsGuest(true);
                 setUser(null);
                 setProfile(null);
-            };
+            }
 
             /**
-             * Обновление данных профиля из БД
+             * Обновление данных профиля из БД.
              * Вызывается после активации промокода, удаления поста и т.д.
              */
-            const refreshProfile = useCallback(async () => {
-                if (user) await loadProfile(user.id);
+            var refreshProfile = useCallback(async function() {
+                if (user) {
+                    await loadProfile(user.id);
+                }
             }, [user, loadProfile]);
 
+            // Значение контекста
+            var contextValue = {
+                user: user,
+                profile: profile,
+                isGuest: isGuest,
+                loading: loading,
+                register: register,
+                login: login,
+                logout: logout,
+                guest: enterGuestMode,
+                refreshProfile: refreshProfile
+            };
+
             return (
-                <AuthContext.Provider value={{
-                    user, profile, isGuest, loading,
-                    register, login, logout, guest, refreshProfile
-                }}>
+                <AuthContext.Provider value={contextValue}>
                     {children}
                 </AuthContext.Provider>
             );
-        };
+        }
 
-        const useAuth = () => useContext(AuthContext);
+        /**
+         * Хук для получения данных авторизации из контекста.
+         */
+        function useAuth() {
+            return useContext(AuthContext);
+        }
 
 
-        // ==========================================
-        // 🎨 PREMIUM AVATAR COMPONENT
-        // Градиентная обводка + неоновая галочка для премиум
-        // Синяя обводка для обычных пользователей
-        // ==========================================
-        const Avatar = ({ src, size = 40, isPremium, showCheck = true, className = "" }) => {
-            // Выбираем класс обводки в зависимости от статуса премиум
-            const ringClass = isPremium ? 'premium-ring' : (src ? 'free-ring' : '');
+        // ================================================================
+        // 🎨 КОМПОНЕНТ АВATARA
+        // Градиентная обводка + неоновая галочка для премиум.
+        // Синяя обводка для обычных пользователей.
+        // ================================================================
+        function Avatar(props) {
+            var src = props.src;
+            var size = props.size || 40;
+            var isPremium = props.isPremium || false;
+            var showCheck = props.showCheck !== undefined ? props.showCheck : true;
+            var extraClass = props.className || '';
+
+            // Выбираем класс обводки
+            var ringClass = isPremium ? 'ring-premium' : (src ? 'ring-free' : '');
 
             return (
-                <div className={`relative inline-block ${className}`}>
+                <div className={'relative inline-block ' + extraClass}>
                     <div className={ringClass}>
-                        <div className="bg-dark rounded-full overflow-hidden" style={{ width: size, height: size }}>
-                            {src
-                                ? <img src={src} className="w-full h-full object-cover" alt="" />
-                                : <div className="w-full h-full flex items-center justify-center bg-darkCard">
-                                    <Icon name="user" size={size * 0.5} />
-                                  </div>
-                            }
+                        <div
+                            className="bg-dark rounded-full overflow-hidden"
+                            style={{ width: size + 'px', height: size + 'px' }}
+                        >
+                            {src ? (
+                                <img
+                                    src={src}
+                                    alt=""
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-darkCard">
+                                    <Icon name="user" size={Math.round(size * 0.5)} />
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    {/* Неоновая градиентная галочка премиум */}
+                    {/* Неоновая градиентная галочка для премиум */}
                     {showCheck && isPremium && (
-                        <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full premium-check flex items-center justify-center border-2 border-dark">
+                        <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full badge-premium flex items-center justify-center border-2 border-dark">
                             <Icon name="check" size={12} className="text-white" />
                         </div>
                     )}
                 </div>
             );
-        };
+        }
 
 
-        // ==========================================
-        // 🚪 AUTH SCREEN
-        // Экран приветствия → Регистрация / Вход / Гость
-        // ==========================================
-        const AuthScreen = () => {
-            const { register, login, guest } = useAuth();
-            const [mode, setMode] = useState('welcome'); // welcome | register | login
-            const [email, setEmail] = useState('');
-            const [password, setPassword] = useState('');
-            const [username, setUsername] = useState('');
-            const [avatarFile, setAvatarFile] = useState(null);
-            const [avatarPreview, setAvatarPreview] = useState('');
-            const [error, setError] = useState('');
-            const [isLoading, setIsLoading] = useState(false);
-            const fileInputRef = useRef(null);
+        // ================================================================
+        // 🚪 ЭКРАН АВТОРИЗАЦИИ
+        // Приветствие → Регистрация / Вход / Гость
+        // ================================================================
+        function AuthScreen() {
+            var auth = useAuth();
+
+            var modeState = useState('welcome');
+            var mode = modeState[0];
+            var setMode = modeState[1];
+
+            var emailState = useState('');
+            var email = emailState[0];
+            var setEmail = emailState[1];
+
+            var passwordState = useState('');
+            var password = passwordState[0];
+            var setPassword = passwordState[1];
+
+            var usernameState = useState('');
+            var username = usernameState[0];
+            var setUsername = usernameState[1];
+
+            var avatarFileState = useState(null);
+            var avatarFile = avatarFileState[0];
+            var setAvatarFile = avatarFileState[1];
+
+            var avatarPreviewState = useState('');
+            var avatarPreview = avatarPreviewState[0];
+            var setAvatarPreview = avatarPreviewState[1];
+
+            var errorState = useState('');
+            var errorMsg = errorState[0];
+            var setErrorMsg = errorState[1];
+
+            var busyState = useState(false);
+            var isBusy = busyState[0];
+            var setIsBusy = busyState[1];
+
+            var fileInputRef = useRef(null);
 
             // Обработка выбора файла аватарки
-            const handleAvatarSelect = (e) => {
-                const file = e.target.files[0];
+            function onAvatarFileChange(e) {
+                var file = e.target.files && e.target.files[0];
                 if (!file) return;
                 setAvatarFile(file);
                 setAvatarPreview(URL.createObjectURL(file));
-            };
+            }
 
             // Регистрация
-            const doRegister = async () => {
-                setError('');
-                setIsLoading(true);
+            async function handleRegister() {
+                setErrorMsg('');
+                setIsBusy(true);
                 try {
-                    await register(email, password, username, avatarFile);
-                } catch (e) {
-                    setError(e.message || 'Ошибка регистрации');
+                    await auth.register(email, password, username, avatarFile);
+                } catch (err) {
+                    setErrorMsg(err.message || 'Ошибка регистрации');
                 }
-                setIsLoading(false);
-            };
+                setIsBusy(false);
+            }
 
             // Вход
-            const doLogin = async () => {
-                setError('');
-                setIsLoading(true);
+            async function handleLogin() {
+                setErrorMsg('');
+                setIsBusy(true);
                 try {
-                    await login(email, password);
-                } catch (e) {
-                    setError(e.message || 'Неверный email или пароль');
+                    await auth.login(email, password);
+                } catch (err) {
+                    setErrorMsg(err.message || 'Неверный email или пароль');
                 }
-                setIsLoading(false);
-            };
+                setIsBusy(false);
+            }
 
-            // --- Экран приветствия ---
+            // --- ЭКРАН ПРИВЕТСТВИЯ ---
             if (mode === 'welcome') {
                 return (
-                    <div className="fixed inset-0 z-50 bg-dark flex flex-col items-center justify-center p-6 fade-in">
-                        <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-primary to-purple-500 flex items-center justify-center mb-6 pulse-logo">
+                    <div className="fixed inset-0 z-50 bg-dark flex flex-col items-center justify-center p-6 animate-fade-in">
+                        {/* Логотип с пульсацией */}
+                        <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-primary to-purple-500 flex items-center justify-center mb-6 pulse-glow">
                             <Icon name="pulse" size={44} className="text-white" />
                         </div>
+
                         <h1 className="text-4xl font-bold mb-1 bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
                             Пульс
                         </h1>
                         <p className="text-slate-400 mb-12 text-sm">Твой ритм. Твои правила.</p>
 
-                        <button onClick={() => setMode('register')}
-                            className="w-full max-w-xs bg-primary py-3.5 rounded-xl font-bold mb-3 active:scale-95 transition shadow-lg shadow-primary/30">
+                        <button
+                            onClick={function() { setMode('register'); }}
+                            className="w-full max-w-xs bg-primary py-3.5 rounded-xl font-bold mb-3 active:scale-95 transition shadow-lg shadow-primary/30"
+                        >
                             Зарегистрироваться
                         </button>
-                        <button onClick={() => setMode('login')}
-                            className="w-full max-w-xs bg-darkCard border border-darkBorder py-3.5 rounded-xl font-semibold mb-3 active:scale-95 transition">
+
+                        <button
+                            onClick={function() { setMode('login'); }}
+                            className="w-full max-w-xs bg-darkCard border border-darkBorder py-3.5 rounded-xl font-semibold mb-3 active:scale-95 transition"
+                        >
                             Войти
                         </button>
-                        <button onClick={guest}
-                            className="w-full max-w-xs text-slate-500 py-3 text-sm active:scale-95 transition">
+
+                        <button
+                            onClick={auth.guest}
+                            className="w-full max-w-xs text-slate-500 py-3 text-sm active:scale-95 transition"
+                        >
                             Продолжить как гость
                         </button>
                     </div>
                 );
             }
 
-            // --- Экран регистрации / входа ---
+            // --- ЭКРАН РЕГИСТРАЦИИ / ВХОДА ---
+            var isRegisterMode = (mode === 'register');
+            var canSubmit = email && password && (!isRegisterMode || username);
+
             return (
-                <div className="fixed inset-0 z-50 bg-dark p-6 fade-in overflow-y-auto">
-                    <button onClick={() => { setMode('welcome'); setError(''); }}
-                        className="p-2 text-slate-400 mb-4">
+                <div className="fixed inset-0 z-50 bg-dark p-6 animate-fade-in overflow-y-auto">
+                    {/* Кнопка назад */}
+                    <button
+                        onClick={function() { setMode('welcome'); setErrorMsg(''); }}
+                        className="p-2 text-slate-400 mb-4"
+                    >
                         <Icon name="x" />
                     </button>
 
                     <h2 className="text-2xl font-bold mb-6">
-                        {mode === 'register' ? 'Создай профиль' : 'Вход'}
+                        {isRegisterMode ? 'Создай профиль' : 'Вход в аккаунт'}
                     </h2>
 
                     {/* Выбор аватарки (только при регистрации) */}
-                    {mode === 'register' && (
+                    {isRegisterMode && (
                         <div className="flex flex-col items-center mb-6">
-                            <div className="relative cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                                {avatarPreview
-                                    ? <img src={avatarPreview} className="w-24 h-24 rounded-full object-cover border-4 border-primary" />
-                                    : <div className="w-24 h-24 rounded-full bg-darkCard border-4 border-dashed border-darkBorder flex items-center justify-center">
+                            <div
+                                className="relative cursor-pointer"
+                                onClick={function() { if (fileInputRef.current) fileInputRef.current.click(); }}
+                            >
+                                {avatarPreview ? (
+                                    <img
+                                        src={avatarPreview}
+                                        className="w-24 h-24 rounded-full object-cover border-4 border-primary"
+                                        alt="preview"
+                                    />
+                                ) : (
+                                    <div className="w-24 h-24 rounded-full bg-darkCard border-4 border-dashed border-darkBorder flex items-center justify-center">
                                         <Icon name="camera" size={32} className="text-slate-500" />
-                                      </div>
-                                }
+                                    </div>
+                                )}
                                 <div className="absolute bottom-0 right-0 bg-primary p-1.5 rounded-full border-2 border-dark">
                                     <Icon name="edit" size={12} />
                                 </div>
                             </div>
-                            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarSelect} />
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={onAvatarFileChange}
+                            />
                             <p className="text-xs text-slate-500 mt-2">Нажми, чтобы выбрать фото с устройства</p>
                         </div>
                     )}
 
-                    {/* Поля ввода */}
-                    {mode === 'register' && (
-                        <input type="text" placeholder="Имя пользователя" value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-3 outline-none focus:border-primary transition" />
+                    {/* Поле имени пользователя (только при регистрации) */}
+                    {isRegisterMode && (
+                        <input
+                            type="text"
+                            placeholder="Имя пользователя"
+                            value={username}
+                            onChange={function(e) { setUsername(e.target.value); }}
+                            className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-3 outline-none focus:border-primary transition text-white"
+                        />
                     )}
 
-                    <input type="email" placeholder="Email" value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-3 outline-none focus:border-primary transition" />
+                    {/* Поле email */}
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={function(e) { setEmail(e.target.value); }}
+                        className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-3 outline-none focus:border-primary transition text-white"
+                    />
 
-                    <input type="password" placeholder="Пароль" value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-4 outline-none focus:border-primary transition" />
+                    {/* Поле пароля */}
+                    <input
+                        type="password"
+                        placeholder="Пароль"
+                        value={password}
+                        onChange={function(e) { setPassword(e.target.value); }}
+                        className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-4 outline-none focus:border-primary transition text-white"
+                    />
 
                     {/* Сообщение об ошибке */}
-                    {error && <p className="text-red-400 text-sm mb-3 text-center">{error}</p>}
+                    {errorMsg && (
+                        <p className="text-red-400 text-sm mb-3 text-center">{errorMsg}</p>
+                    )}
 
                     {/* Основная кнопка */}
                     <button
-                        disabled={isLoading || !email || !password || (mode === 'register' && !username)}
-                        onClick={mode === 'register' ? doRegister : doLogin}
-                        className={`w-full py-4 rounded-xl font-bold transition active:scale-95 flex items-center justify-center gap-2 ${
-                            email && password && (mode === 'login' || username)
-                                ? 'bg-primary'
-                                : 'bg-darkCard text-slate-600'
-                        }`}>
-                        {isLoading && <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full spinner" />}
-                        {mode === 'register' ? 'Создать аккаунт' : 'Войти'}
+                        disabled={isBusy || !canSubmit}
+                        onClick={isRegisterMode ? handleRegister : handleLogin}
+                        className={
+                            'w-full py-4 rounded-xl font-bold transition active:scale-95 flex items-center justify-center gap-2 ' +
+                            (canSubmit && !isBusy ? 'bg-primary text-white' : 'bg-darkCard text-slate-600')
+                        }
+                    >
+                        {isBusy && (
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full spinner" />
+                        )}
+                        {isRegisterMode ? 'Создать аккаунт' : 'Войти'}
                     </button>
 
                     {/* Переключение между регистрацией и входом */}
                     <p className="text-center text-sm text-slate-500 mt-4">
-                        {mode === 'register' ? 'Уже есть аккаунт? ' : 'Нет аккаунта? '}
-                        <button onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setError(''); }}
-                            className="text-primary font-semibold">
-                            {mode === 'register' ? 'Войти' : 'Зарегистрироваться'}
+                        {isRegisterMode ? 'Уже есть аккаунт? ' : 'Нет аккаунта? '}
+                        <button
+                            onClick={function() {
+                                setMode(isRegisterMode ? 'login' : 'register');
+                                setErrorMsg('');
+                            }}
+                            className="text-primary font-semibold"
+                        >
+                            {isRegisterMode ? 'Войти' : 'Зарегистрироваться'}
                         </button>
                     </p>
                 </div>
             );
-        };
+        }
 
 
-        // ==========================================
+        // ================================================================
         // 🏠 HEADER (Шапка приложения)
-        // ==========================================
-        const Header = () => (
-            <header className="sticky top-0 z-40 bg-dark/90 backdrop-blur-xl border-b border-darkBorder">
-                <div className="flex items-center justify-between px-4 h-14">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-purple-500 flex items-center justify-center">
-                            <Icon name="pulse" size={18} className="text-white" />
+        // ================================================================
+        function Header() {
+            return (
+                <header className="sticky top-0 z-40 bg-dark/90 backdrop-blur-xl border-b border-darkBorder">
+                    <div className="flex items-center justify-between px-4 h-14">
+                        {/* Логотип */}
+                        <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-purple-500 flex items-center justify-center">
+                                <Icon name="pulse" size={18} className="text-white" />
+                            </div>
+                            <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+                                Пульс
+                            </h1>
                         </div>
-                        <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
-                            Пульс
-                        </h1>
+
+                        {/* Кнопки уведомлений */}
+                        <div className="flex gap-1">
+                            <button className="p-2 rounded-full hover:bg-darkCard relative transition">
+                                <Icon name="heart" size={22} />
+                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                            <button className="p-2 rounded-full hover:bg-darkCard transition">
+                                <Icon name="comment" size={22} />
+                            </button>
+                        </div>
                     </div>
-                    <div className="flex gap-1">
-                        <button className="p-2 rounded-full hover:bg-darkCard relative">
-                            <Icon name="heart" size={22} />
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
-                        <button className="p-2 rounded-full hover:bg-darkCard">
-                            <Icon name="comment" size={22} />
-                        </button>
-                    </div>
-                </div>
-            </header>
-        );
+                </header>
+            );
+        }
 
 
-        // ==========================================
-        // 🏠 HOME PAGE
-        // Поиск + Сторис друзей + Фото/Видео лента
-        // ==========================================
-        const HomePage = () => {
-            const { user, profile, refreshProfile } = useAuth();
-            const [query, setQuery] = useState('');
-            const [posts, setPosts] = useState([]);
-            const [stories, setStories] = useState([]);
-            const [activeStory, setActiveStory] = useState(null);
-            const [loadingPosts, setLoadingPosts] = useState(true);
-            const storyInputRef = useRef(null);
+        // ================================================================
+        // 🏠 ГЛАВНАЯ СТРАНИЦА
+        // Поиск + Сторис друзей + Фото/видео лента
+        // ================================================================
+        function HomePage() {
+            var auth = useAuth();
+            var user = auth.user;
+            var profile = auth.profile;
+            var refreshProfile = auth.refreshProfile;
+
+            var queryState = useState('');
+            var searchQuery = queryState[0];
+            var setSearchQuery = queryState[1];
+
+            var postsState = useState([]);
+            var posts = postsState[0];
+            var setPosts = postsState[1];
+
+            var storiesState = useState([]);
+            var stories = storiesState[0];
+            var setStories = storiesState[1];
+
+            var activeStoryState = useState(null);
+            var activeStory = activeStoryState[0];
+            var setActiveStory = activeStoryState[1];
+
+            var loadingState = useState(true);
+            var isLoading = loadingState[0];
+            var setIsLoading = loadingState[1];
+
+            var storyFileRef = useRef(null);
 
             /**
-             * Загрузка постов из Supabase
-             * Поддерживает поиск по описанию через ilike
+             * Загрузка постов из Supabase.
+             * Поддерживает поиск по описанию через ilike.
              */
-            const fetchPosts = useCallback(async () => {
-                setLoadingPosts(true);
+            var fetchPosts = useCallback(async function() {
+                if (!supabase) return;
+                setIsLoading(true);
 
-                let queryBuilder = supabase
-                    .from('posts')
-                    .select('*, profiles(username, avatar_url, is_premium)')
-                    .order('created_at', { ascending: false })
-                    .limit(50);
+                try {
+                    var query;
+                    if (searchQuery) {
+                        query = supabase
+                            .from('posts')
+                            .select('*, profiles(username, avatar_url, is_premium)')
+                            .or('caption.ilike.%' + searchQuery + '%')
+                            .order('created_at', { ascending: false })
+                            .limit(50);
+                    } else {
+                        query = supabase
+                            .from('posts')
+                            .select('*, profiles(username, avatar_url, is_premium)')
+                            .order('created_at', { ascending: false })
+                            .limit(50);
+                    }
 
-                if (query) {
-                    queryBuilder = supabase
-                        .from('posts')
-                        .select('*, profiles(username, avatar_url, is_premium)')
-                        .or(`caption.ilike.%${query}%`)
-                        .order('created_at', { ascending: false })
-                        .limit(50);
+                    var result = await query;
+                    setPosts(result.data || []);
+                } catch (err) {
+                    console.error('Ошибка загрузки постов:', err);
                 }
 
-                const { data } = await queryBuilder;
-                setPosts(data || []);
-                setLoadingPosts(false);
-            }, [query]);
+                setIsLoading(false);
+            }, [searchQuery]);
 
             /**
-             * Загрузка сторис за последние 24 часа
+             * Загрузка сторис за последние 24 часа.
              */
-            const fetchStories = useCallback(async () => {
-                const cutoff = new Date(Date.now() - 86400000).toISOString();
-                const { data } = await supabase
-                    .from('stories')
-                    .select('*, profiles(username, avatar_url, is_premium)')
-                    .gte('created_at', cutoff)
-                    .order('created_at', { ascending: false });
-                setStories(data || []);
+            var fetchStories = useCallback(async function() {
+                if (!supabase) return;
+
+                try {
+                    var cutoff = new Date(Date.now() - 86400000).toISOString();
+                    var result = await supabase
+                        .from('stories')
+                        .select('*, profiles(username, avatar_url, is_premium)')
+                        .gte('created_at', cutoff)
+                        .order('created_at', { ascending: false });
+
+                    setStories(result.data || []);
+                } catch (err) {
+                    console.error('Ошибка загрузки сторис:', err);
+                }
             }, []);
 
             // Загружаем данные при монтировании и при изменении поиска
-            useEffect(() => {
+            useEffect(function() {
                 fetchPosts();
                 fetchStories();
             }, [fetchPosts, fetchStories]);
 
             /**
-             * Загрузка своей сторис
-             * Сжимает изображение → загружает в Storage → создаёт запись в stories
+             * Загрузка своей сторис.
+             * Сжимает → загружает в Storage → создаёт запись в таблице stories.
              */
-            const handleStoryUpload = async (e) => {
-                const file = e.target.files[0];
+            async function handleStoryUpload(e) {
+                var file = e.target.files && e.target.files[0];
                 if (!file || !user) return;
 
-                const blob = await compressImage(file, 1080, 0.8);
-                const path = `${user.id}/story_${Date.now()}.jpg`;
+                try {
+                    var blob = await compressImage(file, 1080, 0.8);
+                    var path = user.id + '/story_' + Date.now() + '.jpg';
 
-                const { error } = await supabase.storage.from('posts').upload(path, blob, {
-                    contentType: 'image/jpeg'
-                });
-                if (error) {
-                    alert('Ошибка загрузки сторис: ' + error.message);
-                    return;
+                    var uploadResult = await supabase.storage.from('posts').upload(path, blob, {
+                        contentType: 'image/jpeg'
+                    });
+
+                    if (uploadResult.error) {
+                        alert('Ошибка загрузки сторис: ' + uploadResult.error.message);
+                        return;
+                    }
+
+                    var urlResult = supabase.storage.from('posts').getPublicUrl(path);
+                    var publicUrl = urlResult.data.publicUrl;
+
+                    await supabase.from('stories').insert({
+                        user_id: user.id,
+                        media_url: publicUrl
+                    });
+
+                    fetchStories();
+                } catch (err) {
+                    console.error('Ошибка создания сторис:', err);
+                    alert('Ошибка: ' + err.message);
                 }
-
-                const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
-                await supabase.from('stories').insert({
-                    user_id: user.id,
-                    media_url: publicUrl
-                });
-
-                fetchStories();
-            };
+            }
 
             /**
-             * Удаление своего поста
-             * Вызывает RPC функцию которая также восстанавливает лимит
+             * Удаление своего поста.
+             * RPC функция также восстанавливает недельный лимит.
              */
-            const deletePost = async (postId) => {
+            async function handleDeletePost(postId) {
                 if (!confirm('Удалить пост? Лимит восстановится.')) return;
-                await supabase.rpc('delete_post_and_restore', { p_post_id: postId });
-                refreshProfile();
-                fetchPosts();
-            };
 
-            // Фильтруем чужие сторис (своя отображается отдельно)
-            const otherStories = stories.filter(s => !user || s.user_id !== user.id);
+                try {
+                    await supabase.rpc('delete_post_and_restore', { p_post_id: postId });
+                    refreshProfile();
+                    fetchPosts();
+                } catch (err) {
+                    console.error('Ошибка удаления:', err);
+                    alert('Ошибка удаления: ' + err.message);
+                }
+            }
+
+            // Фильтруем чужие сторис (своя показывается отдельно)
+            var otherStories = stories.filter(function(s) {
+                return !user || s.user_id !== user.id;
+            });
 
             return (
-                <div className="fade-in pb-20">
+                <div className="animate-fade-in pb-20">
 
-                    {/* Строка поиска (sticky под header) */}
+                    {/* Строка поиска (прилипает под header) */}
                     <div className="px-4 py-3 sticky top-14 z-30 bg-dark/95 backdrop-blur-md">
                         <div className="relative">
                             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
                                 <Icon name="search" size={18} />
                             </div>
-                            <input type="text" placeholder="Поиск по имени или описанию..."
-                                value={query} onChange={e => setQuery(e.target.value)}
-                                className="w-full bg-darkCard border border-darkBorder rounded-xl py-3 pl-10 pr-10 text-sm outline-none focus:border-primary transition placeholder-slate-500" />
-                            {query && (
-                                <button onClick={() => setQuery('')}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500">
+                            <input
+                                type="text"
+                                placeholder="Поиск по имени или описанию..."
+                                value={searchQuery}
+                                onChange={function(e) { setSearchQuery(e.target.value); }}
+                                className="w-full bg-darkCard border border-darkBorder rounded-xl py-3 pl-10 pr-10 text-sm outline-none focus:border-primary transition placeholder-slate-500 text-white"
+                            />
+                            {searchQuery && (
+                                <button
+                                    onClick={function() { setSearchQuery(''); }}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
+                                >
                                     <Icon name="x" size={16} />
                                 </button>
                             )}
@@ -812,118 +1242,192 @@
 
                     {/* Сторис (горизонтальный скролл) */}
                     <div className="px-4 py-3 border-b border-darkBorder">
-                        <div className="flex gap-4 overflow-x-auto stories-scroll pb-1">
+                        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
 
                             {/* Кнопка добавления своей истории */}
-                            <div className="flex flex-col items-center gap-1 min-w-[68px]"
-                                onClick={() => storyInputRef.current?.click()}>
-                                <div className="relative w-16 h-16 rounded-full bg-darkCard border-2 border-dashed border-darkBorder overflow-hidden cursor-pointer">
-                                    {profile?.avatar_url
-                                        ? <img src={profile.avatar_url} className="w-full h-full object-cover opacity-60" />
-                                        : <div className="w-full h-full flex items-center justify-center">
+                            <div
+                                className="flex flex-col items-center gap-1 min-w-[68px] cursor-pointer"
+                                onClick={function() { if (storyFileRef.current) storyFileRef.current.click(); }}
+                            >
+                                <div className="relative w-16 h-16 rounded-full bg-darkCard border-2 border-dashed border-darkBorder overflow-hidden">
+                                    {profile && profile.avatar_url ? (
+                                        <img src={profile.avatar_url} className="w-full h-full object-cover opacity-60" alt="" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
                                             <Icon name="user" size={24} className="text-slate-600" />
-                                          </div>
-                                    }
+                                        </div>
+                                    )}
                                     <div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 bg-primary rounded-full flex items-center justify-center border-2 border-dark">
                                         <span className="text-white text-sm font-bold leading-none">+</span>
                                     </div>
                                 </div>
-                                <input ref={storyInputRef} type="file" accept="image/*" className="hidden" onChange={handleStoryUpload} />
+                                <input
+                                    ref={storyFileRef}
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleStoryUpload}
+                                />
                                 <span className="text-[11px] text-slate-400 w-16 text-center truncate">Ваша</span>
                             </div>
 
                             {/* Чужие истории */}
-                            {otherStories.map(story => (
-                                <button key={story.id} onClick={() => setActiveStory(story)}
-                                    className="flex flex-col items-center gap-1 min-w-[68px]">
-                                    <Avatar src={story.profiles?.avatar_url} size={60} isPremium={story.profiles?.is_premium} />
-                                    <span className="text-[11px] text-slate-300 w-16 text-center truncate">
-                                        {(story.profiles?.username || '').split('_')[0]}
-                                    </span>
-                                </button>
-                            ))}
+                            {otherStories.map(function(story) {
+                                var storyProfile = story.profiles;
+                                var shortName = (storyProfile && storyProfile.username ? storyProfile.username : 'user').split('_')[0];
+
+                                return (
+                                    <button
+                                        key={story.id}
+                                        onClick={function() { setActiveStory(story); }}
+                                        className="flex flex-col items-center gap-1 min-w-[68px]"
+                                    >
+                                        <Avatar
+                                            src={storyProfile ? storyProfile.avatar_url : null}
+                                            size={60}
+                                            isPremium={storyProfile ? storyProfile.is_premium : false}
+                                        />
+                                        <span className="text-[11px] text-slate-300 w-16 text-center truncate">
+                                            {shortName}
+                                        </span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
                     {/* Лента постов */}
-                    {loadingPosts ? (
+                    {isLoading ? (
                         <div className="flex justify-center py-20">
                             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full spinner" />
                         </div>
                     ) : posts.length > 0 ? (
-                        posts.map(post => (
-                            <article key={post.id} className="border-b border-darkBorder">
+                        posts.map(function(post) {
+                            var postProfile = post.profiles;
+                            var isOwnPost = user && user.id === post.user_id;
 
-                                {/* Шапка поста: аватар, имя, время, качество */}
-                                <div className="flex items-center justify-between px-4 py-3">
-                                    <div className="flex items-center gap-3">
-                                        <Avatar src={post.profiles?.avatar_url} size={36} isPremium={post.profiles?.is_premium} />
-                                        <div>
-                                            <div className="flex items-center gap-1">
-                                                <p className="text-sm font-semibold">{post.profiles?.username}</p>
-                                                {post.profiles?.is_premium && (
-                                                    <span className="text-[10px] bg-gradient-to-r from-orange-500 to-pink-500 text-white px-1.5 rounded font-bold">PRO</span>
-                                                )}
+                            return (
+                                <article key={post.id} className="border-b border-darkBorder">
+
+                                    {/* Шапка поста */}
+                                    <div className="flex items-center justify-between px-4 py-3">
+                                        <div className="flex items-center gap-3">
+                                            <Avatar
+                                                src={postProfile ? postProfile.avatar_url : null}
+                                                size={36}
+                                                isPremium={postProfile ? postProfile.is_premium : false}
+                                            />
+                                            <div>
+                                                <div className="flex items-center gap-1">
+                                                    <p className="text-sm font-semibold">
+                                                        {postProfile ? postProfile.username : 'unknown'}
+                                                    </p>
+                                                    {postProfile && postProfile.is_premium && (
+                                                        <span className="text-[10px] bg-gradient-to-r from-orange-500 to-pink-500 text-white px-1.5 rounded font-bold">
+                                                            PRO
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-xs text-slate-500">
+                                                    {formatTimeAgo(post.created_at)} • {post.quality} • {post.fps} FPS
+                                                </p>
                                             </div>
-                                            <p className="text-xs text-slate-500">
-                                                {formatTime(post.created_at)} • {post.quality} • {post.fps} FPS
-                                            </p>
                                         </div>
+
+                                        {/* Кнопка удаления (только свои посты) */}
+                                        {isOwnPost && (
+                                            <button
+                                                onClick={function() { handleDeletePost(post.id); }}
+                                                className="text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition"
+                                            >
+                                                <Icon name="trash" size={18} />
+                                            </button>
+                                        )}
                                     </div>
 
-                                    {/* Кнопка удаления (только для своих постов) */}
-                                    {user && user.id === post.user_id && (
-                                        <button onClick={() => deletePost(post.id)}
-                                            className="text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition">
-                                            <Icon name="trash" size={18} />
+                                    {/* Медиа контент */}
+                                    <div className="relative bg-black">
+                                        {post.media_items && post.media_items.length === 1 ? (
+                                            /* Одно медиа */
+                                            post.media_items[0].type === 'video' ? (
+                                                <video
+                                                    src={post.media_items[0].url}
+                                                    controls
+                                                    playsInline
+                                                    className="w-full max-h-[500px] object-cover"
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={post.media_items[0].url}
+                                                    className="w-full object-cover max-h-[550px]"
+                                                    loading="lazy"
+                                                    alt=""
+                                                />
+                                            )
+                                        ) : (
+                                            /* Карусель из нескольких медиа */
+                                            <div className="relative">
+                                                <div className="media-carousel flex">
+                                                    {(post.media_items || []).map(function(item, idx) {
+                                                        return (
+                                                            <div key={idx} className="media-carousel-item">
+                                                                {item.type === 'video' ? (
+                                                                    <video
+                                                                        src={item.url}
+                                                                        controls
+                                                                        playsInline
+                                                                        className="w-full max-h-[500px] object-cover"
+                                                                    />
+                                                                ) : (
+                                                                    <img
+                                                                        src={item.url}
+                                                                        className="w-full object-cover max-h-[550px]"
+                                                                        loading="lazy"
+                                                                        alt=""
+                                                                    />
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                                <div className="absolute bottom-3 right-3 bg-black/60 px-2 py-1 rounded-full text-xs font-bold backdrop-blur-sm">
+                                                    {post.media_items.length} медиа
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Кнопки действий */}
+                                    <div className="flex items-center gap-4 px-4 py-3">
+                                        <button className="active:scale-125 transition">
+                                            <Icon name="heart" />
                                         </button>
-                                    )}
-                                </div>
+                                        <button className="active:scale-110 transition">
+                                            <Icon name="comment" />
+                                        </button>
+                                        <button className="active:scale-110 transition">
+                                            <Icon name="share" />
+                                        </button>
+                                        <div className="flex-1" />
+                                        <button className="active:scale-110 transition">
+                                            <Icon name="bookmark" />
+                                        </button>
+                                    </div>
 
-                                {/* Медиа контент (одиночное или карусель) */}
-                                <div className="relative bg-black">
-                                    {post.media_items?.length === 1 ? (
-                                        post.media_items[0].type === 'video'
-                                            ? <video src={post.media_items[0].url} controls playsInline className="w-full max-h-[500px] object-cover" />
-                                            : <img src={post.media_items[0].url} className="w-full object-cover max-h-[550px]" loading="lazy" />
-                                    ) : (
-                                        <div className="relative">
-                                            <div className="carousel-scroll flex">
-                                                {(post.media_items || []).map((item, idx) => (
-                                                    <div key={idx} className="carousel-item">
-                                                        {item.type === 'video'
-                                                            ? <video src={item.url} controls playsInline className="w-full max-h-[500px] object-cover" />
-                                                            : <img src={item.url} className="w-full object-cover max-h-[550px]" loading="lazy" />
-                                                        }
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <div className="absolute bottom-3 right-3 bg-black/60 px-2 py-1 rounded-full text-xs font-bold backdrop-blur-sm">
-                                                {post.media_items.length} медиа
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Кнопки действий */}
-                                <div className="flex items-center gap-4 px-4 py-3">
-                                    <button className="active:scale-125 transition"><Icon name="heart" /></button>
-                                    <button><Icon name="comment" /></button>
-                                    <button><Icon name="share" /></button>
-                                    <div className="flex-1" />
-                                    <button><Icon name="bookmark" /></button>
-                                </div>
-
-                                {/* Подпись к посту */}
-                                <div className="px-4 pb-4">
-                                    <p className="text-sm">
-                                        <span className="font-semibold mr-2">{post.profiles?.username}</span>
-                                        <span className="text-slate-300">{post.caption}</span>
-                                    </p>
-                                </div>
-                            </article>
-                        ))
+                                    {/* Подпись */}
+                                    <div className="px-4 pb-4">
+                                        <p className="text-sm">
+                                            <span className="font-semibold mr-2">
+                                                {postProfile ? postProfile.username : 'unknown'}
+                                            </span>
+                                            <span className="text-slate-300">{post.caption}</span>
+                                        </p>
+                                    </div>
+                                </article>
+                            );
+                        })
                     ) : (
+                        /* Пустое состояние */
                         <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
                             <Icon name="pulse" size={48} className="text-slate-700 mb-4" />
                             <p className="text-slate-500 text-lg font-semibold mb-2">Лента пуста</p>
@@ -933,71 +1437,115 @@
 
                     {/* Оверлей просмотра сторис */}
                     {activeStory && (
-                        <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
-                            onClick={() => setActiveStory(null)}>
-                            <div className="relative w-full max-w-md h-full" onClick={e => e.stopPropagation()}>
+                        <div
+                            className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
+                            onClick={function() { setActiveStory(null); }}
+                        >
+                            <div
+                                className="relative w-full max-w-md h-full"
+                                onClick={function(e) { e.stopPropagation(); }}
+                            >
                                 <div className="absolute top-6 left-3 right-3 z-10 flex items-center justify-between">
                                     <div className="flex items-center gap-2">
-                                        <Avatar src={activeStory.profiles?.avatar_url} size={32} isPremium={activeStory.profiles?.is_premium} />
-                                        <span className="text-sm font-semibold">{activeStory.profiles?.username}</span>
+                                        <Avatar
+                                            src={activeStory.profiles ? activeStory.profiles.avatar_url : null}
+                                            size={32}
+                                            isPremium={activeStory.profiles ? activeStory.profiles.is_premium : false}
+                                        />
+                                        <span className="text-sm font-semibold">
+                                            {activeStory.profiles ? activeStory.profiles.username : ''}
+                                        </span>
                                     </div>
-                                    <button onClick={() => setActiveStory(null)}><Icon name="x" /></button>
+                                    <button onClick={function() { setActiveStory(null); }}>
+                                        <Icon name="x" />
+                                    </button>
                                 </div>
-                                <img src={activeStory.media_url} className="w-full h-full object-contain" />
+                                <img
+                                    src={activeStory.media_url}
+                                    className="w-full h-full object-contain"
+                                    alt=""
+                                />
                             </div>
                         </div>
                     )}
                 </div>
             );
-        };
+        }
 
 
-        // ==========================================
-        // 🎬 FEED PAGE
-        // Вертикальная лента видео в стиле TikTok
-        // Автоплей через IntersectionObserver
-        // ==========================================
-        const FeedPage = () => {
-            const [videos, setVideos] = useState([]);
-            const [activeIdx, setActiveIdx] = useState(0);
-            const [loading, setLoading] = useState(true);
-            const containerRef = useRef(null);
+        // ================================================================
+        // 🎬 ЛЕНТА ВИДЕО (TikTok-стиль)
+        // Вертикальный скролл, автоплей через IntersectionObserver
+        // ================================================================
+        function FeedPage() {
+            var videosState = useState([]);
+            var videos = videosState[0];
+            var setVideos = videosState[1];
 
-            // Загрузка всех постов, фильтрация только видео
-            useEffect(() => {
-                (async () => {
-                    const { data } = await supabase
-                        .from('posts')
-                        .select('*, profiles(username, avatar_url, is_premium)')
-                        .order('created_at', { ascending: false })
-                        .limit(30);
+            var activeIdxState = useState(0);
+            var activeIdx = activeIdxState[0];
+            var setActiveIdx = activeIdxState[1];
 
-                    const videoPosts = (data || []).filter(p =>
-                        p.media_items?.some(m => m.type === 'video')
-                    );
-                    setVideos(videoPosts);
-                    setLoading(false);
-                })();
+            var loadingState = useState(true);
+            var isLoading = loadingState[0];
+            var setIsLoading = loadingState[1];
+
+            var containerRef = useRef(null);
+
+            // Загрузка видео-постов из Supabase
+            useEffect(function() {
+                async function loadVideos() {
+                    if (!supabase) { setIsLoading(false); return; }
+
+                    try {
+                        var result = await supabase
+                            .from('posts')
+                            .select('*, profiles(username, avatar_url, is_premium)')
+                            .order('created_at', { ascending: false })
+                            .limit(30);
+
+                        var allPosts = result.data || [];
+                        var videoPosts = allPosts.filter(function(p) {
+                            return p.media_items && p.media_items.some(function(m) {
+                                return m.type === 'video';
+                            });
+                        });
+
+                        setVideos(videoPosts);
+                    } catch (err) {
+                        console.error('Ошибка загрузки видео:', err);
+                    }
+
+                    setIsLoading(false);
+                }
+
+                loadVideos();
             }, []);
 
             // IntersectionObserver для автоплея текущего видео
-            useEffect(() => {
-                if (!videos.length) return;
+            useEffect(function() {
+                if (!videos.length || !containerRef.current) return;
 
-                const observer = new IntersectionObserver(entries => {
-                    entries.forEach(entry => {
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
                         if (entry.isIntersecting) {
-                            setActiveIdx(Number(entry.target.dataset.idx));
+                            var idx = Number(entry.target.getAttribute('data-idx'));
+                            setActiveIdx(idx);
                         }
                     });
-                }, { threshold: 0.6, root: containerRef.current });
+                }, {
+                    threshold: 0.6,
+                    root: containerRef.current
+                });
 
-                document.querySelectorAll('.video-snap').forEach(el => observer.observe(el));
-                return () => observer.disconnect();
+                var items = containerRef.current.querySelectorAll('.tiktok-item');
+                items.forEach(function(el) { observer.observe(el); });
+
+                return function() { observer.disconnect(); };
             }, [videos]);
 
             // Состояние загрузки
-            if (loading) {
+            if (isLoading) {
                 return (
                     <div className="h-full flex justify-center items-center">
                         <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full spinner" />
@@ -1008,7 +1556,7 @@
             // Пустое состояние
             if (!videos.length) {
                 return (
-                    <div className="h-full flex flex-col items-center justify-center p-6 text-center fade-in">
+                    <div className="h-full flex flex-col items-center justify-center p-6 text-center animate-fade-in">
                         <Icon name="play" size={48} className="text-slate-700 mb-4" />
                         <p className="text-slate-500 text-lg font-semibold">Видео пока нет</p>
                         <p className="text-slate-600 text-sm mt-2">Выложи первое видео через кнопку «+»!</p>
@@ -1017,21 +1565,40 @@
             }
 
             return (
-                <div ref={containerRef} className="video-feed h-full">
-                    {videos.map((video, index) => {
-                        const firstVideoItem = video.media_items?.find(m => m.type === 'video');
+                <div ref={containerRef} className="tiktok-feed h-full">
+                    {videos.map(function(video, index) {
+                        var firstVideoItem = null;
+                        if (video.media_items) {
+                            for (var i = 0; i < video.media_items.length; i++) {
+                                if (video.media_items[i].type === 'video') {
+                                    firstVideoItem = video.media_items[i];
+                                    break;
+                                }
+                            }
+                        }
+
+                        var videoProfile = video.profiles;
 
                         return (
-                            <div key={video.id} data-idx={index} className="video-snap relative bg-black"
-                                style={{ height: 'calc(100dvh - 64px)' }}>
-
-                                {/* Видео элемент с автоплеем */}
+                            <div
+                                key={video.id}
+                                data-idx={index}
+                                className="tiktok-item relative bg-black"
+                                style={{ height: 'calc(100dvh - 64px)' }}
+                            >
+                                {/* Видео с автоплеем */}
                                 <video
-                                    src={firstVideoItem?.url}
-                                    loop playsInline muted
-                                    ref={el => {
-                                        if (el && index === activeIdx) el.play().catch(() => {});
-                                        if (el && index !== activeIdx) el.pause();
+                                    src={firstVideoItem ? firstVideoItem.url : ''}
+                                    loop
+                                    playsInline
+                                    muted
+                                    ref={function(el) {
+                                        if (el && index === activeIdx) {
+                                            el.play().catch(function() {});
+                                        }
+                                        if (el && index !== activeIdx) {
+                                            el.pause();
+                                        }
                                     }}
                                     className="w-full h-full object-cover"
                                 />
@@ -1041,11 +1608,17 @@
                                     {video.fps} FPS • {video.quality}
                                 </div>
 
-                                {/* Информация об авторе и описание */}
+                                {/* Информация об авторе */}
                                 <div className="absolute bottom-6 left-4 right-16 z-10">
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Avatar src={video.profiles?.avatar_url} size={32} isPremium={video.profiles?.is_premium} />
-                                        <span className="font-bold text-sm">@{video.profiles?.username}</span>
+                                        <Avatar
+                                            src={videoProfile ? videoProfile.avatar_url : null}
+                                            size={32}
+                                            isPremium={videoProfile ? videoProfile.is_premium : false}
+                                        />
+                                        <span className="font-bold text-sm">
+                                            @{videoProfile ? videoProfile.username : 'unknown'}
+                                        </span>
                                     </div>
                                     <p className="text-sm text-white/90 leading-snug">{video.caption}</p>
                                 </div>
@@ -1053,15 +1626,21 @@
                                 {/* Правая панель действий */}
                                 <div className="absolute right-3 bottom-8 flex flex-col items-center gap-5 z-10">
                                     <button className="flex flex-col items-center">
-                                        <div className="p-3 rounded-full bg-black/30 backdrop-blur-sm"><Icon name="heart" /></div>
-                                        <span className="text-xs mt-1">{video.likes_count}</span>
+                                        <div className="p-3 rounded-full bg-black/30 backdrop-blur-sm">
+                                            <Icon name="heart" />
+                                        </div>
+                                        <span className="text-xs mt-1">{formatCount(video.likes_count)}</span>
                                     </button>
                                     <button className="flex flex-col items-center">
-                                        <div className="p-3 rounded-full bg-black/30 backdrop-blur-sm"><Icon name="comment" /></div>
-                                        <span className="text-xs mt-1">{video.comments_count}</span>
+                                        <div className="p-3 rounded-full bg-black/30 backdrop-blur-sm">
+                                            <Icon name="comment" />
+                                        </div>
+                                        <span className="text-xs mt-1">{formatCount(video.comments_count)}</span>
                                     </button>
                                     <button>
-                                        <div className="p-3 rounded-full bg-black/30 backdrop-blur-sm"><Icon name="share" /></div>
+                                        <div className="p-3 rounded-full bg-black/30 backdrop-blur-sm">
+                                            <Icon name="share" />
+                                        </div>
                                     </button>
                                 </div>
                             </div>
@@ -1069,54 +1648,77 @@
                     })}
                 </div>
             );
-        };
+        }
 
 
-        // ==========================================
-        // ➕ CREATE PAGE
-        // Создание поста: выбор фото/видео, до 4 объектов
-        // Проверка лимитов, загрузка в Supabase Storage
-        // ==========================================
-        const CreatePage = () => {
-            const { user, profile, refreshProfile } = useAuth();
-            const [mediaItems, setMediaItems] = useState([]);
-            const [caption, setCaption] = useState('');
-            const [status, setStatus] = useState(null);       // null | 'limit' | 'ok' | 'err'
-            const [limitInfo, setLimitInfo] = useState(null);
-            const [uploading, setUploading] = useState(false);
-            const fileInputRef = useRef(null);
+        // ================================================================
+        // ➕ СТРАНИЦА СОЗДАНИЯ ПОСТА
+        // Выбор фото/видео (до 4 объектов), проверка лимитов,
+        // загрузка в Supabase Storage, создание записи в БД
+        // ================================================================
+        function CreatePage() {
+            var auth = useAuth();
+            var user = auth.user;
+            var profile = auth.profile;
+            var refreshProfile = auth.refreshProfile;
 
-            // Если нет аккаунта — показываем заглушку
+            var itemsState = useState([]);
+            var mediaItems = itemsState[0];
+            var setMediaItems = itemsState[1];
+
+            var captionState = useState('');
+            var caption = captionState[0];
+            var setCaption = captionState[1];
+
+            var statusState = useState(null);
+            var status = statusState[0];
+            var setStatus = statusState[1];
+
+            var limitInfoState = useState(null);
+            var limitInfo = limitInfoState[0];
+            var setLimitInfo = limitInfoState[1];
+
+            var uploadingState = useState(false);
+            var isUploading = uploadingState[0];
+            var setIsUploading = uploadingState[1];
+
+            var fileInputRef = useRef(null);
+
+            // Если нет аккаунта
             if (!user) {
                 return (
-                    <div className="h-full flex flex-col items-center justify-center p-6 text-center fade-in">
+                    <div className="h-full flex flex-col items-center justify-center p-6 text-center animate-fade-in">
                         <Icon name="lock" size={40} className="text-slate-600 mb-4" />
                         <h2 className="text-xl font-bold mb-2">Нужен аккаунт</h2>
-                        <p className="text-slate-400 text-sm">Зарегистрируйся, чтобы постить</p>
+                        <p className="text-slate-400 text-sm">Зарегистрируйся, чтобы публиковать посты</p>
                     </div>
                 );
             }
 
             /**
-             * Обработка выбора файлов
-             * Проверяет лимит 4 объекта и длительность видео 60 сек
-             * Фото сжимаются через Canvas API
+             * Обработка выбора файлов.
+             * Проверяет: максимум 4 объекта, видео не длиннее 60 сек.
+             * Фото сжимаются через Canvas API.
              */
-            const handleFilesSelected = async (e) => {
-                const files = Array.from(e.target.files);
+            async function handleFilesSelected(e) {
+                var files = e.target.files ? Array.from(e.target.files) : [];
+                if (files.length === 0) return;
 
                 if (mediaItems.length + files.length > 4) {
                     alert('Максимум 4 объекта в одном посте!');
                     return;
                 }
 
-                const newItems = [];
-                for (const file of files) {
+                var newItems = [];
+
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+
                     if (file.type.startsWith('video/')) {
                         // Проверка длительности видео
-                        const duration = await getVideoDuration(file);
+                        var duration = await getVideoDuration(file);
                         if (duration > 60) {
-                            alert(`Видео "${file.name}" длиннее 60 секунд!`);
+                            alert('Видео "' + file.name + '" длиннее 60 секунд! Максимум 60 сек.');
                             continue;
                         }
                         newItems.push({
@@ -1125,76 +1727,120 @@
                             preview: URL.createObjectURL(file)
                         });
                     } else {
-                        // Сжатие фото перед добавлением
-                        const compressedBlob = await compressImage(file, 1080, 0.7);
-                        newItems.push({
-                            type: 'photo',
-                            file: compressedBlob,
-                            preview: URL.createObjectURL(compressedBlob)
-                        });
+                        // Сжатие фото
+                        try {
+                            var compressedBlob = await compressImage(file, 1080, 0.7);
+                            newItems.push({
+                                type: 'photo',
+                                file: compressedBlob,
+                                preview: URL.createObjectURL(compressedBlob)
+                            });
+                        } catch (compressErr) {
+                            console.error('Ошибка сжатия:', compressErr);
+                            // Добавляем оригинал если сжатие не удалось
+                            newItems.push({
+                                type: 'photo',
+                                file: file,
+                                preview: URL.createObjectURL(file)
+                            });
+                        }
                     }
                 }
 
-                setMediaItems(prev => [...prev, ...newItems]);
-            };
+                setMediaItems(function(prev) {
+                    return prev.concat(newItems);
+                });
+            }
 
-            // Удаление элемента из списка превью
-            const removeItem = (idx) => setMediaItems(prev => prev.filter((_, i) => i !== idx));
+            // Удаление элемента из превью
+            function removeItem(idx) {
+                setMediaItems(function(prev) {
+                    return prev.filter(function(_, i) { return i !== idx; });
+                });
+            }
 
             /**
-             * Публикация поста
-             * 1. Проверяет недельный лимит
+             * Публикация поста.
+             * 1. Проверяет недельный лимит из БД
              * 2. Загружает каждый файл в Supabase Storage
              * 3. Создаёт запись в таблице posts
              */
-            const publish = async () => {
-                if (!mediaItems.length) return;
+            async function handlePublish() {
+                if (mediaItems.length === 0) return;
 
-                // Свежая проверка лимита из БД
+                // Свежая проверка лимита
                 await refreshProfile();
-                const { data: freshProfile } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
 
-                const now = Date.now();
-                let postsThisWeek = freshProfile.posts_this_week;
+                var profileResult;
+                try {
+                    profileResult = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+                } catch (err) {
+                    setStatus('err');
+                    setTimeout(function() { setStatus(null); }, 3000);
+                    return;
+                }
+
+                var freshProfile = profileResult.data;
+                if (!freshProfile) {
+                    setStatus('err');
+                    setTimeout(function() { setStatus(null); }, 3000);
+                    return;
+                }
+
+                var now = Date.now();
+                var postsThisWeek = freshProfile.posts_this_week || 0;
 
                 // Сброс счётчика если неделя прошла
                 if (now > new Date(freshProfile.week_reset).getTime()) {
                     postsThisWeek = 0;
                 }
 
-                const limit = freshProfile.is_premium ? 6 : 2;
+                var limit = freshProfile.is_premium ? 6 : 2;
 
                 if (postsThisWeek >= limit) {
-                    setLimitInfo({ limit, used: postsThisWeek, isPremium: freshProfile.is_premium });
+                    setLimitInfo({
+                        limit: limit,
+                        used: postsThisWeek,
+                        isPremium: freshProfile.is_premium
+                    });
                     setStatus('limit');
                     return;
                 }
 
-                setUploading(true);
+                setIsUploading(true);
 
                 try {
                     // Загрузка каждого файла в Storage
-                    const uploadedItems = [];
-                    for (const item of mediaItems) {
-                        const ext = item.type === 'video' ? 'mp4' : 'jpg';
-                        const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-                        const path = `${user.id}/${fileName}`;
+                    var uploadedItems = [];
 
-                        const { error } = await supabase.storage.from('posts').upload(path, item.file, {
-                            contentType: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
+                    for (var i = 0; i < mediaItems.length; i++) {
+                        var item = mediaItems[i];
+                        var ext = item.type === 'video' ? 'mp4' : 'jpg';
+                        var fileName = Date.now() + '_' + Math.random().toString(36).slice(2) + '.' + ext;
+                        var storagePath = user.id + '/' + fileName;
+                        var contentType = item.type === 'video' ? 'video/mp4' : 'image/jpeg';
+
+                        var uploadResult = await supabase.storage.from('posts').upload(storagePath, item.file, {
+                            contentType: contentType
                         });
-                        if (error) throw error;
 
-                        const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
-                        uploadedItems.push({ type: item.type, url: publicUrl });
+                        if (uploadResult.error) {
+                            throw uploadResult.error;
+                        }
+
+                        var urlResult = supabase.storage.from('posts').getPublicUrl(storagePath);
+                        uploadedItems.push({
+                            type: item.type,
+                            url: urlResult.data.publicUrl
+                        });
                     }
 
                     // Создание записи поста в БД
-                    await supabase.from('posts').insert({
+                    var insertResult = await supabase.from('posts').insert({
                         user_id: user.id,
                         media_items: uploadedItems,
                         caption: caption,
@@ -1202,72 +1848,85 @@
                         quality: freshProfile.is_premium ? 'HD' : 'SD'
                     });
 
-                    // Успех — очищаем форму
+                    if (insertResult.error) {
+                        throw insertResult.error;
+                    }
+
+                    // Успех
                     refreshProfile();
                     setCaption('');
                     setMediaItems([]);
                     setStatus('ok');
-                    setTimeout(() => setStatus(null), 2000);
+                    setTimeout(function() { setStatus(null); }, 2000);
 
-                } catch (e) {
-                    console.error('Ошибка публикации:', e);
+                } catch (err) {
+                    console.error('Ошибка публикации:', err);
                     setStatus('err');
-                    setTimeout(() => setStatus(null), 3000);
+                    setTimeout(function() { setStatus(null); }, 3000);
                 }
 
-                setUploading(false);
-            };
+                setIsUploading(false);
+            }
 
-            const limit = profile?.is_premium ? 6 : 2;
-            const used = profile?.posts_this_week || 0;
+            var currentLimit = profile ? (profile.is_premium ? 6 : 2) : 2;
+            var currentUsed = profile ? (profile.posts_this_week || 0) : 0;
 
             return (
-                <div className="p-5 fade-in pb-24">
+                <div className="p-5 animate-fade-in pb-24">
                     <h2 className="text-2xl font-bold mb-5">Новый пост</h2>
 
                     {/* Индикатор недельного лимита */}
                     <div className="bg-darkCard rounded-xl p-4 border border-darkBorder mb-5">
                         <div className="flex justify-between mb-2">
                             <span className="text-sm text-slate-400">Лимит недели</span>
-                            <span className={`text-sm font-bold ${profile?.is_premium ? 'text-yellow-400' : ''}`}>
-                                {used} / {limit}
+                            <span className={'text-sm font-bold ' + (profile && profile.is_premium ? 'text-yellow-400' : '')}>
+                                {currentUsed} / {currentLimit}
                             </span>
                         </div>
                         <div className="w-full h-2 bg-darkBorder rounded-full overflow-hidden">
-                            <div className={`h-full ${profile?.is_premium ? 'bg-yellow-400' : 'bg-primary'} transition-all`}
-                                style={{ width: `${Math.min((used / limit) * 100, 100)}%` }} />
+                            <div
+                                className={'h-full transition-all ' + (profile && profile.is_premium ? 'bg-yellow-400' : 'bg-primary')}
+                                style={{ width: Math.min((currentUsed / currentLimit) * 100, 100) + '%' }}
+                            />
                         </div>
                         <p className="text-xs text-slate-500 mt-2">
-                            {profile?.is_premium
+                            {profile && profile.is_premium
                                 ? '👑 Premium: до 6 постов, 60 FPS, HD'
                                 : 'Free: 2 поста, 30 FPS, SD (480p)'}
                         </p>
                     </div>
 
-                    {/* Превью выбранных медиа файлов */}
+                    {/* Превью выбранных медиа */}
                     {mediaItems.length > 0 && (
                         <div className="mb-5">
-                            <div className="flex gap-2 overflow-x-auto stories-scroll pb-2">
-                                {mediaItems.map((item, idx) => (
-                                    <div key={idx} className="relative min-w-[100px] h-[100px] rounded-xl overflow-hidden border border-darkBorder">
-                                        {item.type === 'video'
-                                            ? <video src={item.preview} className="w-full h-full object-cover" />
-                                            : <img src={item.preview} className="w-full h-full object-cover" />
-                                        }
-                                        <button onClick={() => removeItem(idx)}
-                                            className="absolute top-1 right-1 bg-black/70 rounded-full p-1">
-                                            <Icon name="x" size={12} />
-                                        </button>
-                                        <div className="absolute bottom-1 left-1 bg-black/60 px-1.5 rounded text-[10px] font-bold uppercase">
-                                            {item.type === 'video' ? 'VID' : 'IMG'}
+                            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                                {mediaItems.map(function(item, idx) {
+                                    return (
+                                        <div key={idx} className="relative min-w-[100px] h-[100px] rounded-xl overflow-hidden border border-darkBorder">
+                                            {item.type === 'video' ? (
+                                                <video src={item.preview} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <img src={item.preview} className="w-full h-full object-cover" alt="" />
+                                            )}
+                                            <button
+                                                onClick={function() { removeItem(idx); }}
+                                                className="absolute top-1 right-1 bg-black/70 rounded-full p-1"
+                                            >
+                                                <Icon name="x" size={12} />
+                                            </button>
+                                            <div className="absolute bottom-1 left-1 bg-black/60 px-1.5 rounded text-[10px] font-bold uppercase">
+                                                {item.type === 'video' ? 'VID' : 'IMG'}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
 
-                                {/* Кнопка добавить ещё (если меньше 4) */}
+                                {/* Кнопка добавить ещё */}
                                 {mediaItems.length < 4 && (
-                                    <button onClick={() => fileInputRef.current?.click()}
-                                        className="min-w-[100px] h-[100px] rounded-xl border-2 border-dashed border-darkBorder flex items-center justify-center hover:border-primary transition">
+                                    <button
+                                        onClick={function() { if (fileInputRef.current) fileInputRef.current.click(); }}
+                                        className="min-w-[100px] h-[100px] rounded-xl border-2 border-dashed border-darkBorder flex items-center justify-center hover:border-primary transition"
+                                    >
                                         <Icon name="plus" size={24} className="text-slate-500" />
                                     </button>
                                 )}
@@ -1278,31 +1937,50 @@
                         </div>
                     )}
 
-                    {/* Большая кнопка выбора файлов (когда ничего не выбрано) */}
+                    {/* Большая кнопка выбора (когда ничего не выбрано) */}
                     {mediaItems.length === 0 && (
-                        <button onClick={() => fileInputRef.current?.click()}
-                            className="w-full aspect-video bg-darkCard border-2 border-dashed border-darkBorder rounded-2xl flex flex-col items-center justify-center gap-3 mb-5 hover:border-primary transition active:scale-95">
+                        <button
+                            onClick={function() { if (fileInputRef.current) fileInputRef.current.click(); }}
+                            className="w-full aspect-video bg-darkCard border-2 border-dashed border-darkBorder rounded-2xl flex flex-col items-center justify-center gap-3 mb-5 hover:border-primary transition active:scale-95"
+                        >
                             <Icon name="camera" size={40} className="text-slate-500" />
                             <p className="text-slate-400 font-semibold">Выбрать фото или видео</p>
                             <p className="text-xs text-slate-600">До 4 объектов • Видео до 60 сек</p>
                         </button>
                     )}
 
-                    {/* Скрытый input для выбора файлов */}
-                    <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleFilesSelected} />
+                    {/* Скрытый input */}
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*,video/*"
+                        multiple
+                        className="hidden"
+                        onChange={handleFilesSelected}
+                    />
 
-                    {/* Поле описания */}
-                    <textarea value={caption} onChange={e => setCaption(e.target.value)}
-                        placeholder="Описание..." rows={3}
-                        className="w-full bg-darkCard border border-darkBorder rounded-xl p-4 outline-none focus:border-primary resize-none mb-4" />
+                    {/* Описание */}
+                    <textarea
+                        value={caption}
+                        onChange={function(e) { setCaption(e.target.value); }}
+                        placeholder="Описание..."
+                        rows={3}
+                        className="w-full bg-darkCard border border-darkBorder rounded-xl p-4 outline-none focus:border-primary resize-none mb-4 text-white placeholder-slate-500"
+                    />
 
                     {/* Кнопка публикации */}
-                    <button onClick={publish} disabled={!mediaItems.length || uploading}
-                        className={`w-full py-4 rounded-xl font-bold active:scale-95 transition flex items-center justify-center gap-2 ${
-                            mediaItems.length && !uploading ? 'bg-primary' : 'bg-darkCard text-slate-600'
-                        }`}>
-                        {uploading && <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full spinner" />}
-                        {uploading ? 'Загрузка...' : 'Опубликовать'}
+                    <button
+                        onClick={handlePublish}
+                        disabled={mediaItems.length === 0 || isUploading}
+                        className={
+                            'w-full py-4 rounded-xl font-bold active:scale-95 transition flex items-center justify-center gap-2 ' +
+                            (mediaItems.length > 0 && !isUploading ? 'bg-primary text-white' : 'bg-darkCard text-slate-600')
+                        }
+                    >
+                        {isUploading && (
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full spinner" />
+                        )}
+                        {isUploading ? 'Загрузка...' : 'Опубликовать'}
                     </button>
 
                     {/* Модалка: лимит исчерпан */}
@@ -1319,123 +1997,175 @@
                                 <p className="text-xs text-slate-500 mb-5">
                                     💡 Удали старый пост, чтобы освободить место
                                 </p>
-                                <button onClick={() => setStatus(null)}
-                                    className="w-full bg-darkBorder py-3 rounded-xl font-semibold">
+                                <button
+                                    onClick={function() { setStatus(null); }}
+                                    className="w-full bg-darkBorder py-3 rounded-xl font-semibold"
+                                >
                                     Позже
                                 </button>
                             </div>
                         </div>
                     )}
 
-                    {/* Тост: успешно опубликовано */}
+                    {/* Тост: успех */}
                     {status === 'ok' && (
-                        <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-green-500 px-6 py-3 rounded-full font-semibold shadow-lg z-50 fade-in">
+                        <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-green-500 px-6 py-3 rounded-full font-semibold shadow-lg z-50 animate-fade-in">
                             ✅ Опубликовано!
                         </div>
                     )}
 
                     {/* Тост: ошибка */}
                     {status === 'err' && (
-                        <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-red-500 px-6 py-3 rounded-full font-semibold shadow-lg z-50 fade-in">
+                        <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-red-500 px-6 py-3 rounded-full font-semibold shadow-lg z-50 animate-fade-in">
                             ❌ Ошибка загрузки
                         </div>
                     )}
                 </div>
             );
-        };
+        }
 
 
-        // ==========================================
-        // 👤 PROFILE PAGE
+        // ================================================================
+        // 👤 СТРАНИЦА ПРОФИЛЯ
         // Информация, сетка постов, промокоды
-        // ==========================================
-        const ProfilePage = () => {
-            const { user, profile, refreshProfile } = useAuth();
-            const [tab, setTab] = useState('posts');   // posts | promo
-            const [code, setCode] = useState('');
-            const [result, setResult] = useState(null);
-            const [myPosts, setMyPosts] = useState([]);
-            const [applying, setApplying] = useState(false);
+        // ================================================================
+        function ProfilePage() {
+            var auth = useAuth();
+            var user = auth.user;
+            var profile = auth.profile;
+            var refreshProfile = auth.refreshProfile;
+            var logout = auth.logout;
+
+            var tabState = useState('posts');
+            var activeTab = tabState[0];
+            var setActiveTab = tabState[1];
+
+            var codeState = useState('');
+            var promoCode = codeState[0];
+            var setPromoCode = codeState[1];
+
+            var resultState = useState(null);
+            var promoResult = resultState[0];
+            var setPromoResult = resultState[1];
+
+            var myPostsState = useState([]);
+            var myPosts = myPostsState[0];
+            var setMyPosts = myPostsState[1];
+
+            var applyingState = useState(false);
+            var isApplying = applyingState[0];
+            var setIsApplying = applyingState[1];
 
             // Загрузка своих постов
-            useEffect(() => {
-                if (user) {
-                    supabase.from('posts')
-                        .select('*')
-                        .eq('user_id', user.id)
-                        .order('created_at', { ascending: false })
-                        .then(({ data }) => setMyPosts(data || []));
-                }
-            }, [user, tab]);
+            useEffect(function() {
+                if (!user || !supabase) return;
+
+                supabase.from('posts')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .order('created_at', { ascending: false })
+                    .then(function(result) {
+                        setMyPosts(result.data || []);
+                    });
+            }, [user, activeTab]);
 
             // Если нет аккаунта
             if (!user) {
                 return (
-                    <div className="h-full flex items-center justify-center text-slate-500 fade-in">
+                    <div className="h-full flex items-center justify-center text-slate-500 animate-fade-in">
                         <div className="text-center">
                             <Icon name="user" size={48} className="mb-3 mx-auto" />
-                            <p>Профиль только для аккаунтов</p>
+                            <p>Профиль доступен только с аккаунтом</p>
                         </div>
                     </div>
                 );
             }
 
             /**
-             * Активация промокода через серверную RPC функцию
-             * Безопасно проверяет и применяет код на стороне БД
+             * Активация промокода через серверную RPC функцию.
+             * Безопасно проверяется и применяется на стороне БД.
              */
-            const applyPromo = async () => {
-                if (!code.trim()) return;
-                setApplying(true);
+            async function handleApplyPromo() {
+                if (!promoCode.trim()) return;
+                setIsApplying(true);
 
-                const { data, error } = await supabase.rpc('activate_promo', {
-                    p_code: code.trim().toUpperCase()
-                });
+                try {
+                    var result = await supabase.rpc('activate_promo', {
+                        p_code: promoCode.trim().toUpperCase()
+                    });
 
-                setResult(data || { success: false, error: error?.message || 'Ошибка' });
+                    var data = result.data || { success: false, error: result.error ? result.error.message : 'Ошибка' };
+                    setPromoResult(data);
 
-                if (data?.success) {
-                    refreshProfile();
-                    setCode('');
+                    if (data.success) {
+                        refreshProfile();
+                        setPromoCode('');
+                    }
+                } catch (err) {
+                    setPromoResult({ success: false, error: err.message || 'Ошибка' });
                 }
 
-                setApplying(false);
-                setTimeout(() => setResult(null), 3000);
-            };
+                setIsApplying(false);
+                setTimeout(function() { setPromoResult(null); }, 3000);
+            }
 
             /**
-             * Удаление своего поста с восстановлением лимита
+             * Удаление своего поста с восстановлением лимита.
              */
-            const deletePost = async (postId) => {
+            async function handleDeletePost(postId) {
                 if (!confirm('Удалить пост?')) return;
-                await supabase.rpc('delete_post_and_restore', { p_post_id: postId });
-                refreshProfile();
-                setMyPosts(prev => prev.filter(p => p.id !== postId));
-            };
+
+                try {
+                    await supabase.rpc('delete_post_and_restore', { p_post_id: postId });
+                    refreshProfile();
+                    setMyPosts(function(prev) {
+                        return prev.filter(function(p) { return p.id !== postId; });
+                    });
+                } catch (err) {
+                    console.error('Ошибка удаления:', err);
+                }
+            }
 
             return (
-                <div className="fade-in pb-24">
+                <div className="animate-fade-in pb-24">
 
                     {/* Шапка профиля */}
                     <div className="px-5 py-4 flex items-center justify-between border-b border-darkBorder">
-                        <h2 className="text-lg font-bold">@{profile?.username}</h2>
-                        <button className="p-2 text-slate-400"><Icon name="settings" /></button>
+                        <h2 className="text-lg font-bold">@{profile ? profile.username : '...'}</h2>
+                        <div className="flex gap-1">
+                            <button className="p-2 text-slate-400 hover:text-white transition">
+                                <Icon name="settings" />
+                            </button>
+                            <button
+                                onClick={logout}
+                                className="p-2 text-slate-400 hover:text-red-400 transition"
+                                title="Выйти"
+                            >
+                                <Icon name="logOut" size={20} />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Информация о пользователе */}
                     <div className="px-5 py-5 flex items-center gap-5">
-                        <Avatar src={profile?.avatar_url} size={80} isPremium={profile?.is_premium} />
+                        <Avatar
+                            src={profile ? profile.avatar_url : null}
+                            size={80}
+                            isPremium={profile ? profile.is_premium : false}
+                        />
                         <div className="flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <h3 className="font-bold text-lg">{profile?.username}</h3>
-                                {profile?.is_premium && (
+                                <h3 className="font-bold text-lg">
+                                    {profile ? profile.username : '...'}
+                                </h3>
+                                {profile && profile.is_premium && (
                                     <span className="bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-[0_0_10px_rgba(234,88,12,0.5)]">
                                         <Icon name="crown" size={10} filled /> PREMIUM
                                     </span>
                                 )}
                             </div>
                             <p className="text-sm text-slate-400 mt-1">
-                                Постов: {myPosts.length} • {profile?.is_premium ? '60 FPS • HD' : '30 FPS • SD'}
+                                Постов: {myPosts.length} • {profile && profile.is_premium ? '60 FPS • HD' : '30 FPS • SD'}
                             </p>
                         </div>
                     </div>
@@ -1447,75 +2177,106 @@
                         </button>
                     </div>
 
-                    {/* Табы: Посты / Промокоды */}
+                    {/* Табы */}
                     <div className="flex border-b border-darkBorder">
-                        <button onClick={() => setTab('posts')}
-                            className={`flex-1 py-3 flex justify-center relative ${tab === 'posts' ? 'text-white' : 'text-slate-500'}`}>
+                        <button
+                            onClick={function() { setActiveTab('posts'); }}
+                            className={'flex-1 py-3 flex justify-center relative ' + (activeTab === 'posts' ? 'text-white' : 'text-slate-500')}
+                        >
                             <Icon name="grid" />
-                            {tab === 'posts' && <div className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-white rounded-full" />}
+                            {activeTab === 'posts' && (
+                                <div className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-white rounded-full" />
+                            )}
                         </button>
-                        <button onClick={() => setTab('promo')}
-                            className={`flex-1 py-3 flex justify-center relative ${tab === 'promo' ? 'text-yellow-400' : 'text-slate-500'}`}>
+                        <button
+                            onClick={function() { setActiveTab('promo'); }}
+                            className={'flex-1 py-3 flex justify-center relative ' + (activeTab === 'promo' ? 'text-yellow-400' : 'text-slate-500')}
+                        >
                             <Icon name="gift" />
-                            {tab === 'promo' && <div className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-yellow-400 rounded-full" />}
+                            {activeTab === 'promo' && (
+                                <div className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-yellow-400 rounded-full" />
+                            )}
                         </button>
                     </div>
 
-                    {/* Контент таба */}
-                    {tab === 'posts' ? (
+                    {/* Контент табов */}
+                    {activeTab === 'posts' ? (
+                        /* Сетка постов */
                         <div className="grid grid-cols-3 gap-0.5 p-0.5">
-                            {myPosts.length ? myPosts.map(post => (
-                                <div key={post.id} className="aspect-square bg-darkCard overflow-hidden relative group cursor-pointer">
-                                    {post.media_items?.[0]?.type === 'video'
-                                        ? <video src={post.media_items[0].url} className="w-full h-full object-cover" />
-                                        : <img src={post.media_items?.[0]?.url} className="w-full h-full object-cover" />
-                                    }
-                                    {post.media_items?.length > 1 && (
-                                        <div className="absolute top-1 right-1 bg-black/60 px-1.5 rounded text-[10px] font-bold">
-                                            {post.media_items.length}
+                            {myPosts.length > 0 ? (
+                                myPosts.map(function(post) {
+                                    var firstMedia = post.media_items && post.media_items[0];
+                                    var mediaCount = post.media_items ? post.media_items.length : 0;
+
+                                    return (
+                                        <div key={post.id} className="aspect-square bg-darkCard overflow-hidden relative group cursor-pointer">
+                                            {firstMedia && firstMedia.type === 'video' ? (
+                                                <video src={firstMedia.url} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <img src={firstMedia ? firstMedia.url : ''} className="w-full h-full object-cover" alt="" />
+                                            )}
+                                            {mediaCount > 1 && (
+                                                <div className="absolute top-1 right-1 bg-black/60 px-1.5 rounded text-[10px] font-bold">
+                                                    {mediaCount}
+                                                </div>
+                                            )}
+                                            <button
+                                                onClick={function() { handleDeletePost(post.id); }}
+                                                className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+                                            >
+                                                <Icon name="trash" className="text-red-400" />
+                                            </button>
                                         </div>
-                                    )}
-                                    <button onClick={() => deletePost(post.id)}
-                                        className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                                        <Icon name="trash" className="text-red-400" />
-                                    </button>
+                                    );
+                                })
+                            ) : (
+                                <div className="col-span-3 py-12 text-center text-slate-500">
+                                    Нет постов
                                 </div>
-                            )) : (
-                                <div className="col-span-3 py-12 text-center text-slate-500">Нет постов</div>
                             )}
                         </div>
                     ) : (
+                        /* Вкладка промокодов */
                         <div className="p-5 space-y-4">
 
-                            {/* Поле активации промокода */}
+                            {/* Поле ввода промокода */}
                             <div className="bg-darkCard rounded-xl p-4 border border-darkBorder">
                                 <h3 className="font-bold mb-3 flex items-center gap-2">
                                     <Icon name="gift" size={18} className="text-primary" /> Активировать код
                                 </h3>
                                 <div className="flex gap-2">
-                                    <input value={code} onChange={e => setCode(e.target.value.toUpperCase())}
+                                    <input
+                                        value={promoCode}
+                                        onChange={function(e) { setPromoCode(e.target.value.toUpperCase()); }}
                                         placeholder="ВВЕДИ КОД"
-                                        className="flex-1 bg-dark border border-darkBorder rounded-lg px-3 py-2.5 text-sm outline-none focus:border-primary uppercase tracking-wider" />
-                                    <button onClick={applyPromo} disabled={applying}
-                                        className="bg-primary px-5 rounded-lg font-bold active:scale-95 transition flex items-center gap-2">
-                                        {applying && <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full spinner" />}
+                                        className="flex-1 bg-dark border border-darkBorder rounded-lg px-3 py-2.5 text-sm outline-none focus:border-primary uppercase tracking-wider text-white placeholder-slate-500"
+                                    />
+                                    <button
+                                        onClick={handleApplyPromo}
+                                        disabled={isApplying}
+                                        className="bg-primary px-5 rounded-lg font-bold active:scale-95 transition flex items-center gap-2 text-white"
+                                    >
+                                        {isApplying && (
+                                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full spinner" />
+                                        )}
                                         OK
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Результат активации промокода */}
-                            {result && (
-                                <div className={`rounded-xl p-4 text-sm font-semibold fade-in ${
-                                    result.success
+                            {/* Результат активации */}
+                            {promoResult && (
+                                <div className={
+                                    'rounded-xl p-4 text-sm font-semibold animate-fade-in ' +
+                                    (promoResult.success
                                         ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                                        : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                                }`}>
-                                    {result.message || result.error}
+                                        : 'bg-red-500/20 text-red-400 border border-red-500/30')
+                                }>
+                                    {promoResult.message || promoResult.error}
                                 </div>
                             )}
 
-                            {/* Информация о преимуществах Premium */}
+                            {/* Преимущества Premium */}
                             <div className="bg-gradient-to-br from-orange-500/10 to-pink-500/10 rounded-xl p-4 border border-orange-500/20">
                                 <h3 className="font-bold text-orange-400 mb-2 flex items-center gap-2">
                                     <Icon name="crown" size={16} filled className="text-orange-400" /> Premium даёт
@@ -1527,7 +2288,7 @@
                                 </ul>
                             </div>
 
-                            {/* Тестовые промокоды (спойлер) */}
+                            {/* Тестовые коды */}
                             <details className="text-xs text-slate-600">
                                 <summary className="cursor-pointer">🔧 Тестовые коды</summary>
                                 <div className="mt-2 p-3 bg-darkCard rounded-lg">
@@ -1539,46 +2300,55 @@
                     )}
                 </div>
             );
-        };
+        }
 
 
-        // ==========================================
-        // 🔔 ACTIVITY PAGE (Уведомления)
-        // ==========================================
-        const ActivityPage = () => (
-            <div className="fade-in p-6 text-center mt-20">
-                <Icon name="heart" size={48} className="text-slate-700 mb-4 mx-auto" />
-                <p className="text-slate-500 text-lg font-semibold">Уведомления пусты</p>
-                <p className="text-slate-600 text-sm mt-2">Лайки и комментарии появятся здесь</p>
-            </div>
-        );
+        // ================================================================
+        // 🔔 СТРАНИЦА АКТИВНОСТИ (Уведомления)
+        // ================================================================
+        function ActivityPage() {
+            return (
+                <div className="animate-fade-in p-6 text-center mt-20">
+                    <Icon name="heart" size={48} className="text-slate-700 mb-4 mx-auto" />
+                    <p className="text-slate-500 text-lg font-semibold">Уведомления пусты</p>
+                    <p className="text-slate-600 text-sm mt-2">Лайки и комментарии появятся здесь</p>
+                </div>
+            );
+        }
 
 
-        // ==========================================
-        // 🧭 BOTTOM NAVIGATION BAR
+        // ================================================================
+        // 🧭 НИЖНЯЯ НАВИГАЦИЯ
         // 5 вкладок: Главная, Лента, Создать, Активность, Профиль
-        // ==========================================
-        const BottomNav = ({ active, setActive }) => {
-            const { profile } = useAuth();
+        // ================================================================
+        function BottomNav(props) {
+            var active = props.active;
+            var setActive = props.setActive;
+            var auth = useAuth();
+            var profile = auth.profile;
 
-            const tabs = [
+            var tabs = [
                 { id: 'home', label: 'Главная', icon: 'home' },
                 { id: 'feed', label: 'Лента', icon: 'play' },
                 { id: 'create', label: '', icon: 'plus' },
                 { id: 'activity', label: 'Активность', icon: 'heart' },
-                { id: 'profile', label: 'Профиль', icon: 'user' },
+                { id: 'profile', label: 'Профиль', icon: 'user' }
             ];
 
             return (
-                <nav className="fixed bottom-0 left-0 right-0 z-40 bg-dark/90 backdrop-blur-xl border-t border-darkBorder safe-bottom">
+                <nav className="fixed bottom-0 left-0 right-0 z-40 bg-dark/90 backdrop-blur-xl border-t border-darkBorder safe-area-bottom">
                     <div className="max-w-lg mx-auto flex items-center justify-around h-16">
-                        {tabs.map(tab => {
-                            const isActive = active === tab.id;
+                        {tabs.map(function(tab) {
+                            var isActive = (active === tab.id);
 
-                            // Кнопка создания — особый стиль
+                            // Особый стиль для кнопки создания
                             if (tab.id === 'create') {
                                 return (
-                                    <button key={tab.id} onClick={() => setActive('create')} className="mx-1">
+                                    <button
+                                        key={tab.id}
+                                        onClick={function() { setActive('create'); }}
+                                        className="mx-1"
+                                    >
                                         <div className="w-12 h-9 bg-primary rounded-lg flex items-center justify-center active:scale-90 transition shadow-lg shadow-primary/40">
                                             <Icon name="plus" size={22} className="text-white" />
                                         </div>
@@ -1588,12 +2358,24 @@
 
                             // Обычные вкладки
                             return (
-                                <button key={tab.id} onClick={() => setActive(tab.id)}
-                                    className={`flex flex-col items-center gap-0.5 py-1 px-2 transition ${isActive ? 'text-primary' : 'text-slate-500'}`}>
-                                    {tab.id === 'profile' && profile?.avatar_url
-                                        ? <Avatar src={profile.avatar_url} size={24} isPremium={profile.is_premium} showCheck={false} />
-                                        : <Icon name={tab.icon} filled={isActive} size={24} />
+                                <button
+                                    key={tab.id}
+                                    onClick={function() { setActive(tab.id); }}
+                                    className={
+                                        'flex flex-col items-center gap-0.5 py-1 px-2 transition ' +
+                                        (isActive ? 'text-primary' : 'text-slate-500')
                                     }
+                                >
+                                    {tab.id === 'profile' && profile && profile.avatar_url ? (
+                                        <Avatar
+                                            src={profile.avatar_url}
+                                            size={24}
+                                            isPremium={profile.is_premium}
+                                            showCheck={false}
+                                        />
+                                    ) : (
+                                        <Icon name={tab.icon} filled={isActive} size={24} />
+                                    )}
                                     <span className="text-[10px] font-medium">{tab.label}</span>
                                 </button>
                             );
@@ -1601,16 +2383,22 @@
                     </div>
                 </nav>
             );
-        };
+        }
 
 
-        // ==========================================
-        // 🚀 MAIN APP COMPONENT
+        // ================================================================
+        // 🚀 ГЛАВНЫЙ КОМПОНЕНТ ПРИЛОЖЕНИЯ
         // Роутинг между страницами, управление состоянием
-        // ==========================================
-        const AppContent = () => {
-            const { user, isGuest, loading } = useAuth();
-            const [tab, setTab] = useState('home');
+        // ================================================================
+        function AppContent() {
+            var auth = useAuth();
+            var user = auth.user;
+            var isGuest = auth.isGuest;
+            var loading = auth.loading;
+
+            var tabState = useState('home');
+            var activeTab = tabState[0];
+            var setActiveTab = tabState[1];
 
             // Экран загрузки (проверка сессии)
             if (loading) {
@@ -1621,13 +2409,26 @@
                 );
             }
 
-            // Если не авторизован и не гость — показываем экран входа
+            // Если Supabase не загрузился — показываем ошибку
+            if (!supabase) {
+                return (
+                    <div className="h-screen flex flex-col items-center justify-center bg-dark p-6 text-center">
+                        <Icon name="pulse" size={48} className="text-red-400 mb-4" />
+                        <h2 className="text-xl font-bold mb-2">Ошибка подключения</h2>
+                        <p className="text-slate-400 text-sm">
+                            Не удалось загрузить библиотеку Supabase. Проверь подключение к интернету и обнови страницу.
+                        </p>
+                    </div>
+                );
+            }
+
+            // Если не авторизован и не гость — экран входа
             if (!user && !isGuest) {
                 return <AuthScreen />;
             }
 
             // Карта страниц
-            const pages = {
+            var pages = {
                 home: HomePage,
                 feed: FeedPage,
                 create: CreatePage,
@@ -1635,46 +2436,47 @@
                 profile: ProfilePage
             };
 
-            const PageComponent = pages[tab] || HomePage;
-            const isFeedTab = tab === 'feed';
+            var PageComponent = pages[activeTab] || HomePage;
+            var isFeedTab = (activeTab === 'feed');
 
             return (
                 <div className="min-h-screen bg-dark">
                     {/* Header скрываем на вкладке Лента для иммерсивного просмотра */}
                     {!isFeedTab && <Header />}
 
-                    <main className={`${isFeedTab ? 'h-screen' : 'pb-16'} overflow-y-auto`}>
+                    <main className={(isFeedTab ? 'h-screen' : 'pb-16') + ' overflow-y-auto'}>
                         <PageComponent />
                     </main>
 
-                    <BottomNav active={tab} setActive={setTab} />
+                    <BottomNav active={activeTab} setActive={setActiveTab} />
                 </div>
             );
-        };
-
-        // Обёртка с AuthProvider
-        const App = () => (
-            <AuthProvider>
-                <AppContent />
-            </AuthProvider>
-        );
+        }
 
 
-        // ==========================================
-        // 🎯 РЕНДЕР ПРИЛОЖЕНИЯ С ОБРАБОТКОЙ ОШИБОК
-        // ==========================================
+        // ================================================================
+        // 🎯 ТОЧКА ВХОДА — РЕНДЕР ПРИЛОЖЕНИЯ
+        // ================================================================
+        function App() {
+            return (
+                <AuthProvider>
+                    <AppContent />
+                </AuthProvider>
+            );
+        }
+
+        // Безопасный рендер с обработкой ошибок
         try {
-            ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-        } catch (e) {
-            document.getElementById('root').innerHTML = `
-                <div style="color:white;padding:40px;text-align:center">
-                    <h2>❌ Ошибка запуска приложения</h2>
-                    <p style="color:#94a3b8;margin-top:10px">${e.message}</p>
-                    <p style="color:#64748b;margin-top:10px;font-size:12px">
-                        Открой консоль браузера (F12) для деталей
-                    </p>
-                </div>
-            `;
+            var rootElement = document.getElementById('root');
+            var root = ReactDOM.createRoot(rootElement);
+            root.render(<App />);
+        } catch (renderError) {
+            document.getElementById('root').innerHTML =
+                '<div style="color:white;padding:40px;text-align:center">' +
+                '<h2>❌ Ошибка запуска</h2>' +
+                '<p style="color:#94a3b8;margin-top:10px">' + renderError.message + '</p>' +
+                '<p style="color:#64748b;margin-top:10px;font-size:12px">Открой консоль (F12) для деталей</p>' +
+                '</div>';
         }
 
     </script>
