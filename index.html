@@ -2,206 +2,484 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Пульс</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ПУСЬ</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Supabase загружается ПЕРВЫМ, до Babel -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        tailwind.config={theme:{extend:{colors:{primary:'#6366f1',dark:'#0f172a',darkCard:'#1e293b',darkBorder:'#334155'}}}}
-    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-        *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:0;background:#0f172a;color:#fff;overflow-x:hidden}
-        ::-webkit-scrollbar{width:0;height:0}
-        .no-scrollbar{scrollbar-width:none}.no-scrollbar::-webkit-scrollbar{display:none}
-        @keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.animate-fade-in{animation:fadeInUp .3s ease-out forwards}
-        @keyframes pulseGlow{0%{box-shadow:0 0 0 0 rgba(99,102,241,.6)}70%{box-shadow:0 0 0 14px rgba(99,102,241,0)}100%{box-shadow:0 0 0 0 rgba(99,102,241,0)}}.pulse-glow{animation:pulseGlow 2s infinite}
-        @keyframes spinRotate{to{transform:rotate(360deg)}}.spinner{animation:spinRotate .7s linear infinite}
-        .ring-premium{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);padding:3px;border-radius:50%;box-shadow:0 0 14px rgba(220,39,67,.5)}
-        .ring-free{background:#3b82f6;padding:2px;border-radius:50%}
-        .badge-premium{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);box-shadow:0 0 10px rgba(220,39,67,.7)}
-        .tiktok-feed{scroll-snap-type:y mandatory;overflow-y:auto;-webkit-overflow-scrolling:touch}.tiktok-feed::-webkit-scrollbar{display:none}
-        .tiktok-item{scroll-snap-align:start;scroll-snap-stop:always}
-        .media-carousel{scroll-snap-type:x mandatory;overflow-x:auto;scrollbar-width:none}.media-carousel::-webkit-scrollbar{display:none}
-        .media-carousel-item{scroll-snap-align:center;flex-shrink:0;min-width:100%}
-        .safe-area-bottom{padding-bottom:env(safe-area-inset-bottom,0px)}
+        body {
+            background-color: #0f172a; /* Темно-синий */
+            color: #e2e8f0;
+            font-family: sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Premium Styles */
+        .premium-ring {
+            background: linear-gradient(45deg, #ff00cc, #333399, #00ccff);
+            padding: 2px;
+            border-radius: 50%;
+        }
+        
+        .neon-check {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            padding: 2px;
+            box-shadow: 0 0 8px rgba(255, 165, 0, 0.8);
+            border: 2px solid #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body>
-    <div id="root"><div style="color:white;display:flex;align-items:center;justify-content:center;height:100vh"><div style="text-align:center"><div style="width:40px;height:40px;border:3px solid #6366f1;border-top-color:transparent;border-radius:50%;animation:spinRotate .7s linear infinite;margin:0 auto 16px"></div><p style="color:#94a3b8">Загрузка Пульс...</p></div></div></div>
+    <div id="root"></div>
 
-    <!-- Сначала инициализируем Supabase в обычном скрипте (НЕ babel) -->
-    <script>
-        // Этот скрипт выполняется СРАЗУ после загрузки Supabase CDN
-        // Babel-скрипты выполняются ПОСЛЕ всех обычных скриптов
-        window.__SUPABASE_URL = 'https://rzahwdhsdvwojdklblbb.supabase.co';
-        window.__SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
-
-        // Проверяем что Supabase загрузился
-        if (typeof window.supabase !== 'undefined' && typeof window.supabase.createClient === 'function') {
-            window.__sb = window.supabase.createClient(window.__SUPABASE_URL, window.__SUPABASE_KEY);
-            console.log('✅ Supabase готов');
-        } else {
-            // Fallback: пробуем найти createClient
-            var found = false;
-            if (window.supabase) {
-                var keys = Object.keys(window.supabase);
-                for (var i = 0; i < keys.length; i++) {
-                    if (typeof window.supabase[keys[i]] === 'function' && keys[i].toLowerCase().indexOf('create') >= 0) {
-                        window.__sb = window.supabase[keys[i]](window.__SUPABASE_URL, window.__SUPABASE_KEY);
-                        found = true;
-                        console.log('✅ Supabase готов (fallback: ' + keys[i] + ')');
-                        break;
-                    }
-                }
-            }
-            if (!found) {
-                console.error('❌ Supabase не найден. Keys:', window.supabase ? Object.keys(window.supabase) : 'undefined');
-                window.__sb = null;
-            }
-        }
-    </script>
-
-    <!-- Теперь Babel-скрипт — он выполнится ПОСЛЕ обычного скрипта выше -->
     <script type="text/babel">
-        const { useState, useEffect, useRef, createContext, useContext, useCallback } = React;
+        const { useState, useEffect, useRef } = React;
 
-        // Берём уже готовый клиент из window.__sb
-        const supabase = window.__sb;
+        // --- БАЗА ДАННЫХ ---
+        const initDB = () => {
+            if (!localStorage.getItem('pussy_db_v3')) {
+                const codes = {};
+                for(let i=0; i<100; i++) codes['PROMO'+i] = { days: 30, used: false };
+                codes['GOD_MODE'] = { days: Infinity, used: false };
 
-        // ================================================================
-        // 🎨 ИКОНКИ
-        // ================================================================
-        function Icon({ name, size = 24, filled = false, className = '' }) {
-            const p = {
-                home: <><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>{!filled && <polyline points="9 22 9 12 15 12 15 22"/>}</>,
-                play: <polygon points="5 3 19 12 5 21 5 3"/>,
-                plus: <><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></>,
-                heart: <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>,
-                user: <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>,
-                search: <><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>,
-                comment: <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>,
-                share: <><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></>,
-                bookmark: <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>,
-                more: <><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></>,
-                x: <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>,
-                crown: <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>,
-                gift: <><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></>,
-                lock: <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>,
-                settings: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></>,
-                pulse: <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>,
-                edit: <><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></>,
-                grid: <><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></>,
-                camera: <><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></>,
-                trash: <><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></>,
-                check: <polyline points="20 6 9 17 4 12"/>,
-                logOut: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></>,
+                localStorage.setItem('pussy_db_v3', JSON.stringify({
+                    users: [],
+                    posts: [],
+                    stories: [],
+                    promoCodes: codes
+                }));
+            }
+        };
+        initDB();
+
+        const getDB = () => JSON.parse(localStorage.getItem('pussy_db_v3'));
+        const saveDB = (data) => localStorage.setItem('pussy_db_v3', JSON.stringify(data));
+
+        // SVG для "Голова и плечи" (Unknown User)
+        const DefaultAvatarSVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E`;
+
+        // --- КОМПОНЕНТЫ ---
+
+        const Icon = ({ name, size = 24, className }) => {
+            useEffect(() => lucide.createIcons(), [name]);
+            return <i data-lucide={name} width={size} height={size} className={className}></i>;
+        };
+
+        const Avatar = ({ url, isPremium, size = "w-10 h-10" }) => (
+            <div className={`relative ${isPremium ? 'premium-ring' : ''}`}>
+                <div className={`${size} rounded-full bg-slate-700 overflow-hidden border-2 border-[#0f172a]`}>
+                    <img 
+                        src={url || DefaultAvatarSVG} 
+                        className="w-full h-full object-cover" 
+                        onError={(e) => { e.target.src = DefaultAvatarSVG; }}
+                    />
+                </div>
+                {isPremium && (
+                    <div className="neon-check w-4 h-4">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" className="w-2.5 h-2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                )}
+            </div>
+        );
+
+        // --- ЭКРАН АВТОРИЗАЦИИ ---
+        const AuthScreen = ({ onLogin }) => {
+            const [mode, setMode] = useState('login'); // login, register, guest
+            const [username, setUsername] = useState('');
+            const [password, setPassword] = useState('');
+            const [useCustomAvatar, setUseCustomAvatar] = useState(false);
+            const [avatarFile, setAvatarFile] = useState(null);
+            const [error, setError] = useState('');
+
+            const handleRegister = () => {
+                const db = getDB();
+                if (!username || username.length < 3) return setError("Никнейм слишком короткий");
+                if (db.users.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+                    return setError("Этот никнейм уже занят!");
+                }
+
+                let finalAvatar = DefaultAvatarSVG;
+                
+                const finishReg = (av) => {
+                    const newUser = {
+                        id: Date.now().toString(),
+                        username, password,
+                        avatar: av,
+                        isPremium: false,
+                        premiumUntil: 0,
+                        postCountThisWeek: 0,
+                        lastReset: Date.now()
+                    };
+                    db.users.push(newUser);
+                    saveDB(db);
+                    onLogin(newUser);
+                };
+
+                if (useCustomAvatar && avatarFile) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => finishReg(e.target.result);
+                    reader.readAsDataURL(avatarFile);
+                } else {
+                    finishReg(finalAvatar);
+                }
             };
-            return <svg width={size} height={size} viewBox="0 0 24 24" fill={filled?'currentColor':'none'} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>{p[name]||null}</svg>;
-        }
 
-        // ================================================================
-        // 🔧 УТИЛИТЫ
-        // ================================================================
-        function compressImage(file, mw, q) { mw=mw||1080;q=q||0.7; return new Promise(function(res,rej){var r=new FileReader();r.onload=function(ev){var img=new Image();img.onload=function(){var c=document.createElement('canvas');var w=img.width,h=img.height;if(w>mw){h=Math.round(h*mw/w);w=mw;}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(function(b){b?res(b):rej(new Error('fail'))},'image/jpeg',q);};img.onerror=function(){rej(new Error('img fail'));};img.src=ev.target.result;};r.onerror=function(){rej(new Error('read fail'));};r.readAsDataURL(file);}); }
-        function getVideoDuration(file) { return new Promise(function(res){var v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=function(){URL.revokeObjectURL(v.src);res(v.duration);};v.onerror=function(){res(0);};v.src=URL.createObjectURL(file);}); }
-        function formatTimeAgo(d) { var diff=Date.now()-new Date(d).getTime(),m=Math.floor(diff/60000);if(m<1)return'только что';if(m<60)return m+' мин';var h=Math.floor(m/60);if(h<24)return h+' ч';return Math.floor(h/24)+' д'; }
-        function formatCount(n) { if(!n)return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n); }
+            const handleLogin = () => {
+                const db = getDB();
+                const user = db.users.find(u => u.username === username && u.password === password);
+                if (user) onLogin(user);
+                else setError("Неверный логин или пароль");
+            };
 
-        // ================================================================
-        // 🔐 AUTH CONTEXT
-        // ================================================================
-        var AuthContext = createContext(null);
-        function AuthProvider(props) {
-            var _u=useState(null),user=_u[0],setUser=_u[1]; var _p=useState(null),profile=_p[0],setProfile=_p[1]; var _g=useState(false),isGuest=_g[0],setIsGuest=_g[1]; var _l=useState(true),loading=_l[0],setLoading=_l[1];
-            var loadProfile=useCallback(async function(uid){if(!supabase)return;try{var r=await supabase.from('profiles').select('*').eq('id',uid).single();if(r.data)setProfile(r.data);}catch(e){console.error(e);}},[]);
-            useEffect(function(){if(!supabase){setLoading(false);return;}supabase.auth.getSession().then(function(res){var s=res.data?res.data.session:null;if(s&&s.user){setUser(s.user);loadProfile(s.user.id);}setLoading(false);}).catch(function(){setLoading(false);});var sub=supabase.auth.onAuthStateChange(function(_,session){if(session&&session.user){setUser(session.user);loadProfile(session.user.id);}else{setUser(null);setProfile(null);}});return function(){if(sub.data&&sub.data.subscription)sub.data.subscription.unsubscribe();};},[loadProfile]);
-            async function register(email,password,username,avatarFile){if(!supabase)throw new Error('Supabase не подключён');var r=await supabase.auth.signUp({email:email,password:password,options:{data:{username:username}}});if(r.error)throw r.error;if(avatarFile&&r.data&&r.data.user){try{var ext=avatarFile.name.split('.').pop()||'jpg';var path=r.data.user.id+'/avatar.'+ext;var blob=await compressImage(avatarFile,400,0.8);await supabase.storage.from('avatars').upload(path,blob,{upsert:true,contentType:'image/jpeg'});var url=supabase.storage.from('avatars').getPublicUrl(path).data.publicUrl;await supabase.from('profiles').update({avatar_url:url}).eq('id',r.data.user.id);}catch(e){console.error('avatar:',e);}}if(r.data&&r.data.user)await loadProfile(r.data.user.id);return r.data;}
-            async function login(email,password){if(!supabase)throw new Error('Supabase не подключён');var r=await supabase.auth.signInWithPassword({email:email,password:password});if(r.error)throw r.error;return r.data;}
-            async function logout(){if(supabase)await supabase.auth.signOut();setUser(null);setProfile(null);setIsGuest(false);}
-            function enterGuest(){setIsGuest(true);setUser(null);setProfile(null);}
-            var refreshProfile=useCallback(async function(){if(user)await loadProfile(user.id);},[user,loadProfile]);
-            return <AuthContext.Provider value={{user,profile,isGuest,loading,register,login,logout,guest:enterGuest,refreshProfile}}>{props.children}</AuthContext.Provider>;
-        }
-        function useAuth(){return useContext(AuthContext);}
+            return (
+                <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-slate-900">
+                    <h1 className="text-5xl font-black text-blue-500 mb-8 tracking-tighter">ПУСЬ</h1>
+                    <div className="w-full max-w-sm space-y-4">
+                        <input type="text" placeholder="Никнейм" value={username} onChange={e=>setUsername(e.target.value)} className="w-full p-3 bg-slate-800 rounded-xl border border-slate-700 focus:border-blue-500 outline-none text-white" />
+                        
+                        {mode !== 'guest' && (
+                            <input type="password" placeholder="Пароль" value={password} onChange={e=>setPassword(e.target.value)} className="w-full p-3 bg-slate-800 rounded-xl border border-slate-700 focus:border-blue-500 outline-none text-white" />
+                        )}
 
-        // ================================================================
-        // 🎨 AVATAR
-        // ================================================================
-        function Avatar(props){var src=props.src,sz=props.size||40,ip=props.isPremium,sc=props.showCheck!==undefined?props.showCheck:true,c=props.className||'';var ring=ip?'ring-premium':(src?'ring-free':'');return(<div className={'relative inline-block '+c}><div className={ring}><div className="bg-dark rounded-full overflow-hidden" style={{width:sz,height:sz}}>{src?<img src={src} className="w-full h-full object-cover" alt=""/>:<div className="w-full h-full flex items-center justify-center bg-darkCard"><Icon name="user" size={Math.round(sz*0.5)}/></div>}</div></div>{sc&&ip&&<div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full badge-premium flex items-center justify-center border-2 border-dark"><Icon name="check" size={12} className="text-white"/></div>}</div>);}
+                        {mode === 'register' && (
+                            <div className="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                                <p className="text-sm text-slate-400 mb-2">Аватарка:</p>
+                                <div className="flex space-x-2 mb-3">
+                                    <button 
+                                        onClick={() => setUseCustomAvatar(false)}
+                                        className={`flex-1 py-2 text-xs rounded-lg ${!useCustomAvatar ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}
+                                    >
+                                        Стандарт (Голова/Плечи)
+                                    </button>
+                                    <button 
+                                        onClick={() => setUseCustomAvatar(true)}
+                                        className={`flex-1 py-2 text-xs rounded-lg ${useCustomAvatar ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-300'}`}
+                                    >
+                                        Свое фото
+                                    </button>
+                                </div>
+                                
+                                {useCustomAvatar && (
+                                    <input 
+                                        type="file" 
+                                        accept="image/*" 
+                                        onChange={e => setAvatarFile(e.target.files[0])}
+                                        className="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-slate-700 file:text-blue-400 hover:file:bg-slate-600"
+                                    />
+                                )}
+                                
+                                {!useCustomAvatar && (
+                                    <div className="flex justify-center py-2">
+                                        <img src={DefaultAvatarSVG} className="w-12 h-12 opacity-50" />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
+                        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-        // ================================================================
-        // 🚪 AUTH SCREEN
-        // ================================================================
-        function AuthScreen(){var auth=useAuth();var ms=useState('welcome'),mode=ms[0],setMode=ms[1];var es=useState(''),email=es[0],setEmail=es[1];var ps=useState(''),pw=ps[0],setPw=ps[1];var us=useState(''),un=us[0],setUn=us[1];var afs=useState(null),af=afs[0],setAf=afs[1];var aps=useState(''),ap=aps[0],setAp=aps[1];var ers=useState(''),err=ers[0],setErr=ers[1];var bs=useState(false),busy=bs[0],setBusy=bs[1];var fr=useRef(null);
-        function onAvatar(e){var f=e.target.files&&e.target.files[0];if(!f)return;setAf(f);setAp(URL.createObjectURL(f));}
-        async function doReg(){setErr('');setBusy(true);try{await auth.register(email,pw,un,af);}catch(e){setErr(e.message||'Ошибка');}setBusy(false);}
-        async function doLogin(){setErr('');setBusy(true);try{await auth.login(email,pw);}catch(e){setErr(e.message||'Неверные данные');}setBusy(false);}
-        if(mode==='welcome')return(<div className="fixed inset-0 z-50 bg-dark flex flex-col items-center justify-center p-6 animate-fade-in"><div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-primary to-purple-500 flex items-center justify-center mb-6 pulse-glow"><Icon name="pulse" size={44} className="text-white"/></div><h1 className="text-4xl font-bold mb-1 bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">Пульс</h1><p className="text-slate-400 mb-12 text-sm">Твой ритм. Твои правила.</p><button onClick={function(){setMode('register');}} className="w-full max-w-xs bg-primary py-3.5 rounded-xl font-bold mb-3 active:scale-95 transition shadow-lg shadow-primary/30">Зарегистрироваться</button><button onClick={function(){setMode('login');}} className="w-full max-w-xs bg-darkCard border border-darkBorder py-3.5 rounded-xl font-semibold mb-3 active:scale-95 transition">Войти</button><button onClick={auth.guest} className="w-full max-w-xs text-slate-500 py-3 text-sm">Продолжить как гость</button></div>);
-        var isReg=mode==='register',canSubmit=email&&pw&&(!isReg||un);
-        return(<div className="fixed inset-0 z-50 bg-dark p-6 animate-fade-in overflow-y-auto"><button onClick={function(){setMode('welcome');setErr('');}} className="p-2 text-slate-400 mb-4"><Icon name="x"/></button><h2 className="text-2xl font-bold mb-6">{isReg?'Создай профиль':'Вход'}</h2>{isReg&&<div className="flex flex-col items-center mb-6"><div className="relative cursor-pointer" onClick={function(){if(fr.current)fr.current.click();}}>{ap?<img src={ap} className="w-24 h-24 rounded-full object-cover border-4 border-primary"/>:<div className="w-24 h-24 rounded-full bg-darkCard border-4 border-dashed border-darkBorder flex items-center justify-center"><Icon name="camera" size={32} className="text-slate-500"/></div>}<div className="absolute bottom-0 right-0 bg-primary p-1.5 rounded-full border-2 border-dark"><Icon name="edit" size={12}/></div></div><input ref={fr} type="file" accept="image/*" className="hidden" onChange={onAvatar}/><p className="text-xs text-slate-500 mt-2">Нажми для фото</p></div>}{isReg&&<input type="text" placeholder="Имя пользователя" value={un} onChange={function(e){setUn(e.target.value);}} className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-3 outline-none focus:border-primary transition text-white"/>}<input type="email" placeholder="Email" value={email} onChange={function(e){setEmail(e.target.value);}} className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-3 outline-none focus:border-primary transition text-white"/><input type="password" placeholder="Пароль" value={pw} onChange={function(e){setPw(e.target.value);}} className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-4 outline-none focus:border-primary transition text-white"/>{err&&<p className="text-red-400 text-sm mb-3 text-center">{err}</p>}<button disabled={busy||!canSubmit} onClick={isReg?doReg:doLogin} className={'w-full py-4 rounded-xl font-bold transition active:scale-95 flex items-center justify-center gap-2 '+(canSubmit&&!busy?'bg-primary text-white':'bg-darkCard text-slate-600')}>{busy&&<div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full spinner"/>}{isReg?'Создать аккаунт':'Войти'}</button><p className="text-center text-sm text-slate-500 mt-4">{isReg?'Уже есть аккаунт? ':'Нет аккаунта? '}<button onClick={function(){setMode(isReg?'login':'register');setErr('');}} className="text-primary font-semibold">{isReg?'Войти':'Зарегистрироваться'}</button></p></div>);}
+                        <button onClick={mode === 'register' ? handleRegister : handleLogin} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition">
+                            {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+                        </button>
+                        
+                        <div className="flex justify-between text-sm text-slate-400 mt-4">
+                            <button onClick={() => setMode(mode==='login'?'register':'login')} className="hover:text-white">
+                                {mode === 'login' ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}
+                            </button>
+                            <button onClick={() => setMode('guest')} className="hover:text-white">Гость</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
 
-        // ================================================================
-        // 🏠 HEADER
-        // ================================================================
-        function Header(){return(<header className="sticky top-0 z-40 bg-dark/90 backdrop-blur-xl border-b border-darkBorder"><div className="flex items-center justify-between px-4 h-14"><div className="flex items-center gap-2"><div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-purple-500 flex items-center justify-center"><Icon name="pulse" size={18} className="text-white"/></div><h1 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">Пульс</h1></div><div className="flex gap-1"><button className="p-2 rounded-full hover:bg-darkCard relative transition"><Icon name="heart" size={22}/><span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"/></button><button className="p-2 rounded-full hover:bg-darkCard transition"><Icon name="comment" size={22}/></button></div></div></header>);}
+        // --- ОСНОВНОЕ ПРИЛОЖЕНИЕ ---
+        const App = ({ user, onLogout }) => {
+            const [activeTab, setActiveTab] = useState('feed');
+            const [db, setDb] = useState(getDB());
+            const [searchQuery, setSearchQuery] = useState('');
+            
+            useEffect(() => {
+                const interval = setInterval(() => setDb(getDB()), 1000);
+                return () => clearInterval(interval);
+            }, []);
 
-        // ================================================================
-        // 🏠 HOME
-        // ================================================================
-        function HomePage(){var auth=useAuth(),user=auth.user,profile=auth.profile,rp=auth.refreshProfile;var qs=useState(''),q=qs[0],sq=qs[1];var ps=useState([]),posts=ps[0],sp=ps[1];var ss=useState([]),stories=ss[0],sst=ss[1];var as=useState(null),activeStory=as[0],sas=as[1];var ls=useState(true),ld=ls[0],sld=ls[1];var sr=useRef(null);
-        var fp=useCallback(async function(){if(!supabase)return;sld(true);try{var qy=supabase.from('posts').select('*,profiles(username,avatar_url,is_premium)').order('created_at',{ascending:false}).limit(50);if(q)qy=supabase.from('posts').select('*,profiles(username,avatar_url,is_premium)').or('caption.ilike.%'+q+'%').order('created_at',{ascending:false}).limit(50);var r=await qy;sp(r.data||[]);}catch(e){console.error(e);}sld(false);},[q]);
-        var fs=useCallback(async function(){if(!supabase)return;try{var c=new Date(Date.now()-86400000).toISOString();var r=await supabase.from('stories').select('*,profiles(username,avatar_url,is_premium)').gte('created_at',c).order('created_at',{ascending:false});sst(r.data||[]);}catch(e){console.error(e);}},[]);
-        useEffect(function(){fp();fs();},[fp,fs]);
-        async function onStory(e){var f=e.target.files&&e.target.files[0];if(!f||!user)return;try{var bl=await compressImage(f,1080,0.8);var path=user.id+'/story_'+Date.now()+'.jpg';var ur=await supabase.storage.from('posts').upload(path,bl,{contentType:'image/jpeg'});if(ur.error){alert('Ошибка');return;}var pu=supabase.storage.from('posts').getPublicUrl(path).data.publicUrl;await supabase.from('stories').insert({user_id:user.id,media_url:pu});fs();}catch(e){alert('Ошибка: '+e.message);}}
-        async function delPost(pid){if(!confirm('Удалить пост?'))return;try{await supabase.rpc('delete_post_and_restore',{p_post_id:pid});rp();fp();}catch(e){alert('Ошибка: '+e.message);}}
-        var ost=stories.filter(function(s){return !user||s.user_id!==user.id;});
-        return(<div className="animate-fade-in pb-20"><div className="px-4 py-3 sticky top-14 z-30 bg-dark/95 backdrop-blur-md"><div className="relative"><div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"><Icon name="search" size={18}/></div><input type="text" placeholder="Поиск..." value={q} onChange={function(e){sq(e.target.value);}} className="w-full bg-darkCard border border-darkBorder rounded-xl py-3 pl-10 pr-10 text-sm outline-none focus:border-primary transition placeholder-slate-500 text-white"/>{q&&<button onClick={function(){sq('');}} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"><Icon name="x" size={16}/></button>}</div></div><div className="px-4 py-3 border-b border-darkBorder"><div className="flex gap-4 overflow-x-auto no-scrollbar pb-1"><div className="flex flex-col items-center gap-1 min-w-[68px] cursor-pointer" onClick={function(){if(sr.current)sr.current.click();}}><div className="relative w-16 h-16 rounded-full bg-darkCard border-2 border-dashed border-darkBorder overflow-hidden">{profile&&profile.avatar_url?<img src={profile.avatar_url} className="w-full h-full object-cover opacity-60"/>:<div className="w-full h-full flex items-center justify-center"><Icon name="user" size={24} className="text-slate-600"/></div>}<div className="absolute -bottom-0.5 -right-0.5 w-6 h-6 bg-primary rounded-full flex items-center justify-center border-2 border-dark"><span className="text-white text-sm font-bold leading-none">+</span></div></div><input ref={sr} type="file" accept="image/*" className="hidden" onChange={onStory}/><span className="text-[11px] text-slate-400 w-16 text-center truncate">Ваша</span></div>{ost.map(function(s){var sp2=s.profiles;var sn=(sp2&&sp2.username?sp2.username:'user').split('_')[0];return <button key={s.id} onClick={function(){sas(s);}} className="flex flex-col items-center gap-1 min-w-[68px]"><Avatar src={sp2?sp2.avatar_url:null} size={60} isPremium={sp2?sp2.is_premium:false}/><span className="text-[11px] text-slate-300 w-16 text-center truncate">{sn}</span></button>;})}</div></div>{ld?<div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full spinner"/></div>:posts.length>0?posts.map(function(post){var pp=post.profiles;var own=user&&user.id===post.user_id;return(<article key={post.id} className="border-b border-darkBorder"><div className="flex items-center justify-between px-4 py-3"><div className="flex items-center gap-3"><Avatar src={pp?pp.avatar_url:null} size={36} isPremium={pp?pp.is_premium:false}/><div><div className="flex items-center gap-1"><p className="text-sm font-semibold">{pp?pp.username:'unknown'}</p>{pp&&pp.is_premium&&<span className="text-[10px] bg-gradient-to-r from-orange-500 to-pink-500 text-white px-1.5 rounded font-bold">PRO</span>}</div><p className="text-xs text-slate-500">{formatTimeAgo(post.created_at)} • {post.quality} • {post.fps} FPS</p></div></div>{own&&<button onClick={function(){delPost(post.id);}} className="text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition"><Icon name="trash" size={18}/></button>}</div><div className="relative bg-black">{post.media_items&&post.media_items.length===1?(post.media_items[0].type==='video'?<video src={post.media_items[0].url} controls playsInline className="w-full max-h-[500px] object-cover"/>:<img src={post.media_items[0].url} className="w-full object-cover max-h-[550px]" loading="lazy" alt=""/>):<div className="relative"><div className="media-carousel flex">{(post.media_items||[]).map(function(it,i){return <div key={i} className="media-carousel-item">{it.type==='video'?<video src={it.url} controls playsInline className="w-full max-h-[500px] object-cover"/>:<img src={it.url} className="w-full object-cover max-h-[550px]" loading="lazy" alt=""/>}</div>})}</div><div className="absolute bottom-3 right-3 bg-black/60 px-2 py-1 rounded-full text-xs font-bold backdrop-blur-sm">{post.media_items.length} медиа</div></div>}</div><div className="flex items-center gap-4 px-4 py-3"><button className="active:scale-125 transition"><Icon name="heart"/></button><button><Icon name="comment"/></button><button><Icon name="share"/></button><div className="flex-1"/><button><Icon name="bookmark"/></button></div><div className="px-4 pb-4"><p className="text-sm"><span className="font-semibold mr-2">{pp?pp.username:'unknown'}</span><span className="text-slate-300">{post.caption}</span></p></div></article>);}):<div className="flex flex-col items-center justify-center py-20 px-6 text-center"><Icon name="pulse" size={48} className="text-slate-700 mb-4"/><p className="text-slate-500 text-lg font-semibold mb-2">Лента пуста</p><p className="text-slate-600 text-sm">Нажми «+» и выложи первый пост!</p></div>}{activeStory&&<div className="fixed inset-0 z-[100] bg-black flex items-center justify-center" onClick={function(){sas(null);}}><div className="relative w-full max-w-md h-full" onClick={function(e){e.stopPropagation();}}><div className="absolute top-6 left-3 right-3 z-10 flex items-center justify-between"><div className="flex items-center gap-2"><Avatar src={activeStory.profiles?activeStory.profiles.avatar_url:null} size={32} isPremium={activeStory.profiles?activeStory.profiles.is_premium:false}/><span className="text-sm font-semibold">{activeStory.profiles?activeStory.profiles.username:''}</span></div><button onClick={function(){sas(null);}}><Icon name="x"/></button></div><img src={activeStory.media_url} className="w-full h-full object-contain" alt=""/></div></div>}</div>);}
+            const currentUser = db.users.find(u => u.id === user.id) || user;
+            const isPremium = currentUser.isPremium || (currentUser.premiumUntil && currentUser.premiumUntil > Date.now());
 
-        // ================================================================
-        // 🎬 FEED
-        // ================================================================
-        function FeedPage(){var vs=useState([]),videos=vs[0],sv=vs[1];var ais=useState(0),ai=ais[0],sai=ais[1];var ls=useState(true),ld=ls[0],sld=ls[1];var cr=useRef(null);
-        useEffect(function(){async function load(){if(!supabase){sld(false);return;}try{var r=await supabase.from('posts').select('*,profiles(username,avatar_url,is_premium)').order('created_at',{ascending:false}).limit(30);sv((r.data||[]).filter(function(p){return p.media_items&&p.media_items.some(function(m){return m.type==='video';});}));}catch(e){console.error(e);}sld(false);}load();},[]);
-        useEffect(function(){if(!videos.length||!cr.current)return;var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)sai(Number(e.target.getAttribute('data-idx')));});},{threshold:0.6,root:cr.current});cr.current.querySelectorAll('.tiktok-item').forEach(function(el){obs.observe(el);});return function(){obs.disconnect();};},[videos]);
-        if(ld)return<div className="h-full flex justify-center items-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full spinner"/></div>;
-        if(!videos.length)return<div className="h-full flex flex-col items-center justify-center p-6 text-center animate-fade-in"><Icon name="play" size={48} className="text-slate-700 mb-4"/><p className="text-slate-500 text-lg font-semibold">Видео пока нет</p></div>;
-        return(<div ref={cr} className="tiktok-feed h-full">{videos.map(function(v,i){var fv=null;if(v.media_items)for(var j=0;j<v.media_items.length;j++)if(v.media_items[j].type==='video'){fv=v.media_items[j];break;}var vp=v.profiles;return(<div key={v.id} data-idx={i} className="tiktok-item relative bg-black" style={{height:'calc(100dvh - 64px)'}}><video src={fv?fv.url:''} loop playsInline muted ref={function(el){if(el&&i===ai)el.play().catch(function(){});if(el&&i!==ai)el.pause();}} className="w-full h-full object-cover"/><div className="absolute top-4 right-4 bg-black/50 px-2 py-1 rounded text-xs font-bold backdrop-blur-sm">{v.fps} FPS • {v.quality}</div><div className="absolute bottom-6 left-4 right-16 z-10"><div className="flex items-center gap-2 mb-2"><Avatar src={vp?vp.avatar_url:null} size={32} isPremium={vp?vp.is_premium:false}/><span className="font-bold text-sm">@{vp?vp.username:'unknown'}</span></div><p className="text-sm text-white/90 leading-snug">{v.caption}</p></div><div className="absolute right-3 bottom-8 flex flex-col items-center gap-5 z-10"><button className="flex flex-col items-center"><div className="p-3 rounded-full bg-black/30 backdrop-blur-sm"><Icon name="heart"/></div><span className="text-xs mt-1">{formatCount(v.likes_count)}</span></button><button className="flex flex-col items-center"><div className="p-3 rounded-full bg-black/30 backdrop-blur-sm"><Icon name="comment"/></div><span className="text-xs mt-1">{formatCount(v.comments_count)}</span></button><button><div className="p-3 rounded-full bg-black/30 backdrop-blur-sm"><Icon name="share"/></div></button></div></div>);})}</div>);}
+            // --- СОЗДАНИЕ ПОСТА ---
+            const handleCreatePost = (text, file) => {
+                if (user.id === 'guest') return alert("Гости не могут постить");
+                
+                const limit = isPremium ? 4 : 2;
+                if (currentUser.postCountThisWeek >= limit) {
+                    return alert(`Лимит постов исчерпан! (${limit}/неделю)`);
+                }
 
-        // ================================================================
-        // ➕ CREATE
-        // ================================================================
-        function CreatePage(){var auth=useAuth(),user=auth.user,profile=auth.profile,rp=auth.refreshProfile;var its=useState([]),items=its[0],si=its[1];var cs=useState(''),cap=cs[0],sc=cs[1];var sts=useState(null),status=sts[0],ss2=sts[1];var lis=useState(null),li=lis[0],sli=lis[1];var ups=useState(false),up=ups[0],sup2=ups[1];var fr=useRef(null);
-        if(!user)return<div className="h-full flex flex-col items-center justify-center p-6 text-center animate-fade-in"><Icon name="lock" size={40} className="text-slate-600 mb-4"/><h2 className="text-xl font-bold mb-2">Нужен аккаунт</h2></div>;
-        async function onFiles(e){var files=e.target.files?Array.from(e.target.files):[];if(!files.length)return;if(items.length+files.length>4){alert('Максимум 4 объекта!');return;}var ni=[];for(var i=0;i<files.length;i++){var f=files[i];if(f.type.startsWith('video/')){var d=await getVideoDuration(f);if(d>60){alert('Видео > 60 сек!');continue;}ni.push({type:'video',file:f,preview:URL.createObjectURL(f)});}else{try{var b=await compressImage(f,1080,0.7);ni.push({type:'photo',file:b,preview:URL.createObjectURL(b)});}catch(err){ni.push({type:'photo',file:f,preview:URL.createObjectURL(f)});}}}si(function(prev){return prev.concat(ni);});}
-        function rm(idx){si(function(p){return p.filter(function(_,i){return i!==idx;});});}
-        async function pub(){if(!items.length)return;await rp();var pr;try{pr=await supabase.from('profiles').select('*').eq('id',user.id).single();}catch(e){ss2('err');setTimeout(function(){ss2(null);},3000);return;}var fp2=pr.data;if(!fp2){ss2('err');setTimeout(function(){ss2(null);},3000);return;}var now=Date.now(),ptw=fp2.posts_this_week||0;if(now>new Date(fp2.week_reset).getTime())ptw=0;var lm=fp2.is_premium?6:2;if(ptw>=lm){sli({limit:lm,used:ptw,isPremium:fp2.is_premium});ss2('limit');return;}sup2(true);try{var ul=[];for(var i=0;i<items.length;i++){var it=items[i],ext=it.type==='video'?'mp4':'jpg';var path=user.id+'/'+Date.now()+'_'+Math.random().toString(36).slice(2)+'.'+ext;var ur=await supabase.storage.from('posts').upload(path,it.file,{contentType:it.type==='video'?'video/mp4':'image/jpeg'});if(ur.error)throw ur.error;ul.push({type:it.type,url:supabase.storage.from('posts').getPublicUrl(path).data.publicUrl});}var ir=await supabase.from('posts').insert({user_id:user.id,media_items:ul,caption:cap,fps:fp2.is_premium?60:30,quality:fp2.is_premium?'HD':'SD'});if(ir.error)throw ir.error;rp();sc('');si([]);ss2('ok');setTimeout(function(){ss2(null);},2000);}catch(e){console.error(e);ss2('err');setTimeout(function(){ss2(null);},3000);}sup2(false);}
-        var clm=profile?(profile.is_premium?6:2):2,cu=profile?(profile.posts_this_week||0):0;
-        return(<div className="p-5 animate-fade-in pb-24"><h2 className="text-2xl font-bold mb-5">Новый пост</h2><div className="bg-darkCard rounded-xl p-4 border border-darkBorder mb-5"><div className="flex justify-between mb-2"><span className="text-sm text-slate-400">Лимит недели</span><span className={'text-sm font-bold '+(profile&&profile.is_premium?'text-yellow-400':'')}>{cu}/{clm}</span></div><div className="w-full h-2 bg-darkBorder rounded-full overflow-hidden"><div className={'h-full transition-all '+(profile&&profile.is_premium?'bg-yellow-400':'bg-primary')} style={{width:Math.min((cu/clm)*100,100)+'%'}}/></div><p className="text-xs text-slate-500 mt-2">{profile&&profile.is_premium?'👑 Premium: до 6 постов, 60 FPS, HD':'Free: 2 поста, 30 FPS, SD'}</p></div>{items.length>0&&<div className="mb-5"><div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">{items.map(function(it,i){return <div key={i} className="relative min-w-[100px] h-[100px] rounded-xl overflow-hidden border border-darkBorder">{it.type==='video'?<video src={it.preview} className="w-full h-full object-cover"/>:<img src={it.preview} className="w-full h-full object-cover" alt=""/>}<button onClick={function(){rm(i);}} className="absolute top-1 right-1 bg-black/70 rounded-full p-1"><Icon name="x" size={12}/></button><div className="absolute bottom-1 left-1 bg-black/60 px-1.5 rounded text-[10px] font-bold uppercase">{it.type==='video'?'VID':'IMG'}</div></div>;})}{items.length<4&&<button onClick={function(){if(fr.current)fr.current.click();}} className="min-w-[100px] h-[100px] rounded-xl border-2 border-dashed border-darkBorder flex items-center justify-center hover:border-primary transition"><Icon name="plus" size={24} className="text-slate-500"/></button>}</div><p className="text-xs text-slate-500 mt-1">{items.length}/4 • Видео макс. 60 сек</p></div>}{items.length===0&&<button onClick={function(){if(fr.current)fr.current.click();}} className="w-full aspect-video bg-darkCard border-2 border-dashed border-darkBorder rounded-2xl flex flex-col items-center justify-center gap-3 mb-5 hover:border-primary transition active:scale-95"><Icon name="camera" size={40} className="text-slate-500"/><p className="text-slate-400 font-semibold">Выбрать фото или видео</p><p className="text-xs text-slate-600">До 4 объектов • Видео до 60 сек</p></button>}<input ref={fr} type="file" accept="image/*,video/*" multiple className="hidden" onChange={onFiles}/><textarea value={cap} onChange={function(e){sc(e.target.value);}} placeholder="Описание..." rows={3} className="w-full bg-darkCard border border-darkBorder rounded-xl p-4 outline-none focus:border-primary resize-none mb-4 text-white placeholder-slate-500"/><button onClick={pub} disabled={!items.length||up} className={'w-full py-4 rounded-xl font-bold active:scale-95 transition flex items-center justify-center gap-2 '+(items.length&&!up?'bg-primary text-white':'bg-darkCard text-slate-600')}>{up&&<div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full spinner"/>}{up?'Загрузка...':'Опубликовать'}</button>{status==='limit'&&<div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-6"><div className="bg-darkCard border border-darkBorder rounded-2xl p-6 max-w-sm w-full text-center"><div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4"><Icon name="lock" size={28} className="text-red-400"/></div><h3 className="text-xl font-bold mb-2">Лимит исчерпан</h3><p className="text-slate-400 text-sm mb-4">Free: {li.limit}/нед • Premium: 6/нед</p><button onClick={function(){ss2(null);}} className="w-full bg-darkBorder py-3 rounded-xl font-semibold">Позже</button></div></div>}{status==='ok'&&<div className="fixed top-20 left-1/2 -translate-x-1/2 bg-green-500 px-6 py-3 rounded-full font-semibold shadow-lg z-50 animate-fade-in">✅ Опубликовано!</div>}{status==='err'&&<div className="fixed top-20 left-1/2 -translate-x-1/2 bg-red-500 px-6 py-3 rounded-full font-semibold shadow-lg z-50 animate-fade-in">❌ Ошибка</div>}</div>);}
+                if (!file) return alert("Выберите фото!");
 
-        // ================================================================
-        // 👤 PROFILE
-        // ================================================================
-        function ProfilePage(){var auth=useAuth(),user=auth.user,profile=auth.profile,rp=auth.refreshProfile,logout=auth.logout;var ts=useState('posts'),tab=ts[0],st=ts[1];var cds=useState(''),cd=cds[0],scd=cds[1];var rs=useState(null),res=rs[0],sres=rs[1];var mps=useState([]),mp=mps[0],smp=mps[1];var aps=useState(false),aply=aps[0],saply=aps[1];
-        useEffect(function(){if(!user||!supabase)return;supabase.from('posts').select('*').eq('user_id',user.id).order('created_at',{ascending:false}).then(function(r){smp(r.data||[]);});},[user,tab]);
-        if(!user)return<div className="h-full flex items-center justify-center text-slate-500 animate-fade-in"><div className="text-center"><Icon name="user" size={48} className="mb-3 mx-auto"/><p>Профиль только с аккаунтом</p></div></div>;
-        async function applyPromo(){if(!cd.trim())return;saply(true);try{var r=await supabase.rpc('activate_promo',{p_code:cd.trim().toUpperCase()});var d=r.data||{success:false,error:r.error?r.error.message:'Ошибка'};sres(d);if(d.success){rp();scd('');}}catch(e){sres({success:false,error:e.message});}saply(false);setTimeout(function(){sres(null);},3000);}
-        async function delPost(pid){if(!confirm('Удалить?'))return;try{await supabase.rpc('delete_post_and_restore',{p_post_id:pid});rp();smp(function(p){return p.filter(function(x){return x.id!==pid;});});}catch(e){console.error(e);}}
-        return(<div className="animate-fade-in pb-24"><div className="px-5 py-4 flex items-center justify-between border-b border-darkBorder"><h2 className="text-lg font-bold">@{profile?profile.username:'...'}</h2><div className="flex gap-1"><button className="p-2 text-slate-400"><Icon name="settings"/></button><button onClick={logout} className="p-2 text-slate-400 hover:text-red-400 transition"><Icon name="logOut" size={20}/></button></div></div><div className="px-5 py-5 flex items-center gap-5"><Avatar src={profile?profile.avatar_url:null} size={80} isPremium={profile?profile.is_premium:false}/><div className="flex-1"><div className="flex items-center gap-2 flex-wrap"><h3 className="font-bold text-lg">{profile?profile.username:'...'}</h3>{profile&&profile.is_premium&&<span className="bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-[0_0_10px_rgba(234,88,12,0.5)]"><Icon name="crown" size={10} filled/> PREMIUM</span>}</div><p className="text-sm text-slate-400 mt-1">Постов: {mp.length} • {profile&&profile.is_premium?'60 FPS • HD':'30 FPS • SD'}</p></div></div><div className="px-5 pb-4"><button className="w-full py-2.5 bg-darkCard border border-darkBorder rounded-lg text-sm font-semibold flex items-center justify-center gap-2"><Icon name="edit" size={14}/> Редактировать</button></div><div className="flex border-b border-darkBorder"><button onClick={function(){st('posts');}} className={'flex-1 py-3 flex justify-center relative '+(tab==='posts'?'text-white':'text-slate-500')}><Icon name="grid"/>{tab==='posts'&&<div className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-white rounded-full"/>}</button><button onClick={function(){st('promo');}} className={'flex-1 py-3 flex justify-center relative '+(tab==='promo'?'text-yellow-400':'text-slate-500')}><Icon name="gift"/>{tab==='promo'&&<div className="absolute bottom-0 left-1/4 right-1/4 h-0.5 bg-yellow-400 rounded-full"/>}</button></div>{tab==='posts'?<div className="grid grid-cols-3 gap-0.5 p-0.5">{mp.length?mp.map(function(p){var fm=p.media_items&&p.media_items[0];var mc=p.media_items?p.media_items.length:0;return <div key={p.id} className="aspect-square bg-darkCard overflow-hidden relative group cursor-pointer">{fm&&fm.type==='video'?<video src={fm.url} className="w-full h-full object-cover"/>:<img src={fm?fm.url:''} className="w-full h-full object-cover" alt=""/>}{mc>1&&<div className="absolute top-1 right-1 bg-black/60 px-1.5 rounded text-[10px] font-bold">{mc}</div>}<button onClick={function(){delPost(p.id);}} className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"><Icon name="trash" className="text-red-400"/></button></div>;}) : <div className="col-span-3 py-12 text-center text-slate-500">Нет постов</div>}</div>:<div className="p-5 space-y-4"><div className="bg-darkCard rounded-xl p-4 border border-darkBorder"><h3 className="font-bold mb-3 flex items-center gap-2"><Icon name="gift" size={18} className="text-primary"/> Активировать код</h3><div className="flex gap-2"><input value={cd} onChange={function(e){scd(e.target.value.toUpperCase());}} placeholder="ВВЕДИ КОД" className="flex-1 bg-dark border border-darkBorder rounded-lg px-3 py-2.5 text-sm outline-none focus:border-primary uppercase tracking-wider text-white placeholder-slate-500"/><button onClick={applyPromo} disabled={aply} className="bg-primary px-5 rounded-lg font-bold active:scale-95 transition flex items-center gap-2 text-white">{aply&&<div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full spinner"/>}OK</button></div></div>{res&&<div className={'rounded-xl p-4 text-sm font-semibold animate-fade-in '+(res.success?'bg-green-500/20 text-green-400 border border-green-500/30':'bg-red-500/20 text-red-400 border border-red-500/30')}>{res.message||res.error}</div>}<div className="bg-gradient-to-br from-orange-500/10 to-pink-500/10 rounded-xl p-4 border border-orange-500/20"><h3 className="font-bold text-orange-400 mb-2 flex items-center gap-2"><Icon name="crown" size={16} filled className="text-orange-400"/> Premium даёт</h3><ul className="text-sm text-slate-300 space-y-1.5"><li>• 6 постов в неделю (вместо 2)</li><li>• 60 FPS и HD качество</li><li>• Неоновая галочка и обводка</li></ul></div><details className="text-xs text-slate-600"><summary className="cursor-pointer">🔧 Тестовые коды</summary><div className="mt-2 p-3 bg-darkCard rounded-lg"><p className="text-yellow-400 font-bold">PULSE-GOD — навсегда</p><p>PULSE-001 ... PULSE-100 — на месяц</p></div></details></div>}</div>);}
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const db = getDB();
+                    const newPost = {
+                        id: Date.now(),
+                        authorId: user.id,
+                        authorName: user.username,
+                        authorAvatar: user.avatar,
+                        authorIsPremium: isPremium,
+                        text: text,
+                        image: e.target.result,
+                        likes: 0,
+                        createdAt: Date.now()
+                    };
+                    
+                    const userIdx = db.users.findIndex(u => u.id === user.id);
+                    db.users[userIdx].postCountThisWeek += 1;
+                    
+                    db.posts.unshift(newPost);
+                    saveDB(db);
+                    setActiveTab('feed');
+                };
+                reader.readAsDataURL(file);
+            };
 
-        // ================================================================
-        // 🔔 ACTIVITY + 🧭 NAV +  APP
-        // ================================================================
-        function ActivityPage(){return<div className="animate-fade-in p-6 text-center mt-20"><Icon name="heart" size={48} className="text-slate-700 mb-4 mx-auto"/><p className="text-slate-500 text-lg font-semibold">Уведомления пусты</p></div>;}
-        function BottomNav(props){var active=props.active,setActive=props.setActive,profile=useAuth().profile;var tabs=[{id:'home',l:'Главная',i:'home'},{id:'feed',l:'Лента',i:'play'},{id:'create',l:'',i:'plus'},{id:'activity',l:'Активность',i:'heart'},{id:'profile',l:'Профиль',i:'user'}];return(<nav className="fixed bottom-0 left-0 right-0 z-40 bg-dark/90 backdrop-blur-xl border-t border-darkBorder safe-area-bottom"><div className="max-w-lg mx-auto flex items-center justify-around h-16">{tabs.map(function(t){var ia=active===t.id;if(t.id==='create')return<button key={t.id} onClick={function(){setActive('create');}} className="mx-1"><div className="w-12 h-9 bg-primary rounded-lg flex items-center justify-center active:scale-90 transition shadow-lg shadow-primary/40"><Icon name="plus" size={22} className="text-white"/></div></button>;return<button key={t.id} onClick={function(){setActive(t.id);}} className={'flex flex-col items-center gap-0.5 py-1 px-2 transition '+(ia?'text-primary':'text-slate-500')}>{t.id==='profile'&&profile&&profile.avatar_url?<Avatar src={profile.avatar_url} size={24} isPremium={profile.is_premium} showCheck={false}/>:<Icon name={t.i} filled={ia} size={24}/>}<span className="text-[10px] font-medium">{t.l}</span></button>;})}</div></nav>);}
-        function AppContent(){var auth=useAuth(),user=auth.user,isGuest=auth.isGuest,loading=auth.loading;var ts=useState('home'),tab=ts[0],setTab=ts[1];if(loading)return<div className="h-screen flex items-center justify-center bg-dark"><div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full spinner"/></div>;if(!supabase)return<div className="h-screen flex flex-col items-center justify-center bg-dark p-6 text-center"><Icon name="pulse" size={48} className="text-red-400 mb-4"/><h2 className="text-xl font-bold mb-2">Ошибка подключения</h2><p className="text-slate-400 text-sm">Supabase не загрузился. Проверь интернет и обнови страницу (Ctrl+Shift+R).</p></div>;if(!user&&!isGuest)return<AuthScreen/>;var pages={home:HomePage,feed:FeedPage,create:CreatePage,activity:ActivityPage,profile:ProfilePage};var Page=pages[tab]||HomePage,isFeed=tab==='feed';return<div className="min-h-screen bg-dark">{!isFeed&&<Header/>}<main className={(isFeed?'h-screen':'pb-16')+' overflow-y-auto'}><Page/></main><BottomNav active={tab} setActive={setTab}/></div>;}
-        function App(){return<AuthProvider><AppContent/></AuthProvider>;}
+            // --- ПРОМОКОДЫ ---
+            const applyPromo = (code) => {
+                const db = getDB();
+                const promo = db.promoCodes[code];
+                if (!promo) return alert("Неверный код");
+                if (promo.used) return alert("Код использован");
 
-        try{ReactDOM.createRoot(document.getElementById('root')).render(<App/>);}catch(e){document.getElementById('root').innerHTML='<div style="color:white;padding:40px;text-align:center"><h2>❌ Ошибка</h2><p style="color:#94a3b8;margin-top:10px">'+e.message+'</p></div>';}
+                const days = promo.days;
+                const until = days === Infinity ? Infinity : Date.now() + (days * 24 * 60 * 60 * 1000);
+                
+                const userIdx = db.users.findIndex(u => u.id === user.id);
+                db.users[userIdx].isPremium = true;
+                db.users[userIdx].premiumUntil = until;
+                
+                promo.used = true;
+                saveDB(db);
+                alert(`Премиум активирован!`);
+            };
+
+            // --- ВКЛАДКИ ---
+
+            const FeedTab = () => {
+                const filteredPosts = db.posts.filter(p => 
+                    p.text.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                    p.authorName.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+
+                return (
+                    <div className="pb-20">
+                        {/* Поиск сверху */}
+                        <div className="sticky top-0 z-30 bg-[#0f172a]/95 backdrop-blur p-4 border-b border-slate-800">
+                            <div className="relative">
+                                <Icon name="search" className="absolute left-3 top-2.5 text-slate-500" size={18} />
+                                <input 
+                                    type="text" 
+                                    placeholder="Поиск..." 
+                                    value={searchQuery}
+                                    onChange={e => setSearchQuery(e.target.value)}
+                                    className="w-full bg-slate-800 text-white pl-10 pr-4 py-2 rounded-xl border border-slate-700 focus:border-blue-500 outline-none"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Истории */}
+                        {!searchQuery && (
+                            <div className="py-4 border-b border-slate-800">
+                                <div className="flex space-x-4 overflow-x-auto no-scrollbar px-4">
+                                    <div className="flex flex-col items-center space-y-1 min-w-[70px]">
+                                        <div className="w-16 h-16 rounded-full border-2 border-dashed border-slate-600 flex items-center justify-center bg-slate-800">
+                                            <Icon name="plus" className="text-slate-400" />
+                                        </div>
+                                        <span className="text-xs text-slate-400">История</span>
+                                    </div>
+                                    {db.stories.map(s => (
+                                        <div key={s.id} className="flex flex-col items-center space-y-1 min-w-[70px]">
+                                            <Avatar url={s.avatar} isPremium={s.isPremium} size="w-16 h-16" />
+                                            <span className="text-xs text-slate-300 truncate w-16 text-center">{s.username}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Посты */}
+                        <div className="space-y-4 mt-2">
+                            {filteredPosts.map(post => (
+                                <div key={post.id} className="bg-slate-900 border-b border-slate-800 pb-4">
+                                    <div className="flex items-center p-3 space-x-3">
+                                        <Avatar url={post.authorAvatar} isPremium={post.authorIsPremium} />
+                                        <div>
+                                            <p className="font-bold text-sm text-white">{post.authorName}</p>
+                                            <p className="text-xs text-slate-500">Только что</p>
+                                        </div>
+                                    </div>
+                                    {post.image && <img src={post.image} className="w-full aspect-square object-cover bg-slate-800" />}
+                                    <div className="px-3 pt-3">
+                                        <div className="flex space-x-4 mb-2">
+                                            <Icon name="heart" className="text-white" />
+                                            <Icon name="message-circle" className="text-white" />
+                                        </div>
+                                        <p className="text-sm text-slate-300"><span className="font-bold text-white mr-2">{post.authorName}</span>{post.text}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            const SearchTab = () => (
+                <div className="p-4 pb-24">
+                    <h2 className="text-2xl font-bold mb-4">Поиск</h2>
+                    <input type="text" placeholder="Найти друзей..." className="w-full bg-slate-800 p-3 rounded-xl border border-slate-700 text-white outline-none mb-4" />
+                    <p className="text-slate-500 text-center">Здесь будет поиск людей</p>
+                </div>
+            );
+
+            const CreateTab = () => {
+                const [text, setText] = useState('');
+                const [file, setFile] = useState(null);
+                const [preview, setPreview] = useState(null);
+
+                const handleFile = (e) => {
+                    const f = e.target.files[0];
+                    if (f) {
+                        setFile(f);
+                        setPreview(URL.createObjectURL(f));
+                    }
+                };
+
+                return (
+                    <div className="p-4 pb-24 min-h-screen">
+                        <h2 className="text-xl font-bold mb-6">Новый пост</h2>
+                        <textarea 
+                            placeholder="Описание..." 
+                            className="w-full bg-slate-800 p-3 rounded-xl border border-slate-700 text-white outline-none mb-4 h-32 resize-none"
+                            value={text}
+                            onChange={e => setText(e.target.value)}
+                        />
+                        <div className="mb-6">
+                            {!preview ? (
+                                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-600 rounded-xl cursor-pointer hover:bg-slate-800 transition">
+                                    <Icon name="image" size={32} className="text-slate-500 mb-2" />
+                                    <span className="text-slate-400 text-sm">Выбрать фото</span>
+                                    <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
+                                </label>
+                            ) : (
+                                <div className="relative w-full h-64 rounded-xl overflow-hidden">
+                                    <img src={preview} className="w-full h-full object-cover" />
+                                    <button onClick={() => {setFile(null); setPreview(null)}} className="absolute top-2 right-2 bg-red-500 p-1 rounded-full"><Icon name="x" size={16} /></button>
+                                </div>
+                            )}
+                        </div>
+                        <button 
+                            onClick={() => text && file && handleCreatePost(text, file)}
+                            disabled={!text || !file}
+                            className="w-full bg-blue-600 disabled:bg-slate-700 text-white font-bold py-3 rounded-xl"
+                        >
+                            Опубликовать
+                        </button>
+                    </div>
+                );
+            };
+
+            const ProfileTab = () => {
+                const [promo, setPromo] = useState('');
+                const myPosts = db.posts.filter(p => p.authorId === user.id);
+                return (
+                    <div className="pb-24">
+                        <div className="p-6 flex flex-col items-center border-b border-slate-800">
+                            <Avatar url={user.avatar} isPremium={isPremium} size="w-24 h-24" />
+                            <h2 className="text-2xl font-bold mt-4">{user.username}</h2>
+                            {isPremium && <span className="text-yellow-500 text-sm font-bold mt-1">PREMIUM</span>}
+                        </div>
+                        {!isPremium && (
+                            <div className="p-4 m-4 bg-slate-800 rounded-xl">
+                                <div className="flex space-x-2">
+                                    <input type="text" placeholder="Промокод" className="flex-1 bg-slate-900 p-2 rounded text-sm text-white" value={promo} onChange={e=>setPromo(e.target.value)} />
+                                    <button onClick={()=>applyPromo(promo)} className="bg-blue-600 px-4 rounded text-sm font-bold">OK</button>
+                                </div>
+                            </div>
+                        )}
+                        <div className="grid grid-cols-3 gap-1 p-1">
+                            {myPosts.map(p => <div key={p.id} className="aspect-square bg-slate-800"><img src={p.image} className="w-full h-full object-cover"/></div>)}
+                        </div>
+                    </div>
+                );
+            };
+
+            const ActivityTab = () => (
+                <div className="p-4 pb-24 text-center text-slate-500">
+                    <Icon name="bell" size={48} className="mx-auto mb-4 opacity-20" />
+                    <p>Уведомлений нет</p>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen bg-[#0f172a]">
+                    {activeTab === 'feed' && <FeedTab />}
+                    {activeTab === 'search' && <SearchTab />}
+                    {activeTab === 'create' && <CreateTab />}
+                    {activeTab === 'activity' && <ActivityTab />}
+                    {activeTab === 'profile' && <ProfileTab />}
+
+                    {/* Нижняя навигация (5 вкладок) */}
+                    <div className="fixed bottom-0 w-full bg-[#0f172a] border-t border-slate-800 flex justify-around py-2 z-50 pb-safe">
+                        {[
+                            { id: 'feed', icon: 'layout-grid', label: 'Лента' },
+                            { id: 'search', icon: 'search', label: 'Поиск' },
+                            { id: 'create', icon: 'plus-square', label: 'Пост' },
+                            { id: 'activity', icon: 'heart', label: 'Активность' },
+                            { id: 'profile', icon: 'user', label: 'Профиль' }
+                        ].map(tab => (
+                            <button 
+                                key={tab.id} 
+                                onClick={() => setActiveTab(tab.id)} 
+                                className={`flex flex-col items-center p-2 rounded-lg transition-colors ${activeTab===tab.id ? 'text-blue-500' : 'text-slate-500'}`}
+                            >
+                                <Icon name={tab.icon} size={24} />
+                                <span className="text-[10px] mt-1">{tab.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const Root = () => {
+            const [user, setUser] = useState(null);
+            return user ? <App user={user} onLogout={() => setUser(null)} /> : <AuthScreen onLogin={setUser} />;
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Root />);
     </script>
 </body>
 </html>
