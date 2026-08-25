@@ -8,7 +8,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React & ReactDOM (UMD) -->
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     
@@ -73,7 +73,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
         
-        /* Fix for mobile keyboard */
+        /* Fix for mobile keyboard jumping */
         input:focus, textarea:focus {
             transform: translateZ(0);
         }
@@ -83,16 +83,16 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, useCallback } = React;
 
         // --- БАЗА ДАННЫХ (LOCALSTORAGE) ---
         const initDB = () => {
-            if (!localStorage.getItem('pulse_db_final_v2')) {
+            if (!localStorage.getItem('pulse_db_stable')) {
                 const codes = {};
                 for(let i=0; i<100; i++) codes['PULSE30_' + Math.random().toString(36).substring(2, 6).toUpperCase()] = { days: 30, used: false };
                 codes['PULSE_GOD'] = { days: Infinity, used: false };
 
-                localStorage.setItem('pulse_db_final_v2', JSON.stringify({
+                localStorage.setItem('pulse_db_stable', JSON.stringify({
                     users: [],
                     posts: [],
                     videos: [],
@@ -102,8 +102,8 @@
             }
         };
         initDB();
-        const getDB = () => JSON.parse(localStorage.getItem('pulse_db_final_v2'));
-        const saveDB = (data) => localStorage.setItem('pulse_db_final_v2', JSON.stringify(data));
+        const getDB = () => JSON.parse(localStorage.getItem('pulse_db_stable'));
+        const saveDB = (data) => localStorage.setItem('pulse_db_stable', JSON.stringify(data));
 
         const DefaultAvatarSVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E`;
 
@@ -129,14 +129,19 @@
             </div>
         );
 
-        // --- АВТОРИЗАЦИЯ ---
+        // --- АВТОРИЗАЦИЯ С ВЫБОРОМ АВАТАРКИ ---
         const AuthScreen = ({ onLogin }) => {
             const [username, setUsername] = useState('');
             const [password, setPassword] = useState('');
             const [mode, setMode] = useState('login');
             const [error, setError] = useState('');
+            
+            // Состояние для аватарки
+            const [useCustomAv, setUseCustomAv] = useState(false);
+            const [avatarFile, setAvatarFile] = useState(null);
+            const [previewAv, setPreviewAv] = useState(null);
 
-            // Авто-вход при загрузке
+            // Авто-вход
             useEffect(() => {
                 const savedUser = localStorage.getItem('pulse_current_user');
                 if (savedUser) {
@@ -144,22 +149,42 @@
                 }
             }, []);
 
+            const handleFileChange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    setAvatarFile(file);
+                    setPreviewAv(URL.createObjectURL(file));
+                }
+            };
+
             const handleAuth = () => {
                 const db = getDB();
                 if (mode === 'register') {
                     if (!username) return setError("Введите ник");
                     if (db.users.find(u => u.username === username)) return setError("Ник занят");
                     
-                    const newUser = {
-                        id: Date.now().toString(),
-                        username, password, avatar: DefaultAvatarSVG,
-                        isPremium: false, premiumUntil: 0,
-                        postCount: 0, lastReset: Date.now()
+                    let finalAvatar = DefaultAvatarSVG;
+                    
+                    const finishRegistration = (av) => {
+                        const newUser = {
+                            id: Date.now().toString(),
+                            username, password, avatar: av,
+                            isPremium: false, premiumUntil: 0,
+                            postCount: 0, lastReset: Date.now()
+                        };
+                        db.users.push(newUser);
+                        saveDB(db);
+                        alert("Регистрация успешна! Войдите.");
+                        setMode('login');
                     };
-                    db.users.push(newUser);
-                    saveDB(db);
-                    alert("Регистрация успешна! Войдите.");
-                    setMode('login');
+
+                    if (useCustomAv && avatarFile) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => finishRegistration(reader.result);
+                        reader.readAsDataURL(avatarFile);
+                    } else {
+                        finishRegistration(finalAvatar);
+                    }
                 } else {
                     const user = db.users.find(u => u.username === username && u.password === password);
                     if (user) {
@@ -178,6 +203,36 @@
                         <input type="text" placeholder="Никнейм" value={username} onChange={e=>setUsername(e.target.value)} className="w-full p-4 bg-slate-900 rounded-xl border border-slate-800 text-white outline-none focus:border-blue-500" />
                         <input type="password" placeholder="Пароль" value={password} onChange={e=>setPassword(e.target.value)} className="w-full p-4 bg-slate-900 rounded-xl border border-slate-800 text-white outline-none focus:border-blue-500" />
                         
+                        {mode === 'register' && (
+                            <div className="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                                <p className="text-sm text-slate-400 mb-2">Аватарка:</p>
+                                <div className="flex gap-2 mb-3">
+                                    <button 
+                                        onClick={() => {setUseCustomAv(false); setPreviewAv(null);}} 
+                                        className={`flex-1 py-2 text-xs rounded ${!useCustomAv ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+                                    >
+                                        Стандарт
+                                    </button>
+                                    <button 
+                                        onClick={() => setUseCustomAv(true)} 
+                                        className={`flex-1 py-2 text-xs rounded ${useCustomAv ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400'}`}
+                                    >
+                                        Свое фото
+                                    </button>
+                                </div>
+                                
+                                {useCustomAv && (
+                                    <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-xs text-slate-400" />
+                                )}
+                                
+                                {(previewAv || (!useCustomAv && mode === 'register')) && (
+                                    <div className="flex justify-center mt-2">
+                                        <img src={previewAv || DefaultAvatarSVG} className="w-12 h-12 rounded-full border border-slate-700" />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
                         {error && <div className="text-red-500 text-sm text-center">{error}</div>}
 
                         <button onClick={handleAuth} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-900/20 transition-all active:scale-95">
@@ -193,16 +248,38 @@
 
         // --- ПРИЛОЖЕНИЕ ---
         const App = ({ user, onLogout }) => {
+            // Используем useRef для данных, чтобы избежать лишних ререндеров всего дерева
+            const dbRef = useRef(getDB());
             const [activeTab, setActiveTab] = useState('main');
-            const [db, setDb] = useState(getDB());
             const [searchQuery, setSearchQuery] = useState('');
             
-            useEffect(() => {
-                const i = setInterval(() => setDb(getDB()), 1000);
-                return () => clearInterval(i);
-            }, []);
+            // Стейт только для того, что нужно отображать
+            const [posts, setPosts] = useState(dbRef.current.posts);
+            const [videos, setVideos] = useState(dbRef.current.videos);
+            const [stories, setStories] = useState(dbRef.current.stories);
+            const [currentUser, setCurrentUser] = useState(user);
 
-            const currentUser = db.users.find(u => u.id === user.id) || user;
+            // Синхронизация с LocalStorage без мигания
+            useEffect(() => {
+                const syncData = () => {
+                    const freshDB = getDB();
+                    dbRef.current = freshDB;
+                    setPosts(freshDB.posts);
+                    setVideos(freshDB.videos);
+                    setStories(freshDB.stories);
+                    
+                    // Обновляем текущего пользователя, если данные изменились (например, премиум)
+                    const updatedUser = freshDB.users.find(u => u.id === user.id);
+                    if (updatedUser) {
+                        setCurrentUser(updatedUser);
+                        localStorage.setItem('pulse_current_user', JSON.stringify(updatedUser));
+                    }
+                };
+
+                const interval = setInterval(syncData, 2000); // Реже обновляем, чтобы не дергать
+                return () => clearInterval(interval);
+            }, [user.id]);
+
             const isPremium = currentUser.isPremium || (currentUser.premiumUntil && currentUser.premiumUntil > Date.now());
 
             const handleCreate = (type, title, text, file) => {
@@ -239,6 +316,13 @@
                     }
                     
                     saveDB(dbData);
+                    dbRef.current = dbData; // Сразу обновляем реф
+                    
+                    // Обновляем стейты вручную для мгновенного отклика
+                    if (type === 'post') setPosts([item, ...posts]);
+                    if (type === 'story') setStories([item, ...stories]);
+                    if (type === 'video') setVideos([item, ...videos]);
+                    
                     setActiveTab('main');
                 };
                 reader.readAsDataURL(file);
@@ -254,11 +338,9 @@
                     dbData.users[uIdx].premiumUntil = p.days === Infinity ? Infinity : Date.now() + (p.days * 86400000);
                     saveDB(dbData);
                     
-                    const updatedUser = {...user, isPremium: true, premiumUntil: dbData.users[uIdx].premiumUntil};
-                    localStorage.setItem('pulse_current_user', JSON.stringify(updatedUser));
-                    
                     alert("Премиум активирован!");
-                    window.location.reload();
+                    // Принудительно обновляем страницу для применения стилей
+                    window.location.reload(); 
                 } else {
                     alert("Неверный код");
                 }
@@ -267,7 +349,7 @@
             // --- ВКЛАДКИ ---
 
             const MainTab = () => {
-                const filteredPosts = db.posts.filter(p => 
+                const filteredPosts = posts.filter(p => 
                     p.text.toLowerCase().includes(searchQuery.toLowerCase()) || 
                     p.authorName.toLowerCase().includes(searchQuery.toLowerCase())
                 );
@@ -296,7 +378,7 @@
                                         </div>
                                         <span className="text-xs text-slate-400">История</span>
                                     </div>
-                                    {db.stories.map(s => (
+                                    {stories.map(s => (
                                         <div key={s.id} className="flex flex-col items-center space-y-1 min-w-[72px]">
                                             <Avatar url={s.authorAvatar} isPremium={s.authorPremium} size="w-16 h-16" />
                                             <span className="text-xs text-slate-300 truncate w-16 text-center">{s.authorName}</span>
@@ -332,10 +414,10 @@
 
             const FeedTab = () => (
                 <div className="tiktok-container bg-black pb-20">
-                    {db.videos.length === 0 ? (
+                    {videos.length === 0 ? (
                         <div className="h-full flex items-center justify-center text-slate-500">Нет видео</div>
                     ) : (
-                        db.videos.map(v => (
+                        videos.map(v => (
                             <div key={v.id} className="tiktok-item relative">
                                 <img src={v.media} className="w-full h-full object-cover opacity-80" />
                                 <div className="absolute bottom-20 left-4 text-white drop-shadow-md">
@@ -422,7 +504,7 @@
             const ProfileTab = () => {
                 const [subTab, setSubTab] = useState('content');
                 const [promoCode, setPromoCode] = useState('');
-                const myContent = [...db.posts, ...db.videos].filter(p => p.authorId === user.id);
+                const myContent = [...posts, ...videos].filter(p => p.authorId === user.id);
 
                 return (
                     <div className="pb-24 min-h-screen bg-[#020617] animate-fade-in">
@@ -455,7 +537,13 @@
                                     <h3 className="font-bold text-blue-400 mb-3">Активация</h3>
                                     {!isPremium ? (
                                         <div className="flex space-x-2">
-                                            <input type="text" placeholder="Код" className="flex-1 bg-[#020617] p-3 rounded border border-slate-700 text-white outline-none" value={promoCode} onChange={e=>setPromoCode(e.target.value)} />
+                                            <input 
+                                                type="text" 
+                                                placeholder="Код" 
+                                                className="flex-1 bg-[#020617] p-3 rounded border border-slate-700 text-white outline-none" 
+                                                value={promoCode} 
+                                                onChange={e=>setPromoCode(e.target.value)} 
+                                            />
                                             <button onClick={()=>applyPromo(promoCode)} className="bg-blue-600 px-4 rounded font-bold">OK</button>
                                         </div>
                                     ) : (
