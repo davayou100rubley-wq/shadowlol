@@ -7,12 +7,15 @@
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- React 18 -->
     <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <!-- Babel для JSX -->
+
+    <!-- Babel для JSX транспиляции в браузере -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Supabase JS Client -->
+
+    <!-- Supabase JS Client v2 -->
     <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
     <script>
@@ -32,6 +35,7 @@
     </script>
 
     <style>
+        /* Сброс тап-подсветки на мобильных */
         * {
             -webkit-tap-highlight-color: transparent;
             box-sizing: border-box;
@@ -40,17 +44,19 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
+            padding: 0;
             background: #0f172a;
             color: #fff;
             overflow-x: hidden;
         }
 
+        /* Убираем скроллбары везде */
         ::-webkit-scrollbar {
             width: 0;
             height: 0;
         }
 
-        /* Скролл без скроллбара */
+        /* Горизонтальный скролл без скроллбара (сторис) */
         .stories-scroll {
             scrollbar-width: none;
         }
@@ -58,13 +64,19 @@
             display: none;
         }
 
-        /* Анимация появления */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Анимация плавного появления снизу */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .fade-in {
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeInUp 0.3s ease-out;
         }
 
         /* Пульсация логотипа */
@@ -77,13 +89,13 @@
             animation: pulseLogo 2s infinite;
         }
 
-        /* Premium галочка — неоновый градиент */
+        /* Неоновая галочка премиум (градиентная, не синяя) */
         .premium-check {
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
             box-shadow: 0 0 8px rgba(220, 39, 67, 0.6);
         }
 
-        /* Premium обводка аватара — градиентная */
+        /* Градиентная обводка аватара для премиум */
         .premium-ring {
             background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
             padding: 2.5px;
@@ -91,14 +103,14 @@
             box-shadow: 0 0 12px rgba(220, 39, 67, 0.4);
         }
 
-        /* Обычная обводка аватара — синяя */
+        /* Синяя обводка для обычных пользователей */
         .free-ring {
             background: #3b82f6;
             padding: 2px;
             border-radius: 50%;
         }
 
-        /* TikTok вертикальный snap scroll */
+        /* TikTok-style вертикальный snap scroll */
         .video-feed {
             scroll-snap-type: y mandatory;
             overflow-y: auto;
@@ -111,7 +123,7 @@
             scroll-snap-stop: always;
         }
 
-        /* Карусель горизонтальная */
+        /* Горизонтальная карусель внутри поста */
         .carousel-scroll {
             scroll-snap-type: x mandatory;
             overflow-x: auto;
@@ -125,7 +137,7 @@
             min-width: 100%;
         }
 
-        /* Safe area для iPhone */
+        /* Safe area для iPhone с чёлкой */
         .safe-bottom {
             padding-bottom: env(safe-area-inset-bottom, 0px);
         }
@@ -140,42 +152,34 @@
     </style>
 </head>
 <body>
+
+    <!-- Корневой элемент React -->
     <div id="root"></div>
 
     <script type="text/babel">
+
+        // Деструктуризация хуков React
         const { useState, useEffect, useRef, useMemo, createContext, useContext, useCallback } = React;
 
-        // ==========================================
-        // 🔌 SUPABASE CONFIG
-        // ⚠️ ЗАМЕНИ ЭТИ ДВЕ СТРОКИ НА СВОИ КЛЮЧИ!
-        // Supabase Dashboard → Settings → API
-        // ==========================================
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        // ==========================================
 
-        // Безопасная инициализация Supabase клиента
-        let supabase = null;
-        let isSupabaseReady = false;
+        // ==========================================
+        // 🔌 SUPABASE CONFIG — КЛЮЧИ УЖЕ ВСТАВЛЕНЫ
+        // ==========================================
+        const SUPABASE_URL = 'https://rzahwdhsdvwojdklblbb.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6YWh3ZHhzZHZ3b2pka2xibGJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1MTU3NDksImV4cCI6MjEwMzA5MTc0OX0.lwKo2APkZ1FsAfX47bSja99x16sLUSGqsx8gldrtv10';
 
-        try {
-            if (typeof window !== 'undefined' && window.supabase && !SUPABASE_URL.includes('YOUR_')) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                isSupabaseReady = true;
-                console.log('✅ Supabase подключён успешно');
-            } else {
-                console.warn('⚠️ Supabase не настроен. Замени ключи в коде.');
-            }
-        } catch (e) {
-            console.error('❌ Ошибка подключения Supabase:', e);
-        }
+        // Создаём клиент Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase подключён к:', SUPABASE_URL);
 
 
         // ==========================================
-        // 🎨 ИКОНКИ (SVG компоненты)
+        // 🎨 SVG ИКОНКИ
         // ==========================================
         const Icon = ({ name, size = 24, filled = false, className = "" }) => {
-            const paths = {
+
+            // Карта путей для каждой иконки
+            const iconPaths = {
                 home: <>
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                     {!filled && <polyline points="9 22 9 12 15 12 15 22"/>}
@@ -260,7 +264,7 @@
                     strokeLinejoin="round"
                     className={className}
                 >
-                    {paths[name]}
+                    {iconPaths[name]}
                 </svg>
             );
         };
@@ -270,7 +274,11 @@
         // 🔧 УТИЛИТЫ
         // ==========================================
 
-        // Сжатие изображения перед загрузкой в Storage
+        /**
+         * Сжатие изображения через Canvas API
+         * Уменьшает размер перед загрузкой в Supabase Storage
+         * чтобы не превышать лимиты localStorage и ускорить загрузку
+         */
         const compressImage = (file, maxWidth = 1080, quality = 0.7) => {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -282,21 +290,29 @@
                         const canvas = document.createElement('canvas');
                         let width = img.width;
                         let height = img.height;
+
+                        // Пропорциональное уменьшение если шире maxWidth
                         if (width > maxWidth) {
                             height *= maxWidth / width;
                             width = maxWidth;
                         }
+
                         canvas.width = width;
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
+
+                        // Возвращаем Blob (не base64!) для загрузки в Storage
                         canvas.toBlob((blob) => resolve(blob), 'image/jpeg', quality);
                     };
                 };
             });
         };
 
-        // Получение длительности видео
+        /**
+         * Получение длительности видеофайла
+         * Используется для проверки лимита 60 секунд
+         */
         const getVideoDuration = (file) => {
             return new Promise((resolve) => {
                 const video = document.createElement('video');
@@ -307,14 +323,20 @@
             });
         };
 
-        // Форматирование времени
+        /**
+         * Форматирование даты в относительное время
+         * Например: "5 мин", "3 ч", "2 д"
+         */
         const formatTime = (dateStr) => {
             const diff = Date.now() - new Date(dateStr).getTime();
             const minutes = Math.floor(diff / 60000);
+
             if (minutes < 1) return 'только что';
             if (minutes < 60) return `${minutes} мин`;
+
             const hours = Math.floor(minutes / 60);
             if (hours < 24) return `${hours} ч`;
+
             const days = Math.floor(hours / 24);
             return `${days} д`;
         };
@@ -331,26 +353,24 @@
             const [isGuest, setIsGuest] = useState(false);
             const [loading, setLoading] = useState(true);
 
-            // Загрузка профиля из БД
+            /**
+             * Загрузка профиля пользователя из таблицы profiles
+             * Вызывается после входа/регистрации и при обновлении данных
+             */
             const loadProfile = useCallback(async (userId) => {
-                if (!supabase) return;
                 const { data, error } = await supabase
                     .from('profiles')
                     .select('*')
                     .eq('id', userId)
                     .single();
+
                 if (data && !error) {
                     setProfile(data);
                 }
             }, []);
 
+            // При монтировании проверяем существующую сессию (авто-вход)
             useEffect(() => {
-                if (!supabase) {
-                    setLoading(false);
-                    return;
-                }
-
-                // Проверка существующей сессии (авто-вход)
                 supabase.auth.getSession().then(({ data: { session } }) => {
                     if (session?.user) {
                         setUser(session.user);
@@ -359,7 +379,7 @@
                     setLoading(false);
                 });
 
-                // Слушатель изменений auth состояния
+                // Слушатель изменений состояния авторизации
                 const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
                     if (session?.user) {
                         setUser(session.user);
@@ -373,24 +393,32 @@
                 return () => subscription.unsubscribe();
             }, [loadProfile]);
 
-            // Регистрация нового пользователя
+            /**
+             * Регистрация нового пользователя
+             * 1. Создаёт аккаунт в Supabase Auth
+             * 2. Триггер автоматически создаёт запись в profiles
+             * 3. Если есть аватарка — загружает в Storage и обновляет профиль
+             */
             const register = async (email, password, username, avatarFile) => {
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
                     options: { data: { username } }
                 });
+
                 if (error) throw error;
 
-                // Загрузка аватарки если есть
+                // Загрузка аватарки если пользователь выбрал файл
                 if (avatarFile && data.user) {
                     const ext = avatarFile.name.split('.').pop();
                     const path = `${data.user.id}/avatar.${ext}`;
-                    const compressed = await compressImage(avatarFile, 400, 0.8);
-                    await supabase.storage.from('avatars').upload(path, compressed, {
+                    const compressedBlob = await compressImage(avatarFile, 400, 0.8);
+
+                    await supabase.storage.from('avatars').upload(path, compressedBlob, {
                         upsert: true,
                         contentType: 'image/jpeg'
                     });
+
                     const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path);
                     await supabase.from('profiles').update({ avatar_url: publicUrl }).eq('id', data.user.id);
                 }
@@ -399,14 +427,18 @@
                 return data;
             };
 
-            // Вход
+            /**
+             * Вход по email и паролю
+             */
             const login = async (email, password) => {
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 return data;
             };
 
-            // Выход
+            /**
+             * Выход из аккаунта
+             */
             const logout = async () => {
                 await supabase.auth.signOut();
                 setUser(null);
@@ -414,14 +446,19 @@
                 setIsGuest(false);
             };
 
-            // Гостевой режим
+            /**
+             * Гостевой режим — просмотр без аккаунта
+             */
             const guest = () => {
                 setIsGuest(true);
                 setUser(null);
                 setProfile(null);
             };
 
-            // Обновление профиля
+            /**
+             * Обновление данных профиля из БД
+             * Вызывается после активации промокода, удаления поста и т.д.
+             */
             const refreshProfile = useCallback(async () => {
                 if (user) await loadProfile(user.id);
             }, [user, loadProfile]);
@@ -441,8 +478,11 @@
 
         // ==========================================
         // 🎨 PREMIUM AVATAR COMPONENT
+        // Градиентная обводка + неоновая галочка для премиум
+        // Синяя обводка для обычных пользователей
         // ==========================================
         const Avatar = ({ src, size = 40, isPremium, showCheck = true, className = "" }) => {
+            // Выбираем класс обводки в зависимости от статуса премиум
             const ringClass = isPremium ? 'premium-ring' : (src ? 'free-ring' : '');
 
             return (
@@ -457,6 +497,8 @@
                             }
                         </div>
                     </div>
+
+                    {/* Неоновая градиентная галочка премиум */}
                     {showCheck && isPremium && (
                         <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full premium-check flex items-center justify-center border-2 border-dark">
                             <Icon name="check" size={12} className="text-white" />
@@ -468,40 +510,12 @@
 
 
         // ==========================================
-        // ⚙️ SETUP SCREEN (если Supabase не настроен)
-        // ==========================================
-        const SetupScreen = () => (
-            <div className="min-h-screen bg-dark flex flex-col items-center justify-center p-6 text-center fade-in">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-primary to-purple-500 flex items-center justify-center mb-6 pulse-logo">
-                    <Icon name="pulse" size={36} className="text-white" />
-                </div>
-                <h1 className="text-3xl font-bold mb-2">Пульс</h1>
-                <p className="text-slate-400 mb-8 max-w-sm">
-                    Supabase не настроен. Открой этот HTML-файл в любом текстовом редакторе
-                    и замени две строки в начале скрипта:
-                </p>
-                <div className="bg-darkCard border border-darkBorder rounded-xl p-4 text-left text-xs font-mono max-w-md w-full mb-6 overflow-x-auto">
-                    <p className="text-red-400 mb-1">{'// Найди эти строки и замени:'}</p>
-                    <p className="text-slate-400">const SUPABASE_URL = <span className="text-yellow-400">'YOUR_SUPABASE_URL'</span>;</p>
-                    <p className="text-slate-400">const SUPABASE_KEY = <span className="text-yellow-400">'YOUR_SUPABASE_ANON_KEY'</span>;</p>
-                    <p className="text-green-400 mt-3 mb-1">{'// Замени на свои ключи из Supabase:'}</p>
-                    <p className="text-slate-300">const SUPABASE_URL = <span className="text-green-300">'https://xxx.supabase.co'</span>;</p>
-                    <p className="text-slate-300">const SUPABASE_KEY = <span className="text-green-300">'eyJhbG...'</span>;</p>
-                </div>
-                <p className="text-slate-500 text-xs max-w-sm">
-                    Ключи находятся в Supabase Dashboard → Settings → API.<br/>
-                    Также убедись что SQL-скрипт выполнен и бакеты avatars/posts созданы в Storage.
-                </p>
-            </div>
-        );
-
-
-        // ==========================================
-        // 🚪 AUTH SCREEN (Регистрация / Вход / Гость)
+        // 🚪 AUTH SCREEN
+        // Экран приветствия → Регистрация / Вход / Гость
         // ==========================================
         const AuthScreen = () => {
             const { register, login, guest } = useAuth();
-            const [mode, setMode] = useState('welcome');
+            const [mode, setMode] = useState('welcome'); // welcome | register | login
             const [email, setEmail] = useState('');
             const [password, setPassword] = useState('');
             const [username, setUsername] = useState('');
@@ -509,8 +523,9 @@
             const [avatarPreview, setAvatarPreview] = useState('');
             const [error, setError] = useState('');
             const [isLoading, setIsLoading] = useState(false);
-            const fileRef = useRef(null);
+            const fileInputRef = useRef(null);
 
+            // Обработка выбора файла аватарки
             const handleAvatarSelect = (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
@@ -518,6 +533,7 @@
                 setAvatarPreview(URL.createObjectURL(file));
             };
 
+            // Регистрация
             const doRegister = async () => {
                 setError('');
                 setIsLoading(true);
@@ -529,6 +545,7 @@
                 setIsLoading(false);
             };
 
+            // Вход
             const doLogin = async () => {
                 setError('');
                 setIsLoading(true);
@@ -540,7 +557,7 @@
                 setIsLoading(false);
             };
 
-            // Экран приветствия
+            // --- Экран приветствия ---
             if (mode === 'welcome') {
                 return (
                     <div className="fixed inset-0 z-50 bg-dark flex flex-col items-center justify-center p-6 fade-in">
@@ -551,6 +568,7 @@
                             Пульс
                         </h1>
                         <p className="text-slate-400 mb-12 text-sm">Твой ритм. Твои правила.</p>
+
                         <button onClick={() => setMode('register')}
                             className="w-full max-w-xs bg-primary py-3.5 rounded-xl font-bold mb-3 active:scale-95 transition shadow-lg shadow-primary/30">
                             Зарегистрироваться
@@ -567,13 +585,14 @@
                 );
             }
 
-            // Экран регистрации / входа
+            // --- Экран регистрации / входа ---
             return (
                 <div className="fixed inset-0 z-50 bg-dark p-6 fade-in overflow-y-auto">
                     <button onClick={() => { setMode('welcome'); setError(''); }}
                         className="p-2 text-slate-400 mb-4">
                         <Icon name="x" />
                     </button>
+
                     <h2 className="text-2xl font-bold mb-6">
                         {mode === 'register' ? 'Создай профиль' : 'Вход'}
                     </h2>
@@ -581,7 +600,7 @@
                     {/* Выбор аватарки (только при регистрации) */}
                     {mode === 'register' && (
                         <div className="flex flex-col items-center mb-6">
-                            <div className="relative cursor-pointer" onClick={() => fileRef.current?.click()}>
+                            <div className="relative cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                                 {avatarPreview
                                     ? <img src={avatarPreview} className="w-24 h-24 rounded-full object-cover border-4 border-primary" />
                                     : <div className="w-24 h-24 rounded-full bg-darkCard border-4 border-dashed border-darkBorder flex items-center justify-center">
@@ -592,7 +611,7 @@
                                     <Icon name="edit" size={12} />
                                 </div>
                             </div>
-                            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarSelect} />
+                            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarSelect} />
                             <p className="text-xs text-slate-500 mt-2">Нажми, чтобы выбрать фото с устройства</p>
                         </div>
                     )}
@@ -603,28 +622,32 @@
                             onChange={e => setUsername(e.target.value)}
                             className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-3 outline-none focus:border-primary transition" />
                     )}
+
                     <input type="email" placeholder="Email" value={email}
                         onChange={e => setEmail(e.target.value)}
                         className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-3 outline-none focus:border-primary transition" />
+
                     <input type="password" placeholder="Пароль" value={password}
                         onChange={e => setPassword(e.target.value)}
                         className="w-full bg-darkCard border border-darkBorder rounded-xl py-3.5 px-4 mb-4 outline-none focus:border-primary transition" />
 
-                    {/* Ошибка */}
+                    {/* Сообщение об ошибке */}
                     {error && <p className="text-red-400 text-sm mb-3 text-center">{error}</p>}
 
-                    {/* Кнопка действия */}
+                    {/* Основная кнопка */}
                     <button
                         disabled={isLoading || !email || !password || (mode === 'register' && !username)}
                         onClick={mode === 'register' ? doRegister : doLogin}
                         className={`w-full py-4 rounded-xl font-bold transition active:scale-95 flex items-center justify-center gap-2 ${
-                            email && password && (mode === 'login' || username) ? 'bg-primary' : 'bg-darkCard text-slate-600'
+                            email && password && (mode === 'login' || username)
+                                ? 'bg-primary'
+                                : 'bg-darkCard text-slate-600'
                         }`}>
                         {isLoading && <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full spinner" />}
                         {mode === 'register' ? 'Создать аккаунт' : 'Войти'}
                     </button>
 
-                    {/* Переключение режима */}
+                    {/* Переключение между регистрацией и входом */}
                     <p className="text-center text-sm text-slate-500 mt-4">
                         {mode === 'register' ? 'Уже есть аккаунт? ' : 'Нет аккаунта? '}
                         <button onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setError(''); }}
@@ -638,7 +661,7 @@
 
 
         // ==========================================
-        // 🏠 HEADER
+        // 🏠 HEADER (Шапка приложения)
         // ==========================================
         const Header = () => (
             <header className="sticky top-0 z-40 bg-dark/90 backdrop-blur-xl border-b border-darkBorder">
@@ -666,7 +689,8 @@
 
 
         // ==========================================
-        // 🏠 HOME PAGE (Поиск + Сторис друзей + Фото-лента)
+        // 🏠 HOME PAGE
+        // Поиск + Сторис друзей + Фото/Видео лента
         // ==========================================
         const HomePage = () => {
             const { user, profile, refreshProfile } = useAuth();
@@ -677,9 +701,13 @@
             const [loadingPosts, setLoadingPosts] = useState(true);
             const storyInputRef = useRef(null);
 
-            // Загрузка постов из Supabase
+            /**
+             * Загрузка постов из Supabase
+             * Поддерживает поиск по описанию через ilike
+             */
             const fetchPosts = useCallback(async () => {
                 setLoadingPosts(true);
+
                 let queryBuilder = supabase
                     .from('posts')
                     .select('*, profiles(username, avatar_url, is_premium)')
@@ -700,7 +728,9 @@
                 setLoadingPosts(false);
             }, [query]);
 
-            // Загрузка сторис из Supabase
+            /**
+             * Загрузка сторис за последние 24 часа
+             */
             const fetchStories = useCallback(async () => {
                 const cutoff = new Date(Date.now() - 86400000).toISOString();
                 const { data } = await supabase
@@ -711,12 +741,16 @@
                 setStories(data || []);
             }, []);
 
+            // Загружаем данные при монтировании и при изменении поиска
             useEffect(() => {
                 fetchPosts();
                 fetchStories();
             }, [fetchPosts, fetchStories]);
 
-            // Загрузка своей сторис
+            /**
+             * Загрузка своей сторис
+             * Сжимает изображение → загружает в Storage → создаёт запись в stories
+             */
             const handleStoryUpload = async (e) => {
                 const file = e.target.files[0];
                 if (!file || !user) return;
@@ -727,14 +761,24 @@
                 const { error } = await supabase.storage.from('posts').upload(path, blob, {
                     contentType: 'image/jpeg'
                 });
-                if (error) { alert('Ошибка загрузки сторис'); return; }
+                if (error) {
+                    alert('Ошибка загрузки сторис: ' + error.message);
+                    return;
+                }
 
                 const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
-                await supabase.from('stories').insert({ user_id: user.id, media_url: publicUrl });
+                await supabase.from('stories').insert({
+                    user_id: user.id,
+                    media_url: publicUrl
+                });
+
                 fetchStories();
             };
 
-            // Удаление поста
+            /**
+             * Удаление своего поста
+             * Вызывает RPC функцию которая также восстанавливает лимит
+             */
             const deletePost = async (postId) => {
                 if (!confirm('Удалить пост? Лимит восстановится.')) return;
                 await supabase.rpc('delete_post_and_restore', { p_post_id: postId });
@@ -742,12 +786,13 @@
                 fetchPosts();
             };
 
-            // Фильтрация сторис
+            // Фильтруем чужие сторис (своя отображается отдельно)
             const otherStories = stories.filter(s => !user || s.user_id !== user.id);
 
             return (
                 <div className="fade-in pb-20">
-                    {/* Строка поиска */}
+
+                    {/* Строка поиска (sticky под header) */}
                     <div className="px-4 py-3 sticky top-14 z-30 bg-dark/95 backdrop-blur-md">
                         <div className="relative">
                             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
@@ -765,10 +810,11 @@
                         </div>
                     </div>
 
-                    {/* Сторис (только друзья + своя) */}
+                    {/* Сторис (горизонтальный скролл) */}
                     <div className="px-4 py-3 border-b border-darkBorder">
                         <div className="flex gap-4 overflow-x-auto stories-scroll pb-1">
-                            {/* Своя история */}
+
+                            {/* Кнопка добавления своей истории */}
                             <div className="flex flex-col items-center gap-1 min-w-[68px]"
                                 onClick={() => storyInputRef.current?.click()}>
                                 <div className="relative w-16 h-16 rounded-full bg-darkCard border-2 border-dashed border-darkBorder overflow-hidden cursor-pointer">
@@ -807,7 +853,8 @@
                     ) : posts.length > 0 ? (
                         posts.map(post => (
                             <article key={post.id} className="border-b border-darkBorder">
-                                {/* Шапка поста */}
+
+                                {/* Шапка поста: аватар, имя, время, качество */}
                                 <div className="flex items-center justify-between px-4 py-3">
                                     <div className="flex items-center gap-3">
                                         <Avatar src={post.profiles?.avatar_url} size={36} isPremium={post.profiles?.is_premium} />
@@ -823,6 +870,8 @@
                                             </p>
                                         </div>
                                     </div>
+
+                                    {/* Кнопка удаления (только для своих постов) */}
                                     {user && user.id === post.user_id && (
                                         <button onClick={() => deletePost(post.id)}
                                             className="text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition">
@@ -831,7 +880,7 @@
                                     )}
                                 </div>
 
-                                {/* Медиа карусель */}
+                                {/* Медиа контент (одиночное или карусель) */}
                                 <div className="relative bg-black">
                                     {post.media_items?.length === 1 ? (
                                         post.media_items[0].type === 'video'
@@ -856,7 +905,7 @@
                                     )}
                                 </div>
 
-                                {/* Действия */}
+                                {/* Кнопки действий */}
                                 <div className="flex items-center gap-4 px-4 py-3">
                                     <button className="active:scale-125 transition"><Icon name="heart" /></button>
                                     <button><Icon name="comment" /></button>
@@ -865,7 +914,7 @@
                                     <button><Icon name="bookmark" /></button>
                                 </div>
 
-                                {/* Подпись */}
+                                {/* Подпись к посту */}
                                 <div className="px-4 pb-4">
                                     <p className="text-sm">
                                         <span className="font-semibold mr-2">{post.profiles?.username}</span>
@@ -882,7 +931,7 @@
                         </div>
                     )}
 
-                    {/* Просмотр сторис (оверлей) */}
+                    {/* Оверлей просмотра сторис */}
                     {activeStory && (
                         <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center"
                             onClick={() => setActiveStory(null)}>
@@ -904,7 +953,9 @@
 
 
         // ==========================================
-        // 🎬 FEED PAGE (Вертикальная лента видео — TikTok стиль)
+        // 🎬 FEED PAGE
+        // Вертикальная лента видео в стиле TikTok
+        // Автоплей через IntersectionObserver
         // ==========================================
         const FeedPage = () => {
             const [videos, setVideos] = useState([]);
@@ -912,7 +963,7 @@
             const [loading, setLoading] = useState(true);
             const containerRef = useRef(null);
 
-            // Загрузка видео-постов
+            // Загрузка всех постов, фильтрация только видео
             useEffect(() => {
                 (async () => {
                     const { data } = await supabase
@@ -929,9 +980,10 @@
                 })();
             }, []);
 
-            // IntersectionObserver для автоплея
+            // IntersectionObserver для автоплея текущего видео
             useEffect(() => {
                 if (!videos.length) return;
+
                 const observer = new IntersectionObserver(entries => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -944,6 +996,7 @@
                 return () => observer.disconnect();
             }, [videos]);
 
+            // Состояние загрузки
             if (loading) {
                 return (
                     <div className="h-full flex justify-center items-center">
@@ -952,6 +1005,7 @@
                 );
             }
 
+            // Пустое состояние
             if (!videos.length) {
                 return (
                     <div className="h-full flex flex-col items-center justify-center p-6 text-center fade-in">
@@ -965,12 +1019,15 @@
             return (
                 <div ref={containerRef} className="video-feed h-full">
                     {videos.map((video, index) => {
-                        const firstVideo = video.media_items?.find(m => m.type === 'video');
+                        const firstVideoItem = video.media_items?.find(m => m.type === 'video');
+
                         return (
                             <div key={video.id} data-idx={index} className="video-snap relative bg-black"
                                 style={{ height: 'calc(100dvh - 64px)' }}>
+
+                                {/* Видео элемент с автоплеем */}
                                 <video
-                                    src={firstVideo?.url}
+                                    src={firstVideoItem?.url}
                                     loop playsInline muted
                                     ref={el => {
                                         if (el && index === activeIdx) el.play().catch(() => {});
@@ -979,12 +1036,12 @@
                                     className="w-full h-full object-cover"
                                 />
 
-                                {/* Метка качества */}
+                                {/* Метка качества и FPS */}
                                 <div className="absolute top-4 right-4 bg-black/50 px-2 py-1 rounded text-xs font-bold backdrop-blur-sm">
                                     {video.fps} FPS • {video.quality}
                                 </div>
 
-                                {/* Информация внизу */}
+                                {/* Информация об авторе и описание */}
                                 <div className="absolute bottom-6 left-4 right-16 z-10">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Avatar src={video.profiles?.avatar_url} size={32} isPremium={video.profiles?.is_premium} />
@@ -1016,18 +1073,20 @@
 
 
         // ==========================================
-        // ➕ CREATE PAGE (Создание поста: фото/видео, до 4 объектов)
+        // ➕ CREATE PAGE
+        // Создание поста: выбор фото/видео, до 4 объектов
+        // Проверка лимитов, загрузка в Supabase Storage
         // ==========================================
         const CreatePage = () => {
             const { user, profile, refreshProfile } = useAuth();
             const [mediaItems, setMediaItems] = useState([]);
             const [caption, setCaption] = useState('');
-            const [status, setStatus] = useState(null);
+            const [status, setStatus] = useState(null);       // null | 'limit' | 'ok' | 'err'
             const [limitInfo, setLimitInfo] = useState(null);
             const [uploading, setUploading] = useState(false);
-            const fileRef = useRef(null);
+            const fileInputRef = useRef(null);
 
-            // Если нет аккаунта
+            // Если нет аккаунта — показываем заглушку
             if (!user) {
                 return (
                     <div className="h-full flex flex-col items-center justify-center p-6 text-center fade-in">
@@ -1038,9 +1097,14 @@
                 );
             }
 
-            // Обработка выбора файлов
+            /**
+             * Обработка выбора файлов
+             * Проверяет лимит 4 объекта и длительность видео 60 сек
+             * Фото сжимаются через Canvas API
+             */
             const handleFilesSelected = async (e) => {
                 const files = Array.from(e.target.files);
+
                 if (mediaItems.length + files.length > 4) {
                     alert('Максимум 4 объекта в одном посте!');
                     return;
@@ -1049,28 +1113,44 @@
                 const newItems = [];
                 for (const file of files) {
                     if (file.type.startsWith('video/')) {
+                        // Проверка длительности видео
                         const duration = await getVideoDuration(file);
                         if (duration > 60) {
                             alert(`Видео "${file.name}" длиннее 60 секунд!`);
                             continue;
                         }
-                        newItems.push({ type: 'video', file, preview: URL.createObjectURL(file) });
+                        newItems.push({
+                            type: 'video',
+                            file: file,
+                            preview: URL.createObjectURL(file)
+                        });
                     } else {
-                        const blob = await compressImage(file, 1080, 0.7);
-                        newItems.push({ type: 'photo', file: blob, preview: URL.createObjectURL(blob) });
+                        // Сжатие фото перед добавлением
+                        const compressedBlob = await compressImage(file, 1080, 0.7);
+                        newItems.push({
+                            type: 'photo',
+                            file: compressedBlob,
+                            preview: URL.createObjectURL(compressedBlob)
+                        });
                     }
                 }
+
                 setMediaItems(prev => [...prev, ...newItems]);
             };
 
-            // Удаление элемента из превью
+            // Удаление элемента из списка превью
             const removeItem = (idx) => setMediaItems(prev => prev.filter((_, i) => i !== idx));
 
-            // Публикация поста
+            /**
+             * Публикация поста
+             * 1. Проверяет недельный лимит
+             * 2. Загружает каждый файл в Supabase Storage
+             * 3. Создаёт запись в таблице posts
+             */
             const publish = async () => {
                 if (!mediaItems.length) return;
 
-                // Проверка лимита
+                // Свежая проверка лимита из БД
                 await refreshProfile();
                 const { data: freshProfile } = await supabase
                     .from('profiles')
@@ -1080,9 +1160,12 @@
 
                 const now = Date.now();
                 let postsThisWeek = freshProfile.posts_this_week;
+
+                // Сброс счётчика если неделя прошла
                 if (now > new Date(freshProfile.week_reset).getTime()) {
                     postsThisWeek = 0;
                 }
+
                 const limit = freshProfile.is_premium ? 6 : 2;
 
                 if (postsThisWeek >= limit) {
@@ -1092,37 +1175,46 @@
                 }
 
                 setUploading(true);
+
                 try {
+                    // Загрузка каждого файла в Storage
                     const uploadedItems = [];
                     for (const item of mediaItems) {
                         const ext = item.type === 'video' ? 'mp4' : 'jpg';
-                        const path = `${user.id}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+                        const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+                        const path = `${user.id}/${fileName}`;
+
                         const { error } = await supabase.storage.from('posts').upload(path, item.file, {
                             contentType: item.type === 'video' ? 'video/mp4' : 'image/jpeg'
                         });
                         if (error) throw error;
+
                         const { data: { publicUrl } } = supabase.storage.from('posts').getPublicUrl(path);
                         uploadedItems.push({ type: item.type, url: publicUrl });
                     }
 
+                    // Создание записи поста в БД
                     await supabase.from('posts').insert({
                         user_id: user.id,
                         media_items: uploadedItems,
-                        caption,
+                        caption: caption,
                         fps: freshProfile.is_premium ? 60 : 30,
                         quality: freshProfile.is_premium ? 'HD' : 'SD'
                     });
 
+                    // Успех — очищаем форму
                     refreshProfile();
                     setCaption('');
                     setMediaItems([]);
-                    setStatus('success');
+                    setStatus('ok');
                     setTimeout(() => setStatus(null), 2000);
+
                 } catch (e) {
-                    console.error(e);
-                    setStatus('error');
+                    console.error('Ошибка публикации:', e);
+                    setStatus('err');
                     setTimeout(() => setStatus(null), 3000);
                 }
+
                 setUploading(false);
             };
 
@@ -1133,7 +1225,7 @@
                 <div className="p-5 fade-in pb-24">
                     <h2 className="text-2xl font-bold mb-5">Новый пост</h2>
 
-                    {/* Индикатор лимита */}
+                    {/* Индикатор недельного лимита */}
                     <div className="bg-darkCard rounded-xl p-4 border border-darkBorder mb-5">
                         <div className="flex justify-between mb-2">
                             <span className="text-sm text-slate-400">Лимит недели</span>
@@ -1152,7 +1244,7 @@
                         </p>
                     </div>
 
-                    {/* Превью выбранных медиа */}
+                    {/* Превью выбранных медиа файлов */}
                     {mediaItems.length > 0 && (
                         <div className="mb-5">
                             <div className="flex gap-2 overflow-x-auto stories-scroll pb-2">
@@ -1171,8 +1263,10 @@
                                         </div>
                                     </div>
                                 ))}
+
+                                {/* Кнопка добавить ещё (если меньше 4) */}
                                 {mediaItems.length < 4 && (
-                                    <button onClick={() => fileRef.current?.click()}
+                                    <button onClick={() => fileInputRef.current?.click()}
                                         className="min-w-[100px] h-[100px] rounded-xl border-2 border-dashed border-darkBorder flex items-center justify-center hover:border-primary transition">
                                         <Icon name="plus" size={24} className="text-slate-500" />
                                     </button>
@@ -1184,9 +1278,9 @@
                         </div>
                     )}
 
-                    {/* Кнопка выбора файлов */}
+                    {/* Большая кнопка выбора файлов (когда ничего не выбрано) */}
                     {mediaItems.length === 0 && (
-                        <button onClick={() => fileRef.current?.click()}
+                        <button onClick={() => fileInputRef.current?.click()}
                             className="w-full aspect-video bg-darkCard border-2 border-dashed border-darkBorder rounded-2xl flex flex-col items-center justify-center gap-3 mb-5 hover:border-primary transition active:scale-95">
                             <Icon name="camera" size={40} className="text-slate-500" />
                             <p className="text-slate-400 font-semibold">Выбрать фото или видео</p>
@@ -1194,9 +1288,10 @@
                         </button>
                     )}
 
-                    <input ref={fileRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleFilesSelected} />
+                    {/* Скрытый input для выбора файлов */}
+                    <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={handleFilesSelected} />
 
-                    {/* Описание */}
+                    {/* Поле описания */}
                     <textarea value={caption} onChange={e => setCaption(e.target.value)}
                         placeholder="Описание..." rows={3}
                         className="w-full bg-darkCard border border-darkBorder rounded-xl p-4 outline-none focus:border-primary resize-none mb-4" />
@@ -1232,13 +1327,15 @@
                         </div>
                     )}
 
-                    {/* Тосты */}
-                    {status === 'success' && (
+                    {/* Тост: успешно опубликовано */}
+                    {status === 'ok' && (
                         <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-green-500 px-6 py-3 rounded-full font-semibold shadow-lg z-50 fade-in">
                             ✅ Опубликовано!
                         </div>
                     )}
-                    {status === 'error' && (
+
+                    {/* Тост: ошибка */}
+                    {status === 'err' && (
                         <div className="fixed top-20 left-1/2 -translate-x-1/2 bg-red-500 px-6 py-3 rounded-full font-semibold shadow-lg z-50 fade-in">
                             ❌ Ошибка загрузки
                         </div>
@@ -1249,11 +1346,12 @@
 
 
         // ==========================================
-        // 👤 PROFILE PAGE (Посты + Промокоды)
+        // 👤 PROFILE PAGE
+        // Информация, сетка постов, промокоды
         // ==========================================
         const ProfilePage = () => {
             const { user, profile, refreshProfile } = useAuth();
-            const [tab, setTab] = useState('posts');
+            const [tab, setTab] = useState('posts');   // posts | promo
             const [code, setCode] = useState('');
             const [result, setResult] = useState(null);
             const [myPosts, setMyPosts] = useState([]);
@@ -1270,6 +1368,7 @@
                 }
             }, [user, tab]);
 
+            // Если нет аккаунта
             if (!user) {
                 return (
                     <div className="h-full flex items-center justify-center text-slate-500 fade-in">
@@ -1281,23 +1380,32 @@
                 );
             }
 
-            // Активация промокода через RPC функцию
+            /**
+             * Активация промокода через серверную RPC функцию
+             * Безопасно проверяет и применяет код на стороне БД
+             */
             const applyPromo = async () => {
                 if (!code.trim()) return;
                 setApplying(true);
+
                 const { data, error } = await supabase.rpc('activate_promo', {
                     p_code: code.trim().toUpperCase()
                 });
+
                 setResult(data || { success: false, error: error?.message || 'Ошибка' });
+
                 if (data?.success) {
                     refreshProfile();
                     setCode('');
                 }
+
                 setApplying(false);
                 setTimeout(() => setResult(null), 3000);
             };
 
-            // Удаление своего поста
+            /**
+             * Удаление своего поста с восстановлением лимита
+             */
             const deletePost = async (postId) => {
                 if (!confirm('Удалить пост?')) return;
                 await supabase.rpc('delete_post_and_restore', { p_post_id: postId });
@@ -1307,13 +1415,14 @@
 
             return (
                 <div className="fade-in pb-24">
+
                     {/* Шапка профиля */}
                     <div className="px-5 py-4 flex items-center justify-between border-b border-darkBorder">
                         <h2 className="text-lg font-bold">@{profile?.username}</h2>
                         <button className="p-2 text-slate-400"><Icon name="settings" /></button>
                     </div>
 
-                    {/* Информация */}
+                    {/* Информация о пользователе */}
                     <div className="px-5 py-5 flex items-center gap-5">
                         <Avatar src={profile?.avatar_url} size={80} isPremium={profile?.is_premium} />
                         <div className="flex-1">
@@ -1338,7 +1447,7 @@
                         </button>
                     </div>
 
-                    {/* Табы */}
+                    {/* Табы: Посты / Промокоды */}
                     <div className="flex border-b border-darkBorder">
                         <button onClick={() => setTab('posts')}
                             className={`flex-1 py-3 flex justify-center relative ${tab === 'posts' ? 'text-white' : 'text-slate-500'}`}>
@@ -1352,7 +1461,7 @@
                         </button>
                     </div>
 
-                    {/* Контент табов */}
+                    {/* Контент таба */}
                     {tab === 'posts' ? (
                         <div className="grid grid-cols-3 gap-0.5 p-0.5">
                             {myPosts.length ? myPosts.map(post => (
@@ -1377,7 +1486,8 @@
                         </div>
                     ) : (
                         <div className="p-5 space-y-4">
-                            {/* Поле ввода промокода */}
+
+                            {/* Поле активации промокода */}
                             <div className="bg-darkCard rounded-xl p-4 border border-darkBorder">
                                 <h3 className="font-bold mb-3 flex items-center gap-2">
                                     <Icon name="gift" size={18} className="text-primary" /> Активировать код
@@ -1394,7 +1504,7 @@
                                 </div>
                             </div>
 
-                            {/* Результат активации */}
+                            {/* Результат активации промокода */}
                             {result && (
                                 <div className={`rounded-xl p-4 text-sm font-semibold fade-in ${
                                     result.success
@@ -1405,7 +1515,7 @@
                                 </div>
                             )}
 
-                            {/* Информация о Premium */}
+                            {/* Информация о преимуществах Premium */}
                             <div className="bg-gradient-to-br from-orange-500/10 to-pink-500/10 rounded-xl p-4 border border-orange-500/20">
                                 <h3 className="font-bold text-orange-400 mb-2 flex items-center gap-2">
                                     <Icon name="crown" size={16} filled className="text-orange-400" /> Premium даёт
@@ -1417,7 +1527,7 @@
                                 </ul>
                             </div>
 
-                            {/* Тестовые коды */}
+                            {/* Тестовые промокоды (спойлер) */}
                             <details className="text-xs text-slate-600">
                                 <summary className="cursor-pointer">🔧 Тестовые коды</summary>
                                 <div className="mt-2 p-3 bg-darkCard rounded-lg">
@@ -1433,7 +1543,7 @@
 
 
         // ==========================================
-        // 🔔 ACTIVITY PAGE
+        // 🔔 ACTIVITY PAGE (Уведомления)
         // ==========================================
         const ActivityPage = () => (
             <div className="fade-in p-6 text-center mt-20">
@@ -1445,10 +1555,12 @@
 
 
         // ==========================================
-        // 🧭 BOTTOM NAVIGATION
+        // 🧭 BOTTOM NAVIGATION BAR
+        // 5 вкладок: Главная, Лента, Создать, Активность, Профиль
         // ==========================================
         const BottomNav = ({ active, setActive }) => {
             const { profile } = useAuth();
+
             const tabs = [
                 { id: 'home', label: 'Главная', icon: 'home' },
                 { id: 'feed', label: 'Лента', icon: 'play' },
@@ -1463,6 +1575,7 @@
                         {tabs.map(tab => {
                             const isActive = active === tab.id;
 
+                            // Кнопка создания — особый стиль
                             if (tab.id === 'create') {
                                 return (
                                     <button key={tab.id} onClick={() => setActive('create')} className="mx-1">
@@ -1473,6 +1586,7 @@
                                 );
                             }
 
+                            // Обычные вкладки
                             return (
                                 <button key={tab.id} onClick={() => setActive(tab.id)}
                                     className={`flex flex-col items-center gap-0.5 py-1 px-2 transition ${isActive ? 'text-primary' : 'text-slate-500'}`}>
@@ -1492,12 +1606,13 @@
 
         // ==========================================
         // 🚀 MAIN APP COMPONENT
+        // Роутинг между страницами, управление состоянием
         // ==========================================
         const AppContent = () => {
             const { user, isGuest, loading } = useAuth();
             const [tab, setTab] = useState('home');
 
-            // Экран загрузки
+            // Экран загрузки (проверка сессии)
             if (loading) {
                 return (
                     <div className="h-screen flex items-center justify-center bg-dark">
@@ -1506,17 +1621,12 @@
                 );
             }
 
-            // Если Supabase не настроен — показываем экран настройки
-            if (!isSupabaseReady) {
-                return <SetupScreen />;
-            }
-
             // Если не авторизован и не гость — показываем экран входа
             if (!user && !isGuest) {
                 return <AuthScreen />;
             }
 
-            // Роутинг страниц
+            // Карта страниц
             const pages = {
                 home: HomePage,
                 feed: FeedPage,
@@ -1524,20 +1634,25 @@
                 activity: ActivityPage,
                 profile: ProfilePage
             };
-            const Page = pages[tab] || HomePage;
-            const isFeed = tab === 'feed';
+
+            const PageComponent = pages[tab] || HomePage;
+            const isFeedTab = tab === 'feed';
 
             return (
                 <div className="min-h-screen bg-dark">
-                    {!isFeed && <Header />}
-                    <main className={`${isFeed ? 'h-screen' : 'pb-16'} overflow-y-auto`}>
-                        <Page />
+                    {/* Header скрываем на вкладке Лента для иммерсивного просмотра */}
+                    {!isFeedTab && <Header />}
+
+                    <main className={`${isFeedTab ? 'h-screen' : 'pb-16'} overflow-y-auto`}>
+                        <PageComponent />
                     </main>
+
                     <BottomNav active={tab} setActive={setTab} />
                 </div>
             );
         };
 
+        // Обёртка с AuthProvider
         const App = () => (
             <AuthProvider>
                 <AppContent />
@@ -1546,7 +1661,7 @@
 
 
         // ==========================================
-        // 🎯 РЕНДЕР С ОБРАБОТКОЙ ОШИБОК
+        // 🎯 РЕНДЕР ПРИЛОЖЕНИЯ С ОБРАБОТКОЙ ОШИБОК
         // ==========================================
         try {
             ReactDOM.createRoot(document.getElementById('root')).render(<App />);
@@ -1561,6 +1676,7 @@
                 </div>
             `;
         }
+
     </script>
 </body>
 </html>
